@@ -4,7 +4,7 @@
 
 ## Environment Prepare
 
-按照依赖 `node_modules`:
+安装项目依赖 `node_modules`:
 
 ```bash
 yarn
