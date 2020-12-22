@@ -1,7 +1,8 @@
 import React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Alert, Typography } from 'antd';
-import { useIntl, FormattedMessage } from 'umi';
+import { FormattedMessage } from 'umi';
+import { Row, Col } from 'antd';
 import styles from './Welcome.less';
 
 // 复制
@@ -13,13 +14,20 @@ import styles from './Welcome.less';
 //   </pre>
 // );
 // <CodePreview>yarn add @ant-design/pro-table</CodePreview>
+const bigBox = () => ({
+  
+})
+
 export default () => {
-  const intl = useIntl();
   return (
-    <PageContainer>
-      <Card>
-        
-      </Card>
+    <PageContainer
+      title="软件学院篮球队"
+    >
+      <Row>
+        <Col span={8}>
+          <Card>123</Card>
+        </Col>
+      </Row>
     </PageContainer>
   );
 };
