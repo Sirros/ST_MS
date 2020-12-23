@@ -13,10 +13,10 @@ import styles from './Welcome.less';
 //     </code>
 //   </pre>
 // );
-// <CodePreview>yarn add @ant-design/pro-table</CodePreview>
-const bigBox = () => ({
-  
-})
+// <CodePreview>yarn add @ant-design/pro-table</CodePreview> 
+const bigBox = () => (
+  <div></div>
+);
 
 export default () => {
   return (
