@@ -1,6 +1,6 @@
 # Ant Design Pro
 
-项目基于 [Ant Design Pro](https://pro.ant.design).
+umi + dva
 
 ## Environment Prepare
 
