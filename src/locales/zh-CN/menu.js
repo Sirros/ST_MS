@@ -26,6 +26,9 @@ export default {
   'menu.teamManagement.honor': '荣誉修改',
  
   'menu.announcement': '发布公告',
+
+  'menu.t_setting': '队伍设置',
+  'menu.p_setting': '个人中心',
   
   'menu.login': '登录',
 

@@ -3,8 +3,8 @@ import { PageContainer } from '@ant-design/pro-layout';
 
 export default () => {
   return (
-    <PageContainer title='公告'>
-      home123
+    <PageContainer>
+      setting
     </PageContainer>
   );
 };

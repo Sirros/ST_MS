@@ -1,33 +1,123 @@
 import React from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Alert, Typography } from 'antd';
+import { Card } from 'antd';
 import { FormattedMessage } from 'umi';
-import { Row, Col } from 'antd';
+import {
+  Row, Col, Carousel, Statistic,
+} from 'antd';
+import {
+  LikeOutlined,
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+} from '@ant-design/icons';
+import TeamLogo from '../assets/logo.png';
 import styles from './Welcome.less';
 
-// 复制
-// const CodePreview = ({ children }) => (
-//   <pre className={styles.pre}>
-//     <code>
-//       <Typography.Text copyable>{children}</Typography.Text>
-//     </code>
-//   </pre>
-// );
-// <CodePreview>yarn add @ant-design/pro-table</CodePreview>
-const bigBox = () => ({
-  
-})
+const { Meta } = Card;
 
 export default () => {
   return (
-    <PageContainer
-      title="软件学院篮球队"
-    >
-      <Row>
-        <Col span={8}>
-          <Card>123</Card>
-        </Col>
-      </Row>
-    </PageContainer>
+    <div className={styles.homeTopWrapper}>
+      <div className={styles.homeTopLeft}>
+        <Card>
+          <img src={TeamLogo} alt="logo" />
+          <Meta title="title" description="xxxxxxx" style={{ marginTop: 15 }} />
+        </Card>
+        <Row>
+          <Col span={24}>
+            <Card title="组织信息" hoverable={true}>
+              xxxxxxxxxxxxxxxxx
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <Card hoverable={true}>
+              <Statistic title='团队经费' value={1128} prefix={<LikeOutlined />} />
+            </Card>
+          </Col>
+        </Row>
+      </div>
+      <div className={styles.homeTopMid}>
+        <Row justify="center" gutter={10}>
+          <Col span={12}>
+            <Card hoverable={true}>
+              运动员
+              <br />
+              #10
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card hoverable={true}>
+              管理员
+              <br />
+              #10
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card hoverable={true}>
+              即将到来的比赛
+              <br />
+              #10
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card hoverable={true}>
+              照片
+              <br />
+              #10
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <Card hoverable={true}>
+              公告
+              <Meta description="asofhaghasgasasfasfasfasfasfasfasfasfasfasfas" />
+            </Card>
+          </Col>
+        </Row>
+      </div>
+      <div className={styles.homeTopRight}>
+        <Carousel style={{marginBottom: 10}} autoplay dotPosition="bottom">
+          <div className={styles.carouselItem}>
+            <img
+              src="https://images.pexels.com/photos/5168816/pexels-photo-5168816.jpeg?cs=srgb&dl=pexels-alex-kozlov-5168816.jpg&fm=jpg"
+              alt=""
+            />
+          </div>
+          <div className={styles.carouselItem}>
+            <img
+              src="https://images.pexels.com/photos/1842580/pexels-photo-1842580.jpeg?cs=srgb&dl=pexels-matt-hardy-1842580.jpg&fm=jpg"
+              alt=""
+            />
+          </div>
+        </Carousel>
+        <Row gutter={10}>
+          <Col span={12}>
+            <Card>
+              <Statistic
+                title="今日气温"
+                value={21.28}
+                precision={2}
+                valueStyle={{ color: '#3f8600' }}
+                suffix="%"
+              />
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card>
+              <Statistic
+                title="明日气温"
+                value={23.4}
+                precision={2}
+                valueStyle={{ color: '#3f8600' }}
+                prefix={<ArrowUpOutlined />}
+                suffix="%"
+              />
+            </Card>
+          </Col>
+        </Row>
+      </div>
+    </div>
   );
 };

@@ -46,13 +46,11 @@ const GlobalHeaderRight = (props) => {
         //   //console.log('input', value);
         // }}
       />
-      <Tooltip title="使用文档">
+      <Tooltip title="有问题请联系QQ:121970263">
         <a
           style={{
             color: 'inherit',
           }}
-          target="_blank"
-          href="https://pro.ant.design/docs/getting-started"
           rel="noopener noreferrer"
           className={styles.action}
         >
