@@ -27,6 +27,9 @@ export default {
  
   'menu.announcement': 'Announce',
 
+  'menu.t_setting': 'Team Setting',
+  'menu.p_setting': 'Personal Setting',
+
   'menu.login': 'Login',
   
   'menu.exception.403': '403',

@@ -1,9 +1,11 @@
 import React from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Alert, Typography } from 'antd';
+import { Card } from 'antd';
 import { FormattedMessage } from 'umi';
 import { Row, Col } from 'antd';
+import TeamLogo from '../assets/default_logo.jpg';
 import styles from './Welcome.less';
+
+const { Meta } = Card;
 
 // 复制
 // const CodePreview = ({ children }) => (
@@ -14,20 +16,26 @@ import styles from './Welcome.less';
 //   </pre>
 // );
 // <CodePreview>yarn add @ant-design/pro-table</CodePreview> 
-const bigBox = () => (
-  <div></div>
-);
 
 export default () => {
   return (
-    <PageContainer
-      title="软件学院篮球队"
-    >
       <Row>
-        <Col span={8}>
-          <Card>123</Card>
+        <Col span={7}>
+          <Card
+            style={{textAlign: 'center'}}
+            bordered={false}
+            hoverable={true}
+            // loading={true}
+          >
+            <Card style={{overflow: 'hidden', border: 'none'}}>
+              <img className={styles.cardImg} src={TeamLogo} alt="logo" />
+            </Card>
+            <Meta 
+              title='card title'
+              description="this is a description"
+            />
+          </Card>
         </Col>
       </Row>
-    </PageContainer>
   );
 };

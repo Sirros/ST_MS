@@ -1,5 +1,6 @@
 const ALL_ALLOW = ['admin', 'captain', 'manager', 'baller'];
 const EXCEPT_BALLER = ['admin', 'captain', 'manager'];
+const BALLER = ['baller'];
 // const CAPTAIN_AND_ADMIN = ['admin', 'captain'];
 
 export default [
@@ -103,6 +104,21 @@ export default [
                 icon: 'notification',
                 authority: EXCEPT_BALLER,
                 component: './Announcement'
+              },
+              // 队伍/个人设置
+              {
+                path: '/t_setting',
+                name: 't_setting',
+                icon: 'setting',
+                authority: EXCEPT_BALLER,
+                component: './Setting/Tsetting.jsx'
+              },
+              {
+                path: '/p_setting',
+                name: 'p_setting',
+                icon: 'setting',
+                component: './Setting/Psetting.jsx',
+                authority: BALLER
               },
               // {
               //   // menu 第二项
