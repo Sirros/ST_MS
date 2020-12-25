@@ -34,14 +34,14 @@ export default [
                 path: '/',
                 redirect: '/home',
               },
-              {
-                // 首页
-                path: '/welcome',
-                name: 'welcome',
-                icon: 'team',
-                authority: ALL_ALLOW,
-                component: './Welcome',
-              },
+              // {
+              //   // 首页
+              //   path: '/welcome',
+              //   name: 'welcome',
+              //   icon: 'team',
+              //   authority: ALL_ALLOW,
+              //   component: './Welcome',
+              // },
               // 日程表
               {
                 path: '/schedule',
@@ -146,7 +146,7 @@ export default [
               //   component: './ListTableList',
               // },
               {
-                component: './Home'
+                component: './Welcome'
               },
               {
                 component: './404',
