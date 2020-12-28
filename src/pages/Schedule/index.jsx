@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   Calendar, Badge, Row, Col,
-  List
+  List, Divider
 } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import styles from './index.less';
@@ -31,10 +31,12 @@ class Schedule extends Component {
     let listData;
     switch(value.date()) {
       case 8:
-        listData = [
-          { type: 'warning', content: 'This is warning event.' },
-          { type: 'success', content: 'This is usual event.' },
-        ];
+        if(value.month() === 9) {
+          listData = [
+            { type: 'warning', content: 'kkp.' },
+            { type: 'success', content: 'sudu kkp' },
+          ];
+        }
       break;
       case 10:
         listData = [
@@ -74,17 +76,46 @@ class Schedule extends Component {
     )
   }
 
+  changeDay = (day) => {
+    switch(day.day()) {
+      case 1:
+        return '一';
+        break;
+      case 2:
+        return '二';
+       break;
+      case 3:
+        return '三';
+       break;
+      case 4:
+        return '四';
+       break;
+      case 5:
+        return '五';
+       break;
+      case 6:
+        return '六';
+       break;
+      default:
+        return '日';
+    }
+  }
+
   render() {
     return (
       <PageContainer>
         <Row gutter={5} className={styles.Wrapper}>
-          <Col span={9}>
-            当前选择日期：{this.state.selectedDate.format('YYYY-MM-DD')}
+          <Col span={9} className={styles.leftPart} style={{padding: 15}}>
+            <p>
+              {/* 当前选择日期： */}
+              <span>{this.state.selectedDate.format('YYYY-MM-DD')} --- 星期:{this.changeDay(this.state.selectedDate)}</span>
+            </p>
+            <Divider dashed/>
             <List>
               {
                 this.state.selectedList.map(item => (
-                  <List.Item key={item.content}>
-                    {item.content}
+                  <List.Item key={item.content} style={{fontSize: 16}}>
+                    <Badge status={item.type} /> {item.content}
                   </List.Item>
                 ))
               }
