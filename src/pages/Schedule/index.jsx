@@ -107,8 +107,8 @@ class Schedule extends Component {
         <Row gutter={5} className={styles.Wrapper}>
           <Col span={9} className={styles.leftPart} style={{padding: 15}}>
             <p>
-              {/* 当前选择日期： */}
-              <span>{this.state.selectedDate.format('YYYY-MM-DD')} --- 星期:{this.changeDay(this.state.selectedDate)}</span>
+              <span style={{marginRight: 10}}>{this.state.selectedDate.format('YYYY-MM-DD')}</span>
+              <span style={{marginLeft: 10}}>星期：{this.changeDay(this.state.selectedDate)}</span>
             </p>
             <Divider dashed/>
             <List>
