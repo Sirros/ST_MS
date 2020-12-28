@@ -76,6 +76,7 @@ class Schedule extends Component {
     )
   }
 
+  // day change func
   changeDay = (day) => {
     switch(day.day()) {
       case 1:
@@ -105,7 +106,7 @@ class Schedule extends Component {
     return (
       <PageContainer>
         <Row gutter={5} className={styles.Wrapper}>
-          <Col span={9} className={styles.leftPart} style={{padding: 15}}>
+          <Col span={11} className={styles.leftPart} style={{padding: 15}}>
             <p>
               <span style={{marginRight: 10}}>{this.state.selectedDate.format('YYYY-MM-DD')}</span>
               <span style={{marginLeft: 10}}>星期：{this.changeDay(this.state.selectedDate)}</span>
@@ -121,7 +122,7 @@ class Schedule extends Component {
               }
             </List>
           </Col>
-          <Col span={15} style={{borderLeft: '1px solid #e4e4e4'}}>
+          <Col span={13} style={{borderLeft: '1px solid #e4e4e4'}}>
             <Calendar
               value={this.state.defaultDate}
               onSelect={this.handleSelect}
