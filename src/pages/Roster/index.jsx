@@ -3,6 +3,7 @@ import {
   Badge, Table, Space, Switch,
   Row, Col, Card, Tooltip,
   Image, Avatar, Input, Button,
+  Divider,
 } from 'antd';
 import {
   QuestionCircleOutlined,
@@ -19,6 +20,7 @@ const data = [
   {
     key: 1,
     name: '温蒂',
+    attr: '队长',
     studentId: '2017141463192',
     grade: '2017',
     height: '182',
@@ -33,6 +35,7 @@ const data = [
   {
     key: 2,
     name: '来了',
+    attr: '队长',
     studentId: '2017141463192',
     grade: '2017',
     height: '192',
@@ -47,6 +50,7 @@ const data = [
   {
     key: 3,
     name: '温蒂',
+    attr: '队员',
     studentId: '2017141463192',
     grade: '2016',
     height: '172',
@@ -61,6 +65,7 @@ const data = [
   {
     key: 4,
     name: '温蒂',
+    attr: '队员',
     studentId: '2017141463192',
     grade: '2017',
     height: '182',
@@ -75,6 +80,7 @@ const data = [
   {
     key: 5,
     name: '温蒂',
+    attr: '队员',
     studentId: '2017141463192',
     grade: '2017',
     height: '182',
@@ -89,6 +95,7 @@ const data = [
   {
     key: 6,
     name: '温蒂',
+    attr: '队员',
     studentId: '2017141463192',
     grade: '2017',
     height: '182',
@@ -103,6 +110,7 @@ const data = [
   {
     key: 7,
     name: '温蒂',
+    attr: '经理',
     studentId: '2017141463192',
     grade: '2017',
     height: '182',
@@ -117,6 +125,52 @@ const data = [
   {
     key: 8,
     name: '温蒂',
+    attr: '经理',
+    studentId: '2017141463192',
+    grade: '2017',
+    height: '182',
+    weight: '83',
+    jersey_number: '1',
+    charge: 'C/PF',
+    em: '121970263@qq.com',
+    birthday: '1998-08-03',
+    phone: '13032867907',
+    description: '暂无备注信息'
+  },
+  {
+    key: 9,
+    name: '温蒂',
+    attr: '队员',
+    studentId: '2017141463192',
+    grade: '2017',
+    height: '182',
+    weight: '83',
+    jersey_number: '1',
+    charge: 'C/PF',
+    em: '121970263@qq.com',
+    birthday: '1998-08-03',
+    phone: '13032867907',
+    description: '暂无备注信息'
+  },
+  {
+    key: 10,
+    name: '温蒂',
+    attr: '队员',
+    studentId: '2017141463192',
+    grade: '2017',
+    height: '182',
+    weight: '83',
+    jersey_number: '1',
+    charge: 'C/PF',
+    em: '121970263@qq.com',
+    birthday: '1998-08-03',
+    phone: '13032867907',
+    description: '暂无备注信息'
+  },
+  {
+    key: 11,
+    name: '温蒂',
+    attr: '队员',
     studentId: '2017141463192',
     grade: '2017',
     height: '182',
@@ -233,19 +287,41 @@ class Roster extends Component {
   renderCardList = () => {
     return (
       <div style={{marginTop: 15}}>
+        <h4 style={{marginBottom: 5}}>管理员</h4>
         <Row gutter={24} className={styles.cwrapper}>
           {data.map(item => {
-            return (
-              <Col key={item.key} span={6} style={{marginBottom: 15}}>
-                <Card
-                  hoverable={true}
-                  bordered={false}
-                  cover={ <Image alt="avatar" src={avatar} /> }
-                >
-                  <Meta title={item.name} description={item.studentId} />
-                </Card>
-              </Col>
-            )
+            if(item.attr === '队长' || item.attr === '经理') {
+              return (
+                <Col key={item.key} span={6} style={{marginBottom: 15}}>
+                  <Card
+                    hoverable={true}
+                    bordered={false}
+                    cover={ <Image alt="avatar" src={avatar} /> }
+                  >
+                    <Meta title={`${item.name}(${item.attr})`} description={item.studentId} />
+                  </Card>
+                </Col>
+              )
+            }
+          })}
+        </Row>
+        <Divider dashed />
+        <h4 style={{marginBottom: 5}}>运动员</h4>
+        <Row gutter={24} className={styles.cwrapper}>
+          {data.map(item => {
+            if(item.attr === '队员') {
+              return (
+                <Col key={item.key} span={6} style={{marginBottom: 15}}>
+                  <Card
+                    hoverable={true}
+                    bordered={false}
+                    cover={ <Image alt="avatar" src={avatar} /> }
+                  >
+                    <Meta title={item.name} description={item.studentId} />
+                  </Card>
+                </Col>
+              )
+            }
           })}
         </Row>
       </div>
@@ -255,7 +331,7 @@ class Roster extends Component {
   renderTips = () => {
     return (
       <Tooltip title="点击表格展开项查看运动员伤病信息" >
-        <a style={{ color: 'inherit'}} className={styles.action}>
+        <a style={{ color: 'inherit', marginRight: 20}} className={styles.action}>
           <QuestionCircleOutlined />
         </a>
       </Tooltip>
@@ -288,6 +364,7 @@ class Roster extends Component {
     const { show, inputText } = this.state;
     const columns = [
       { title: '姓名', dataIndex: 'name', key: 'name', fixed: 'left', width: 100, ...getColumnSearchProps('name')},
+      { title: '属性', dataIndex: 'attr', key: 'attr', width: 100, ...getColumnSearchProps('attr')},
       { // 自定义渲染
         title: '照片',
         dataIndex: 'avatar',
@@ -315,9 +392,11 @@ class Roster extends Component {
           />
           { show ? <span style={{color: '#C0C0C0'}}>点击图片可放大预览</span> : <span style={{color: '#C0C0C0'}}>点击按钮切换视图</span> }
           { show ? null : renderTips() }
-          <Input allowClear={true} value={inputText} onChange={(e) => {handleMyChange(e)}} placeholder='仅提供学号搜索' />
-          <Button onClick={handleMySearch}>搜索</Button>
-          <Button onClick={handleMyReset}>重置</Button>
+          { show ? null : <>
+            <Input allowClear={true} value={inputText} onChange={(e) => {handleMyChange(e)}} placeholder='仅提供学号搜索' />
+            <Button onClick={handleMySearch} style={{border: 'none'}} type='primary'>搜索</Button>
+            <Button onClick={handleMyReset} style={{border: 'none'}}>重置</Button>
+          </> }
         </Space>
         { show ? renderCardList() : renderTable(columns) }
       </PageContainer>

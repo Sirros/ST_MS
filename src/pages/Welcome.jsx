@@ -27,6 +27,7 @@ const data = [
   'Los Angeles battles huge wildfires.',
 ];
 export default class extends Component {
+
   render () {
     return (
       <div className={styles.homeTopWrapper}>
