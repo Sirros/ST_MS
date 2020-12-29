@@ -189,13 +189,14 @@ class Roster extends Component {
     super(props);
     this.state = {
       show: false,
-      data: data,
+      data: data, // table data source
       searchText: '',
       searchedColumn: '',
-      inputText: ''
+      inputText: '' // input value
     };
   }
 
+  // table inline search func
   getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => {
      return (
@@ -268,6 +269,7 @@ class Roster extends Component {
     })
   }
   
+  // table render func
   renderTable = (c) => {
     return (
       <Table
@@ -284,6 +286,7 @@ class Roster extends Component {
     )
   }
   
+  // card list render func
   renderCardList = () => {
     return (
       <div style={{marginTop: 15}}>
@@ -328,6 +331,7 @@ class Roster extends Component {
     )
   }
 
+  // tips render func
   renderTips = () => {
     return (
       <Tooltip title="点击表格展开项查看运动员伤病信息" >
@@ -338,6 +342,7 @@ class Roster extends Component {
     )
   }
 
+  // table outline search func
   handleMySearch = () => {
     const res = data.filter(i => {
       return i.studentId === this.state.inputText;
