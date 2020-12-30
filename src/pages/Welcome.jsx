@@ -3,12 +3,13 @@ import { Card } from 'antd';
 import { FormattedMessage } from 'umi';
 import {
   Row, Col, Carousel, Statistic,
-  Divider, List
+  Divider, List, Badge
 } from 'antd';
 import {
   LikeOutlined,
   ArrowUpOutlined,
   AlertOutlined,
+  NotificationOutlined
 } from '@ant-design/icons';
 import TeamLogo from '../assets/logo.png';
 import styles from './Welcome.less';
@@ -85,7 +86,8 @@ export default class extends Component {
           <Row>
             <Col span={24}>
               <Card hoverable={true}>
-                <AlertOutlined />公告
+                <Badge dot><NotificationOutlined /></Badge>
+                <span style={{marginLeft: 5}}>公告</span>
                 <List
                   className={styles.listText}
                   size="small"
