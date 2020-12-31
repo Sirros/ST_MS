@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // antd相关
 import {
   Badge, Upload, Divider, Radio,
-  Drawer, Form, Row,  Col, Input,
+  Drawer, Form, Row,  Col,
   Button,
 } from 'antd';
 import ProForm, {

@@ -1,6 +1,6 @@
-import React, { Component, forwardRef } from 'react';
+import React, { Component } from 'react';
 import { Card } from 'antd';
-import { FormattedMessage } from 'umi';
+// import { FormattedMessage } from 'umi';
 import {
   Row, Col, Carousel, Statistic,
   Divider, List, Badge
@@ -8,7 +8,7 @@ import {
 import {
   LikeOutlined,
   ArrowUpOutlined,
-  AlertOutlined,
+  // AlertOutlined,
   NotificationOutlined
 } from '@ant-design/icons';
 import TeamLogo from '../assets/logo.png';
@@ -28,6 +28,10 @@ const data = [
   'Los Angeles battles huge wildfires.',
 ];
 export default class extends Component {
+ 
+  componentDidMount() {
+    console.log(localStorage.getItem('antd-pro-authority'))
+  }
 
   render () {
     return (
