@@ -23,19 +23,9 @@ import {
 
 // 徽标列表
 const colors = [
-  'pink',
-  'red',
-  'yellow',
-  'orange',
-  'cyan',
-  'green',
-  'blue',
-  'purple',
-  'geekblue',
-  'magenta',
-  'volcano',
-  'gold',
-  'lime',
+  'pink', 'red', 'yellow', 'orange', 'cyan',
+  'green', 'blue', 'purple', 'geekblue', 'magenta',
+  'volcano', 'gold', 'lime',
 ];
 
 const { TextArea } = Input;
@@ -57,7 +47,6 @@ class Announcement extends Component {
       editorState: BraftEditor.createEditorState(null), // 创建一个空的editorState作为初始值
       powerInner: '', // 富文本内容
       isDisable_1: false,
-      isDisable_2: false,
     };
   }
 
@@ -131,13 +120,6 @@ class Announcement extends Component {
     imgWindow.document.write(image.outerHTML);
   };
 
-  // handleTextAreaChange = (e) => {
-  //   console.log(e.target.value)
-  //   this.setState({
-  //     powerInner: e.target.value,
-  //   })
-  // }
-
   // 富文本显示区域聚焦
   handleOnFocus = () => {
     this.setState({
@@ -148,8 +130,12 @@ class Announcement extends Component {
 
   // form submit func
   formMain = (v) => {
-    v.file = v.file.concat(this.state.fileList);
-    v.powerText = this.state.editorState.toHTML();
+    const { fileList, editorState } = this.state;
+    console.log(editorState.toHTML())
+    v.file = v.file.concat(fileList);
+    if(!v.noticeContent) {
+      v.noticeContent = editorState.toHTML();
+    }
     console.log(v)
   }
 
@@ -159,7 +145,7 @@ class Announcement extends Component {
       rai_onChange, handleEditorChange, submitContent, 
       handleOnFocus, proTextAreaChange
     } = this;
-    const { fileList, selected, editorState, visible, powerInner, isDisable_1, isDisable_2 } = this.state;
+    const { fileList, selected, editorState, visible, powerInner, isDisable_1 } = this.state;
     return (
       <PageContainer>
         <div style={formWrapper}>
@@ -193,7 +179,7 @@ class Announcement extends Component {
             <ProForm.Group style={{marginBottom: 10}}>
               <Radio.Group onChange={rai_onChange} value={selected}>
                 <Radio disabled={isDisable_1} value="simpleText">普通内容块</Radio>
-                <Radio disabled={isDisable_2} value="powerText">富文本编辑器</Radio>
+                <Radio value="powerText">富文本编辑器</Radio>
               </Radio.Group>
             </ProForm.Group>
             { selected === 'simpleText' 
