@@ -1,4 +1,4 @@
-# Ant Design Pro
+# correlation 
 
 umi + dva
 
@@ -10,13 +10,13 @@ umi + dva
 yarn
 ```
 
-### 启动项目
+### poj run
 
 ```bash
 yarn start
 ```
 
-### 项目打包
+### poj build
 
 ```bash
 yarn build
