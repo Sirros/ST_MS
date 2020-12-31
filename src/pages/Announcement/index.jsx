@@ -69,30 +69,16 @@ class Announcement extends Component {
     }
   };
 
-  handleEditorChange = (editorState) => {
-      this.setState({ editorState })
-  };
+  handleEditorChange = (editorState) => { this.setState({ editorState }) };
 
   // drawer 关闭
-  handleDrawerClose = () => {
-    this.setState({
-      visible: false
-    })
-  };
+  handleDrawerClose = () => { this.setState({ visible: false }) };
 
   // 选择按钮更改
-  handleRadioChange = (e) => {
-    this.setState({
-      selected: e.target.value,
-    })
-  };
+  handleRadioChange = (e) => { this.setState({ selected: e.target.value }) };
 
   // 图片添加
-  pic_onChange = ({ fileList: newFileList }) => {
-    this.setState({
-      fileList: newFileList
-    })
-  };
+  pic_onChange = ({ fileList: newFileList }) => { this.setState({ fileList: newFileList }) };
 
   // 图片预览
   onPreview = async file => {
