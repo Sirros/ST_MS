@@ -120,31 +120,6 @@ export default [
                 component: './Setting/Psetting.jsx',
                 authority: BALLER
               },
-              // {
-              //   // menu 第二项
-              //   path: '/admin',
-              //   name: 'admin',
-              //   icon: 'crown',
-              //   component: './Admin',
-              //   authority: ['admin'],
-              //   routes: [
-              //     {
-              //       // 管理页二级页面
-              //       path: '/admin/sub-page',
-              //       name: 'sub-page',
-              //       icon: 'smile',
-              //       component: './Welcome',
-              //       authority: ['admin'],
-              //     },
-              //   ],
-              // },
-              // {
-              //   // menu 第三项
-              //   name: 'list.table-list',
-              //   icon: 'table',
-              //   path: '/list',
-              //   component: './ListTableList',
-              // },
               {
                 component: './Welcome'
               },

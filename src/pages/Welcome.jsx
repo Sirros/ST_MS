@@ -8,9 +8,9 @@ import {
 import {
   LikeOutlined,
   ArrowUpOutlined,
-  // AlertOutlined,
   NotificationOutlined
 } from '@ant-design/icons';
+import { history } from 'umi';
 import TeamLogo from '../assets/logo.png';
 import styles from './Welcome.less';
 
@@ -28,7 +28,6 @@ const data = [
   'Los Angeles battles huge wildfires.',
 ];
 export default class extends Component {
- 
   componentDidMount() {
     console.log(localStorage.getItem('antd-pro-authority'))
   }
