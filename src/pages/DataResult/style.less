@@ -1,27 +1,83 @@
+@textColor: rgba(0, 0, 0, 0.45);
 
 .myTabs {
-    background-color: #fff;
-    :global(.ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list:first-child) {
-        margin-left: 32px;
+  background-color: #fff;
+  margin-bottom: 15px;
+  :global(.ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list:first-child) {
+    margin-left: 32px;
+  }
+  .stat {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    :global(.ant-statistic-title) {
+      font-size: 20px;
+      color: @textColor;
     }
+    :global(.ant-statistic-content) {
+      font-size: 28px;
+      font-weight: 500;
+    }
+  }
+  .charts_title {
+    display: block;
+    margin: 0;
+    margin-left: 32px;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.45);
+  }
+  .compare_charts {
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+  }
+  .compare_charts,
+  .bin_charts {
+    border-right: 1px dashed #999;
+  }
+  .zhu_charts {
+    padding: 5px 10px;
+  }
+  .bin_charts,
+  .zhu_charts {
+    margin-bottom: 15px;
+  }
 }
 .pt {
-    :global(.ant-card .ant-card-body) {
-        padding-bottom: 16px !important;
-        margin-bottom: 15px;
-    }
-    :global(
-        .ant-card .ant-card-body .ant-table-wrapper
-        .ant-spin-nested-loading .ant-spin-container .ant-table
-        .ant-table-container .ant-table-tbody tr:nth-child(-n+6)
-        .ant-table-cell:first-child) > div{
-        background-color: #314659;
-    }
-    :global(
-        .ant-card .ant-card-body .ant-table-wrapper
-        .ant-spin-nested-loading .ant-spin-container
-        .ant-table .ant-table-container 
-        .ant-table-tbody > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected) > td) {
-        background-color: #bdc4ca;
-    }
+  :global(.ant-card .ant-card-body) {
+    padding-bottom: 16px !important;
+    margin-bottom: 15px;
+  }
+  :global(.ant-card
+      .ant-card-body
+      .ant-table-wrapper
+      .ant-spin-nested-loading
+      .ant-spin-container
+      .ant-table
+      .ant-table-container
+      .ant-table-tbody
+      tr:nth-child(-n + 6)
+      .ant-table-cell:first-child)
+    > div {
+    background-color: #314659;
+  }
+  :global(.ant-card
+      .ant-card-body
+      .ant-table-wrapper
+      .ant-spin-nested-loading
+      .ant-spin-container
+      .ant-table
+      .ant-table-container
+      .ant-table-tbody
+      > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)
+      > td) {
+    background-color: #bdc4ca;
+  }
+  :global(.ant-card
+      .ant-card-body
+      .ant-pro-table-list-toolbar
+      .ant-pro-table-list-toolbar-container) {
+    padding: 0;
+  }
 }
