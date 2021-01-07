@@ -1,8 +1,12 @@
+// 公共变量
 @textColor: rgba(0, 0, 0, 0.45);
+@borderStyle: 1px dashed rgb(212, 212, 212);
+@tableHoverColor: #bdc4ca;
+@componentMarginBottom: 15px;
 
 .myTabs {
   background-color: #fff;
-  margin-bottom: 15px;
+  margin-bottom: @componentMarginBottom;
   :global(.ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list:first-child) {
     margin-left: 32px;
   }
@@ -26,28 +30,28 @@
     margin: 0;
     margin-left: 32px;
     font-size: 16px;
-    color: rgba(0, 0, 0, 0.45);
+    color: @textColor;
   }
   .compare_charts {
-    padding-bottom: 15px;
-    margin-bottom: 15px;
+    padding-bottom: @componentMarginBottom;
+    margin-bottom: @componentMarginBottom;
+    border-bottom: @borderStyle;
   }
-  .compare_charts,
   .bin_charts {
-    border-right: 1px dashed #999;
+    border-right: @borderStyle;
   }
   .zhu_charts {
     padding: 5px 10px;
   }
   .bin_charts,
   .zhu_charts {
-    margin-bottom: 15px;
+    margin-bottom: @componentMarginBottom;
   }
 }
 .pt {
   :global(.ant-card .ant-card-body) {
     padding-bottom: 16px !important;
-    margin-bottom: 15px;
+    margin-bottom: @componentMarginBottom;
   }
   :global(.ant-card
       .ant-card-body
@@ -72,7 +76,7 @@
       .ant-table-tbody
       > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)
       > td) {
-    background-color: #bdc4ca;
+    background-color: @tableHoverColor;
   }
   :global(.ant-card
       .ant-card-body

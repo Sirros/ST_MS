@@ -134,9 +134,9 @@ const columns = [
   },
 ];
 
-const data = [];
+const table_data = [];
 for (let i = 0; i < 15; i++) {
-  data.push({
+  table_data.push({
     key: i + 1,
     name: `data111 ${i}`,
     score: Math.floor(Math.random() * 20),
@@ -280,7 +280,7 @@ class DataResult extends Component {
         columns={columns}
         request={async () => {
           return {
-            data: data || [],
+            data: table_data || [],
             success: true,
           };
         }}
