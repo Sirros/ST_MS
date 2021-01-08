@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-
+// /node/api/login
 export async function fakeAccountLogin(params) {
   return request('/api/login/account', {
     method: 'POST',

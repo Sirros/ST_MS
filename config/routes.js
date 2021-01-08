@@ -116,9 +116,9 @@ export default [
               {
                 path: '/p_setting',
                 name: 'p_setting',
-                icon: 'setting',
+                icon: 'user',
                 component: './Setting/Psetting.jsx',
-                authority: BALLER
+                authority: ALL_ALLOW
               },
               {
                 component: './Welcome'

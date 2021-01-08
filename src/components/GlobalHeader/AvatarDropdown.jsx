@@ -8,23 +8,20 @@ import styles from './index.less';
 class AvatarDropdown extends React.Component {
   onMenuClick = (event) => {
     const { key } = event;
-
     if (key === 'logout') {
       const { dispatch } = this.props;
-
       if (dispatch) {
         dispatch({
           type: 'login/logout',
         });
       }
-
       return;
     }
-
-    history.push(`/account/${key}`);
+    history.push(key === 'logout' ? `/account/${key}` : '/p_setting');
   };
 
   render() {
+    console.log(this.props);
     const {
       currentUser = {
         avatar: '',
@@ -33,20 +30,20 @@ class AvatarDropdown extends React.Component {
       menu,
     } = this.props;
     const menuHeaderDropdown = (
-      <Menu className={styles.menu} selectedKeys={[]} onClick={this.onMenuClick}>
-        {menu && (
+      <Menu className={styles.menu} selectedKeys={['center']} onClick={this.onMenuClick}>
+        {/* {true && (
           <Menu.Item key="center">
             <UserOutlined />
             个人中心
           </Menu.Item>
-        )}
-        {menu && (
+        )} */}
+        {
           <Menu.Item key="settings">
             <SettingOutlined />
             个人设置
           </Menu.Item>
-        )}
-        {menu && <Menu.Divider />}
+        }
+        {true && <Menu.Divider />}
 
         <Menu.Item key="logout">
           <LogoutOutlined />

@@ -3,11 +3,11 @@ import {
   UserOutlined,
   GithubOutlined
 } from '@ant-design/icons';
-import { Alert, message, Radio, Tabs } from 'antd';
+import { Alert, Radio, Tabs } from 'antd';
 import React, { useState } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { connect, useIntl, FormattedMessage } from 'umi';
-import { getFakeCaptcha } from '@/services/login';
+// import { getFakeCaptcha } from '@/services/login';
 import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
 import styles from './index.less';
 
@@ -51,14 +51,15 @@ const Login = (props) => {
   const [type, setType] = useState('account');
   const intl = useIntl();
 
+  // 提交登陆
   const handleSubmit = (values) => {
     const { dispatch } = props;
     dispatch({
       type: 'login/login',
-      payload: { ...values, type },
+      payload: { ...values, type, selectedUser },
     });
   };
-
+  // 选择角色
   const handleSelectUser = (e) => {
     const { dispatch } = props;
     dispatch({
