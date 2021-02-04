@@ -146,6 +146,7 @@ export default class extends Component {
           <div>
             <List
               onMouseOver={() => {console.log('over')}}
+              onMouseLeave={() => {console.log('leave')}}
               className={styles.listText}
               size="small"
               bordered

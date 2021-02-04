@@ -67,7 +67,6 @@ const Login = (props) => {
       payload: e.target.value
     })
   };
-
   return (
     <div className={styles.main}>
       <ProForm
@@ -98,11 +97,11 @@ const Login = (props) => {
           />
         </Tabs>
 
-        {status === 'error' && loginType === 'account' && !submitting && (
+        {status === 'error' && type === 'account' && !submitting && (
           <LoginMessage
             content={intl.formatMessage({
               id: 'pages.login.accountLogin.errorMessage',
-              defaultMessage: '账户或密码错误（admin/ant.design)',
+              defaultMessage: '账户或密码错误（root/123456)',
             })}
           />
         )}
@@ -116,7 +115,7 @@ const Login = (props) => {
               }}
               placeholder={intl.formatMessage({
                 id: 'pages.login.username.placeholder',
-                defaultMessage: '用户名: admin or user',
+                defaultMessage: '用户名: root',
               })}
               rules={[
                 {
@@ -138,7 +137,7 @@ const Login = (props) => {
               }}
               placeholder={intl.formatMessage({
                 id: 'pages.login.password.placeholder',
-                defaultMessage: '密码: ant.design',
+                defaultMessage: '密码: 123456',
               })}
               rules={[
                 {

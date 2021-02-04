@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 // antd相关
-import {
-  Badge, Upload, Divider, Radio,
-  Drawer, Form, Row,  Col,
-  Button,
-} from 'antd';
+import { Badge, Upload, Divider, Radio, Drawer, Form, Row, Col, Button } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormRadio,
@@ -18,24 +14,32 @@ import ImgCrop from 'antd-img-crop';
 // 富文本编辑器相关
 import BraftEditor from 'braft-editor';
 import 'braft-editor/dist/index.css';
-import 'braft-editor/dist/output.css'
+import 'braft-editor/dist/output.css';
 // 自定义样式相关
-import {
-  formWrapper, tipsText, displayBox
-} from './styleComponent';
+import { formWrapper, tipsText, displayBox } from './styleComponent';
 
 // 徽标列表
 const colors = [
-  'pink', 'red', 'yellow', 'orange', 'cyan',
-  'green', 'blue', 'purple', 'geekblue', 'magenta',
-  'volcano', 'gold', 'lime',
+  'pink',
+  'red',
+  'yellow',
+  'orange',
+  'cyan',
+  'green',
+  'blue',
+  'purple',
+  'geekblue',
+  'magenta',
+  'volcano',
+  'gold',
+  'lime',
 ];
 
-const badgeOption = colors.map(c => {
+const badgeOption = colors.map((c) => {
   return {
     label: <Badge color={c} text={c} />,
     value: c,
-  }
+  };
 });
 
 class Announcement extends Component {
@@ -43,8 +47,8 @@ class Announcement extends Component {
     super(props);
     this.state = {
       fileList: [],
-      selected: 'simpleText',   // radio当前选择
-      visible: false,  // drwer是否打开
+      selected: 'simpleText', // radio当前选择
+      visible: false, // drwer是否打开
       editorState: BraftEditor.createEditorState(null), // 创建一个空的editorState作为初始值
       powerInner: '', // 富文本内容
       isDisable: false,
@@ -60,31 +64,39 @@ class Announcement extends Component {
     this.setState({
       visible: false, // drawer关闭
       powerInner: eleInnerText, // 保存富文本的内容
-      isDisable: false
-    })
-    if(eleInnerText) {
+      isDisable: false,
+    });
+    if (eleInnerText) {
       this.setState({
-        isDisable: true
-      })
+        isDisable: true,
+      });
     }
   };
 
-  handleEditorChange = (editorState) => { this.setState({ editorState }) };
+  handleEditorChange = (editorState) => {
+    this.setState({ editorState });
+  };
 
   // drawer 关闭
-  handleDrawerClose = () => { this.setState({ visible: false }) };
+  handleDrawerClose = () => {
+    this.setState({ visible: false });
+  };
 
   // 选择按钮更改
-  handleRadioChange = (e) => { this.setState({ selected: e.target.value }) };
+  handleRadioChange = (e) => {
+    this.setState({ selected: e.target.value });
+  };
 
   // 图片添加
-  pic_onChange = ({ fileList: newFileList }) => { this.setState({ fileList: newFileList }) };
+  pic_onChange = ({ fileList: newFileList }) => {
+    this.setState({ fileList: newFileList });
+  };
 
   // 图片预览
-  onPreview = async file => {
+  onPreview = async (file) => {
     let src = file.url;
     if (!src) {
-      src = await new Promise(resolve => {
+      src = await new Promise((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file.originFileObj);
         reader.onload = () => resolve(reader.result);
@@ -101,25 +113,30 @@ class Announcement extends Component {
     this.setState({
       visible: true,
       editorState: BraftEditor.createEditorState(document.querySelector('#displayArea').innerHTML),
-    })
+    });
   };
 
   // 表单提交
   handleFormSubmit = (v) => {
     const { fileList, editorState } = this.state;
-    console.log(editorState.toHTML())
+    console.log(editorState.toHTML());
     v.file = v.file.concat(fileList);
-    if(!v.noticeContent) {
+    if (!v.noticeContent) {
       v.noticeContent = editorState.toHTML();
     }
-    console.log(v)
+    console.log(v);
   };
 
   render() {
     const {
-      handleFormSubmit, pic_onChange, onPreview, handleDrawerClose, 
-      handleRadioChange, handleEditorChange, handlePowerTextSubmit, 
-      handleOnBoxClick
+      handleFormSubmit,
+      pic_onChange,
+      onPreview,
+      handleDrawerClose,
+      handleRadioChange,
+      handleEditorChange,
+      handlePowerTextSubmit,
+      handleOnBoxClick,
     } = this;
     const { fileList, selected, editorState, visible, powerInner, isDisable } = this.state;
     return (
@@ -137,13 +154,15 @@ class Announcement extends Component {
             }}
             onValuesChange={(_, values) => {
               console.log(_);
-              if(_.annoType) {
+              if (_.annoType) {
                 this.setState({
-                  selected: _.annoType
-                })
+                  selected: _.annoType,
+                });
               }
             }}
-            onFinish={async (value) => { handleFormSubmit(value) }}
+            onFinish={async (value) => {
+              handleFormSubmit(value);
+            }}
           >
             <ProFormText
               width="lg"
@@ -152,61 +171,63 @@ class Announcement extends Component {
               laceholder="请填写公告标题"
               rules={[{ required: true, message: '请填写公告标题!' }]}
             />
-            <ProForm.Group style={{marginBottom: 10}}>
+            <ProForm.Group style={{ marginBottom: 10 }}>
               <Radio.Group onChange={handleRadioChange} value={selected}>
-                <Radio disabled={isDisable} value="simpleText">普通内容块</Radio>
+                <Radio disabled={isDisable} value="simpleText">
+                  普通内容块
+                </Radio>
                 <Radio value="powerText">富文本编辑器</Radio>
               </Radio.Group>
             </ProForm.Group>
-            { selected === 'simpleText' 
-              ? <ProFormTextArea
-                  name="noticeContent"
-                  width="lg"
-                  placeholder="请填写公告内容"
-                /> 
-              : null }
-            { selected === 'powerText' ? 
+            {selected === 'simpleText' ? (
+              <ProFormTextArea name="noticeContent" width="lg" placeholder="请填写公告内容" />
+            ) : null}
+            {selected === 'powerText' ? (
               <>
                 {/* <TextArea style={{width: '300px'}} onFocus={handleOnBoxClick} value={powerInner} /> */}
                 <div
-                  id='displayArea'
-                  className='braft-output-content'
+                  id="displayArea"
+                  className="braft-output-content"
                   style={displayBox}
                   onClick={handleOnBoxClick}
-                  dangerouslySetInnerHTML={{__html: editorState.toHTML()}}>
-                </div>
+                  dangerouslySetInnerHTML={{ __html: editorState.toHTML() }}
+                ></div>
                 <Drawer
-                    title="富文本编辑器"
-                    placement="right"
-                    closable={false}
-                    onClose={handleDrawerClose}
-                    width="600"
-                    visible={visible}
-                    footer={
-                      <div style={{ textAlign: 'right'}}>
-                        <Button onClick={handleDrawerClose} style={{ marginRight: 8 }}>取消</Button>
-                        <Button onClick={handlePowerTextSubmit} type="primary">提交</Button>
-                      </div>
-                    }
-                  >
-                    <Form layout="vertical" hideRequiredMark>
-                      <Row gutter={16}>
-                        <Col span={24}>
-                          <Form.Item name="dw">
-                            <div className='my-component'>
-                              <BraftEditor
-                                value={editorState}
-                                onChange={handleEditorChange}
-                                onSave={handlePowerTextSubmit}
-                              />
-                            </div>
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    </Form>
-                  </Drawer>
-                </> 
-              : null }
+                  title="富文本编辑器"
+                  placement="right"
+                  closable={false}
+                  onClose={handleDrawerClose}
+                  width="600"
+                  visible={visible}
+                  footer={
+                    <div style={{ textAlign: 'right' }}>
+                      <Button onClick={handleDrawerClose} style={{ marginRight: 8 }}>
+                        取消
+                      </Button>
+                      <Button onClick={handlePowerTextSubmit} type="primary">
+                        提交
+                      </Button>
+                    </div>
+                  }
+                >
+                  <Form layout="vertical" hideRequiredMark>
+                    <Row gutter={16}>
+                      <Col span={24}>
+                        <Form.Item name="dw">
+                          <div className="my-component">
+                            <BraftEditor
+                              value={editorState}
+                              onChange={handleEditorChange}
+                              onSave={handlePowerTextSubmit}
+                            />
+                          </div>
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Drawer>
+              </>
+            ) : null}
             <ProFormSelect
               name="noticeAttr"
               label="公告属性"
@@ -224,13 +245,9 @@ class Announcement extends Component {
               radioType="button"
               options={badgeOption}
             />
-            <ProFormDateTimeRangePicker
-              width="lg"
-              name="dateTimeRange"
-              label="日期时间区间"
-            />
+            <ProFormDateTimeRangePicker width="lg" name="dateTimeRange" label="日期时间区间" />
             <ProFormUploadDragger max={10} width="lg" label="文件/图片" name="file" />
-            <Divider dashed/>
+            <Divider dashed />
             <span style={tipsText}>如果图片需预览/剪裁/旋转，请选用以下方式上传图片</span>
             <ImgCrop rotate>
               <Upload
@@ -244,7 +261,7 @@ class Announcement extends Component {
                 {fileList.length < 10 && '+ Upload'}
               </Upload>
             </ImgCrop>
-            <Divider dashed/>
+            <Divider dashed />
           </ProForm>
         </div>
       </PageContainer>
