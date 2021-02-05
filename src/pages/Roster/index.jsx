@@ -12,8 +12,7 @@ import {
 import Highlighter from 'react-highlight-words';
 import { PageContainer } from '@ant-design/pro-layout';
 import styles from './index.less';
-import avatar from '../../assets/logo-dribble.svg';
-// import avatar from '../../assets/avatar.jpg';
+import avatar from '@/assets/01.jpg';
 
 const { Meta } = Card;
 const data = [
