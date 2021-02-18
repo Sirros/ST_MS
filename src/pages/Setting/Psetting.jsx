@@ -52,11 +52,11 @@ function beforeUpload(file) {
   const isJpgOrPng =
     file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png';
   if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
+    message.error('你只能上传JPG/JEPG/PNG格式的图片文件');
   }
   const isLt2M = file.size / 1024 / 1024 < 2;
   if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
+    message.error('图片大小必须小于2MB!');
   }
   return isJpgOrPng && isLt2M;
 }
@@ -67,7 +67,7 @@ const PSetting = () => {
   const [province, setProvince] = useState(provinceData[0]);
   const [cities, setCities] = useState(cityData[provinceData[0]]);
   const [city, setCity] = useState(cityData[provinceData[0]][0]);
-  const [tags, setTags] = useState(['Tag 1', 'Tag 2', 'Tag 3']);
+  const [tags, setTags] = useState(['默认标签']);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -207,22 +207,34 @@ const PSetting = () => {
               <div className={styles.detail}>
                 <Row gutter={24}>
                   <Col span={8}>
-                    <span className={styles.title}>邮箱:</span>
-                  </Col>
-                  <Col span={16}>
-                    <span>13032867907@163.com</span>
-                  </Col>
-                  <Col span={8}>
                     <span className={styles.title}>年级:</span>
                   </Col>
                   <Col span={16}>
                     <span>2017</span>
                   </Col>
                   <Col span={8}>
+                    <span className={styles.title}>身高:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span>182cm</span>
+                  </Col>
+                  <Col span={8}>
+                    <span className={styles.title}>体重:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span>100kg</span>
+                  </Col>
+                  <Col span={8}>
                     <span className={styles.title}>联系电话:</span>
                   </Col>
                   <Col span={16}>
                     <span>13032867907</span>
+                  </Col>
+                  <Col span={8}>
+                    <span className={styles.title}>邮箱:</span>
+                  </Col>
+                  <Col span={16}>
+                    <span>13032867907@163.com</span>
                   </Col>
                   <Col span={8}>
                     <span className={styles.title}>地区:</span>
@@ -306,6 +318,7 @@ const PSetting = () => {
                 opinion: '',
                 size: '',
                 email: '',
+                body_info: ''
               }}
             >
               <Form.Item label="姓名" name="name">
@@ -321,10 +334,13 @@ const PSetting = () => {
                 <Input min={0} max={6} placeholder="请输入有效的电话号码" />
               </Form.Item>
               <Form.Item label="球衣号码" name="number" rules={[{ required: false }]}>
-                <Input min={0} max={99} placeholder="请输入球衣号码" />
+                <Input min={0} max={99} placeholder="请输入球衣号码，如果有多个请用'/'分隔：新生杯/三十二院" />
               </Form.Item>
               <Form.Item label="球衣码数" name="size" rules={[{ required: false }]}>
                 <Input min={0} max={6} placeholder="请输入球衣码数" />
+              </Form.Item>
+              <Form.Item label="身高体重" name="body_info" rules={[{ required: false }]}>
+                <Input min={0} max={6} placeholder="请输入身高体重，请用'/'分隔：身高cm/体重kg" />
               </Form.Item>
               <Form.Item label="头像" rules={[{ required: false }]}>
                 <>
