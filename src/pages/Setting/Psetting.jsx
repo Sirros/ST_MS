@@ -1,4 +1,4 @@
-import React, { Component, useState, useRef } from 'react';
+import React, { Component, useState, useRef, useEffect } from 'react';
 import ImgCrop from 'antd-img-crop';
 import { PageContainer } from '@ant-design/pro-layout';
 import { TweenOneGroup } from 'rc-tween-one';
@@ -73,17 +73,21 @@ const PSetting = () => {
   const [imageUrl, setImageUrl] = useState('');
 
   const formRef = useRef();
+  const inputRef = useRef();
+
+  useEffect(() => {
+    if(inputRef.current && typeof inputRef.current.focus === 'function') {
+      inputRef.current.focus()
+    }
+  }, [inputVisible])
 
   const handleClose = (removedTag) => {
-    console.log(tags)
     const _tags = tags.filter((tag) => tag !== removedTag);
-    console.log(_tags);
-    // this.setState({ tags });
     setTags(_tags);
   };
 
   const showInput = () => {
-    setInputVisible(true, () => this.input.focus());
+    setInputVisible(true);
   };
 
   const handleInputChange = (e) => {
@@ -91,17 +95,13 @@ const PSetting = () => {
   };
 
   const handleInputConfirm = () => {
+    let _temp = [];
     if (inputValue && tags.indexOf(inputValue) === -1) {
-      tags = [...tags, inputValue];
+      _temp = [...tags, inputValue]
     }
-    console.log(tags);
-    setTags(tags);
-    setInputValue(false);
-    setInputVisible('');
-  };
-
-  const saveInputRef = (input) => {
-    this.input = input;
+    setTags(_temp);
+    setInputValue('');
+    setInputVisible(false);
   };
 
   const forMap = (tag) => {
@@ -268,7 +268,7 @@ const PSetting = () => {
                     </div>
                     {inputVisible && (
                       <Input
-                        ref={saveInputRef}
+                        ref={inputRef}
                         type="text"
                         size="small"
                         style={tags.length ? { width: 78, marginTop: '16px' } : { width: 78 }}
