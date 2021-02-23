@@ -223,7 +223,7 @@ const TSetting = () => {
                   message="队伍信息更改请慎重!"
                   type="warning"
                   closable
-                  style={{ marginTop: 10, width: '30%' }}
+                  style={{ marginTop: 10, width: '35%' }}
                   onClose={onClose}
                 />
               </Form.Item>
