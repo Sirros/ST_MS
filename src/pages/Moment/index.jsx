@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Button, Modal, Radio, Upload, message, Input } from 'antd';
+import { Row, Col, Button, Modal, Radio, Upload, message, Input, Image, Divider } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import styles from './index.less';
 import folderImg from '@/assets/folder.png';
@@ -17,6 +17,7 @@ export default () => {
   const [createFolderInfo, setCreateFolderInfo] = useState({});
   const [createFolderTitle, setCreateFolderTitle] = useState('');
   const [createFolderCreator, setCreateFolderCreator] = useState('');
+  // const [currentSelectFile, setCurrentSelectFile] = useState('');
 
   // test data hook
   const [folderList, setFolderList] = useState(['2019年32院照片', '2018年队员训练照片']);
@@ -70,6 +71,7 @@ export default () => {
   const handleFolderItemClick = (e) => {
     setSelectFoldetItem(e.currentTarget.id);
     setToggleDetail(true);
+    // setCurrentSelectFile(e.currentTarget.id);
   };
 
   const handleGoBack = () => {
@@ -90,8 +92,9 @@ export default () => {
       });
       setFolderList([...folderList, createFolderTitle]);
       message.success('创建文件夹成功！');
+    } else {
+      message.success('上传文件成功！');
     }
-    message.success('上传文件成功！');
   };
 
   const handleCancel = () => {
@@ -171,13 +174,29 @@ export default () => {
   // 文件渲染
   // function renderFileList() {}
 
+  // 当前选择
+  function renderPictureWall() {
+    console.log(selectFoldetItem);
+    return (
+      <Row gutter={10} type="flex">
+        <Col span={4}>
+          <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+        </Col>
+      </Row>
+    );
+  }
+
   function renderFolderDetail() {
     return (
-      <div>
-        <Button style={{ marginRight: 15 }} type="" onClick={handleGoBack}>
-          返回
-        </Button>
-        <b>{selectFoldetItem}</b>
+      <div className={styles.Detail}>
+        <div className={styles.DetailTitle}>
+          <Button style={{ marginRight: 15 }} type="" onClick={handleGoBack}>
+            返回
+          </Button>
+          <b>{selectFoldetItem}</b>
+          <Divider dashed />
+        </div>
+        <div className={styles.DetailContent}>{renderPictureWall()}</div>
       </div>
     );
   }
