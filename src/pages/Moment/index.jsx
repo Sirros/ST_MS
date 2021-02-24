@@ -4,7 +4,6 @@ import { InboxOutlined } from '@ant-design/icons';
 import styles from './index.less';
 import folderImg from '@/assets/folder.png';
 import fileImg from '@/assets/file.png';
-// import addFolder from '../../assets/addFolder.png';
 
 import { Card } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -13,14 +12,15 @@ export default () => {
   const [toggleDetail, setToggleDetail] = useState(false);
   const [selectFoldetItem, setSelectFoldetItem] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [createType, setCreateType] = useState('file');
   const [createFolderInfo, setCreateFolderInfo] = useState({});
   const [createFolderTitle, setCreateFolderTitle] = useState('');
   const [createFolderCreator, setCreateFolderCreator] = useState('');
-  // const [currentSelectFile, setCurrentSelectFile] = useState('');
 
   // test data hook
   const [folderList, setFolderList] = useState(['2019年32院照片', '2018年队员训练照片']);
+  const [fileList, setFileList] = useState(['期末考试真题']);
 
   const { Dragger } = Upload;
 
@@ -71,11 +71,47 @@ export default () => {
   const handleFolderItemClick = (e) => {
     setSelectFoldetItem(e.currentTarget.id);
     setToggleDetail(true);
-    // setCurrentSelectFile(e.currentTarget.id);
+  };
+
+  const handleFileItemClick = (e) => {
+    console.log('文件下载');
+    // 文件下载
+    // const downLoad = (fileKey, fileName) => {
+    //   const params = { fileKey: fileKey };
+    //   const downloadUrl = contextPath + '/api/regulated/info/file/downLoad';
+    //   fetch(downloadUrl, {
+    //     method: 'POST',
+    //     body: window.JSON.stringify(params),
+    //     credentials: 'include',
+    //     headers: new Headers({
+    //       'Content-Type': 'application/json',
+    //     }),
+    //   })
+    //   .then((response) => {
+    //     response.blob().then((blob) => {
+    //       const aLink = document.createElement('a');
+    //       document.body.appendChild(aLink);
+    //       aLink.style.display = 'none';
+    //       const objectUrl = window.URL.createObjectURL(blob);
+    //       aLink.href = objectUrl;
+    //       aLink.download = fileName;
+    //       aLink.click();
+    //       document.body.removeChild(aLink);
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    // };
   };
 
   const handleGoBack = () => {
     setToggleDetail(false);
+  };
+
+  const handleDeleteFile = () => {
+    console.log('删除文件夹');
+    setDeleteModalVisible(true);
   };
 
   const handleOpenAddCard = () => {
@@ -97,8 +133,14 @@ export default () => {
     }
   };
 
+  const handleDeleteOk = () => {
+    setDeleteModalVisible(false);
+    console.log('确认删除文件夹！');
+  };
+
   const handleCancel = () => {
     setIsModalVisible(false);
+    setDeleteModalVisible(false);
   };
 
   const handleCreateTypeChange = (e) => {
@@ -113,35 +155,6 @@ export default () => {
     setCreateFolderCreator(e.target.value);
   };
 
-  // 文件下载
-  // const downLoad = (fileKey, fileName) => {
-  //   const params = { fileKey: fileKey };
-  //   const downloadUrl = contextPath + '/api/regulated/info/file/downLoad';
-  //   fetch(downloadUrl, {
-  //     method: 'POST',
-  //     body: window.JSON.stringify(params),
-  //     credentials: 'include',
-  //     headers: new Headers({
-  //       'Content-Type': 'application/json',
-  //     }),
-  //   })
-  //   .then((response) => {
-  //     response.blob().then((blob) => {
-  //       const aLink = document.createElement('a');
-  //       document.body.appendChild(aLink);
-  //       aLink.style.display = 'none';
-  //       const objectUrl = window.URL.createObjectURL(blob);
-  //       aLink.href = objectUrl;
-  //       aLink.download = fileName;
-  //       aLink.click();
-  //       document.body.removeChild(aLink);
-  //     });
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
-  // };
-
   function renderAddContent() {
     return (
       <div className={styles.folderContainer} onClick={(e) => handleOpenAddCard(e)}>
@@ -151,7 +164,7 @@ export default () => {
       </div>
     );
   }
-  // 文件夹熏染
+  // 文件/文件夹渲染
   function renderFolderList() {
     return (
       <Row>
@@ -167,22 +180,34 @@ export default () => {
             </Col>
           );
         })}
+        {fileList.map((item) => {
+          return (
+            <Col span={3} key={item}>
+              <div id={item} onClick={handleFileItemClick} className={styles.folderContainer}>
+                <img src={fileImg} />
+                <span>
+                  <b>{item}</b>
+                </span>
+              </div>
+            </Col>
+          );
+        })}
         <Col span={3}>{renderAddContent()}</Col>
       </Row>
     );
   }
-  // 文件渲染
-  // function renderFileList() {}
 
   // 当前选择
   function renderPictureWall() {
-    console.log(selectFoldetItem);
     return (
-      <Row gutter={10} type="flex">
-        <Col span={4}>
-          <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-        </Col>
-      </Row>
+      <>
+        <Row gutter={10} type="flex">
+          <Col span={4}>
+            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+          </Col>
+          <Col span={4}>{renderAddContent()}</Col>
+        </Row>
+      </>
     );
   }
 
@@ -190,10 +215,13 @@ export default () => {
     return (
       <div className={styles.Detail}>
         <div className={styles.DetailTitle}>
-          <Button style={{ marginRight: 15 }} type="" onClick={handleGoBack}>
+          <Button style={{ marginRight: 15 }} type="primary" onClick={handleGoBack}>
             返回
           </Button>
           <b>{selectFoldetItem}</b>
+          <Button danger style={{ marginRight: 15, float: 'right' }} onClick={handleDeleteFile}>
+            删除文件夹
+          </Button>
           <Divider dashed />
         </div>
         <div className={styles.DetailContent}>{renderPictureWall()}</div>
@@ -215,37 +243,49 @@ export default () => {
     );
   }
 
-  function renderModal() {
+  function renderModal(option) {
     return (
       <>
-        <Modal title="添加内容" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-          添加类型：
-          <Radio.Group value={createType} onChange={handleCreateTypeChange}>
-            <Radio.Button value="file">文件</Radio.Button>
-            <Radio.Button value="folder">文件夹</Radio.Button>
-          </Radio.Group>
-          {createType === 'file' && renderUploadFile()}
-          {createType === 'folder' && (
-            <>
-              <Input
-                style={{ marginTop: 15 }}
-                allowClear
-                size="middle"
-                addonBefore="文件夹名称"
-                defaultValue=""
-                onChange={handleCreateTitleChange}
-              />
-              <Input
-                style={{ marginTop: 15 }}
-                allowClear
-                size="middle"
-                addonBefore="创建人"
-                defaultValue=""
-                onChange={handleCreatorChange}
-              />
-            </>
-          )}
-        </Modal>
+        {option === 'add' && (
+          <Modal title="添加内容" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+            添加类型：
+            <Radio.Group value={createType} onChange={handleCreateTypeChange}>
+              <Radio.Button value="file">文件</Radio.Button>
+              <Radio.Button value="folder">文件夹</Radio.Button>
+            </Radio.Group>
+            {createType === 'file' && renderUploadFile()}
+            {createType === 'folder' && (
+              <>
+                <Input
+                  style={{ marginTop: 15 }}
+                  allowClear
+                  size="middle"
+                  addonBefore="文件夹名称"
+                  defaultValue=""
+                  onChange={handleCreateTitleChange}
+                />
+                <Input
+                  style={{ marginTop: 15 }}
+                  allowClear
+                  size="middle"
+                  addonBefore="创建人"
+                  defaultValue=""
+                  onChange={handleCreatorChange}
+                />
+              </>
+            )}
+          </Modal>
+        )}
+        {option === 'delete' && (
+          <Modal
+            title="提示"
+            visible={deleteModalVisible}
+            onOk={handleDeleteOk}
+            onCancel={handleCancel}
+          >
+            确认删除文件夹吗，删除后文件夹内容不可找回！
+          </Modal>
+        )}
       </>
     );
   }
@@ -255,7 +295,8 @@ export default () => {
       <Card>
         {!toggleDetail && renderFolderList()}
         {!!toggleDetail && renderFolderDetail()}
-        {!!isModalVisible && renderModal()}
+        {!!isModalVisible && renderModal('add')}
+        {!!deleteModalVisible && renderModal('delete')}
       </Card>
     </PageContainer>
   );
