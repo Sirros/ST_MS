@@ -48,8 +48,7 @@ export default [
                 name: 'schedule',
                 icon: 'schedule',
                 authority: ALL_ALLOW,
-                component: './Schedule'
-                  
+                component: './Schedule',
               },
               // 花名册
               {
@@ -57,7 +56,7 @@ export default [
                 name: 'roster',
                 icon: 'skin',
                 component: './Roster',
-                authority: ALL_ALLOW
+                authority: ALL_ALLOW,
               },
               // 运动队数据与结果
               {
@@ -65,7 +64,7 @@ export default [
                 name: 'dataResult',
                 icon: 'database',
                 authority: ALL_ALLOW,
-                component: './DataResult'
+                component: './DataResult',
               },
               // 运动队瞬间记录
               {
@@ -73,7 +72,7 @@ export default [
                 name: 'moment',
                 icon: 'star',
                 authority: ALL_ALLOW,
-                component: './Moment'
+                component: './Moment',
               },
               // 运动队荣誉
               {
@@ -90,12 +89,28 @@ export default [
                 icon: 'edit',
                 authority: EXCEPT_BALLER,
                 routes: [
-                  { path: '/teamManagement/sechdule', name: 'sechdule', component: './TeamManagement/subPages/sechdule' },
-                  { path: '/teamManagement/roster', name: 'roster', component: './TeamManagement/subPages/roster' },
-                  { path: '/teamManagement/dataResult', name: 'dataResult', component: './TeamManagement/subPages/dataResult' },
-                  { path: '/teamManagement/star', name: 'star', component: './TeamManagement/subPages/star' },
-                  { path: '/teamManagement/honor', name: 'honor', component: './TeamManagement/subPages/honor' },
-                ]
+                  {
+                    path: '/teamManagement/sechdule',
+                    name: 'sechdule',
+                    component: './TeamManagement/subPages/sechdule',
+                  },
+                  {
+                    path: '/teamManagement/roster',
+                    name: 'roster',
+                    component: './TeamManagement/subPages/roster',
+                  },
+                  {
+                    path: '/teamManagement/dataResult',
+                    name: 'dataResult',
+                    component: './TeamManagement/subPages/dataResult',
+                  },
+                  {
+                    path: '/teamManagement/star',
+                    name: 'star',
+                    component: './TeamManagement/subPages/star',
+                  },
+                  // { path: '/teamManagement/honor', name: 'honor', component: './TeamManagement/subPages/honor' },
+                ],
               },
               // 公告发布
               {
@@ -103,7 +118,7 @@ export default [
                 name: 'announcement',
                 icon: 'notification',
                 authority: EXCEPT_BALLER,
-                component: './Announcement'
+                component: './Announcement',
               },
               // 队伍/个人设置
               {
@@ -111,25 +126,24 @@ export default [
                 name: 't_setting',
                 icon: 'setting',
                 authority: EXCEPT_BALLER,
-                component: './Setting/Tsetting.jsx'
+                component: './Setting/Tsetting.jsx',
               },
               {
                 path: '/p_setting',
                 name: 'p_setting',
                 icon: 'user',
                 component: './Setting/Psetting.jsx',
-                authority: ALL_ALLOW
+                authority: ALL_ALLOW,
               },
               {
-                component: './Welcome'
+                component: './Welcome',
               },
               {
                 component: './404',
               },
-              
             ],
           },
-          
+
           {
             component: './404',
           },
