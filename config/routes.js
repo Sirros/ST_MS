@@ -89,11 +89,11 @@ export default [
                 icon: 'edit',
                 authority: EXCEPT_BALLER,
                 routes: [
-                  {
-                    path: '/teamManagement/sechdule',
-                    name: 'sechdule',
-                    component: './TeamManagement/subPages/sechdule',
-                  },
+                  // {
+                  //   path: '/teamManagement/sechdule',
+                  //   name: 'sechdule',
+                  //   component: './TeamManagement/subPages/sechdule',
+                  // },
                   {
                     path: '/teamManagement/roster',
                     name: 'roster',
@@ -104,11 +104,11 @@ export default [
                     name: 'dataResult',
                     component: './TeamManagement/subPages/dataResult',
                   },
-                  {
-                    path: '/teamManagement/star',
-                    name: 'star',
-                    component: './TeamManagement/subPages/star',
-                  },
+                  // {
+                  //   path: '/teamManagement/star',
+                  //   name: 'star',
+                  //   component: './TeamManagement/subPages/star',
+                  // },
                   // { path: '/teamManagement/honor', name: 'honor', component: './TeamManagement/subPages/honor' },
                 ],
               },

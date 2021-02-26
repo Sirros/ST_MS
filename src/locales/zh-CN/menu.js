@@ -21,15 +21,15 @@ export default {
   'menu.teamManagement': '管理',
   'menu.teamManagement.sechdule': '日程修改',
   'menu.teamManagement.roster': '人员信息修改',
-  'menu.teamManagement.dataResult': '数据修改',
+  'menu.teamManagement.dataResult': '过程数据录入',
   'menu.teamManagement.star': '瞬间修改',
   'menu.teamManagement.honor': '荣誉修改',
- 
+
   'menu.announcement': '发布公告',
 
   'menu.t_setting': '队伍设置',
   'menu.p_setting': '个人中心',
-  
+
   'menu.login': '登录',
 
   'menu.exception.403': '403',
@@ -50,7 +50,7 @@ export default {
   'menu.exception.not-find': '404',
   'menu.exception.server-error': '500',
   'menu.exception.trigger': '触发错误',
-  
+
   'menu.account.logout': '退出登录',
 
   // 'menu.account': '个人页',
