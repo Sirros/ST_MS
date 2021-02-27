@@ -115,7 +115,7 @@ const Login = (props) => {
               }}
               placeholder={intl.formatMessage({
                 id: 'pages.login.username.placeholder',
-                defaultMessage: '用户名: root',
+                defaultMessage: '用户名: admin',
               })}
               rules={[
                 {
@@ -137,7 +137,7 @@ const Login = (props) => {
               }}
               placeholder={intl.formatMessage({
                 id: 'pages.login.password.placeholder',
-                defaultMessage: '密码: 123456',
+                defaultMessage: '密码: ant.design',
               })}
               rules={[
                 {
