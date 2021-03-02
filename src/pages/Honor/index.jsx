@@ -20,6 +20,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import _ from 'lodash';
+import { getDifference } from '@/utils/utils.js';
 import styles from './index.less';
 
 export default () => {
@@ -116,7 +117,7 @@ export default () => {
         message.info('荣誉无变更');
       } else {
         // 找出修改项
-        _diff = difference(value, initialValues);
+        _diff = getDifference(value, initialValues);
         console.log(_diff);
         message.success('荣誉发生变更');
       }

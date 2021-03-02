@@ -1,7 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Table, Button, Input, InputNumber, Popconfirm, Form, Typography, Tooltip } from 'antd';
-// import { teamManagement_columns } from '@/utils/tableColumns';
+import { AudioOutlined } from '@ant-design/icons';
+import ReactExport from 'react-export-excel';
+import {
+  Table,
+  Button,
+  Input,
+  message,
+  InputNumber,
+  Popconfirm,
+  Form,
+  Typography,
+  Tooltip,
+  Space,
+  Card,
+} from 'antd';
+import _ from 'lodash';
+import { getDifference } from '@/utils/utils.js';
+import styles from './styles/rouster.less';
 
 export default () => {
   const [form] = Form.useForm();
@@ -9,11 +25,26 @@ export default () => {
   const [tableData, setTableData] = useState([]);
   const [count, setCount] = useState(0);
 
+  const ExcelFile = ReactExport.ExcelFile;
+  const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+  const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+
+  const { Search } = Input;
+  const suffix = (
+    <AudioOutlined
+      style={{
+        fontSize: 16,
+        color: '#1890ff',
+      }}
+    />
+  );
+
   useEffect(() => {
     const data = {
       key: 123,
       name: `林子博`,
       attr: '队员',
+      grade: '2017',
       age: 32,
       address: `中国香港`,
       studentId: '2017141463192',
@@ -52,7 +83,7 @@ export default () => {
             rules={[
               {
                 required: true,
-                message: `Please Input ${title}!`,
+                message: `${title} 不能为空!`,
               },
             ]}
           >
@@ -65,43 +96,57 @@ export default () => {
     );
   };
 
-  const isEditing = (record) => record.key === editingKey;
-  const edit = (record) => {
-    form.setFieldsValue({
-      name: '',
-      age: '',
-      address: '',
-      ...record,
-    });
-    setEditingKey(record.key);
-  };
-
   // 取消编辑状态
   const cancel = () => {
     setEditingKey('');
   };
 
-  // 编辑状态下保存
+  // 编辑状态下保存，key：编辑行的 key
   const save = async (key) => {
     try {
       const row = await form.validateFields();
       console.log(row);
+      // 更新一行数据，后台根据唯一学号更改
       const newData = [...tableData];
+      // 修改
       const index = newData.findIndex((item) => key === item.key);
-
       if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        setTableData(newData);
-        setEditingKey('');
+        if (!Object.keys(getDifference(row, newData[index])).length) {
+          message.info('数据没有修改');
+        } else {
+          newData.splice(index, 1, { ...newData[index], ...row });
+          setTableData(newData);
+          // 这里发请求
+          //
+          //
+          message.success('修改成功');
+        }
       } else {
+        // 新增请求
+        //
+        //
         newData.push(row);
         setTableData(newData);
-        setEditingKey('');
       }
+      setEditingKey('');
     } catch (errInfo) {
       console.log('Validate Failed:', errInfo);
+      errInfo.errorFields.forEach((i) => {
+        message.warn(`${i.errors}`);
+      });
     }
+  };
+
+  const handleDelete = (deleteId) => {
+    console.log('删除队员', deleteId);
+  };
+
+  const isEditing = (record) => record.key === editingKey;
+  const edit = (record) => {
+    form.setFieldsValue({
+      ...record,
+    });
+    setEditingKey(record.key);
   };
 
   const columns = [
@@ -117,6 +162,14 @@ export default () => {
       dataIndex: 'studentId',
       width: '180px',
       editable: true,
+      sorter: (a, b) => a.studentId - b.studentId,
+    },
+    {
+      title: '年级',
+      dataIndex: 'grade',
+      width: '160px',
+      editable: true,
+      sorter: (a, b) => a.grade - b.grade,
     },
     {
       title: '属性',
@@ -155,16 +208,18 @@ export default () => {
       editable: true,
     },
     {
-      title: '身高',
+      title: '身高/cm',
       dataIndex: 'height',
       width: '110px',
       editable: true,
+      sorter: (a, b) => a.height - b.height,
     },
     {
-      title: '体重',
+      title: '体重/kg',
       dataIndex: 'weight',
       width: '110px',
       editable: true,
+      sorter: (a, b) => a.weight - b.weight,
     },
     {
       title: '地址',
@@ -189,7 +244,7 @@ export default () => {
     {
       title: '操作',
       dataIndex: 'operation',
-      width: '80px',
+      width: '160px',
       fixed: 'right',
       render: (_, record) => {
         const editable = isEditing(record);
@@ -209,13 +264,25 @@ export default () => {
             </Popconfirm>
           </span>
         ) : (
-          <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-            编辑
-          </Typography.Link>
+          <>
+            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+              编辑
+            </Typography.Link>
+
+            <Popconfirm
+              title="确认删除吗？请慎重！"
+              onConfirm={() => handleDelete(record.studentId)}
+            >
+              <Button style={{ marginLeft: 20 }} type="dashed" danger>
+                删除
+              </Button>
+            </Popconfirm>
+          </>
         );
       },
     },
   ];
+
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -255,34 +322,82 @@ export default () => {
     setTableData([newData, ...tableData]);
   };
 
-  return (
-    <PageContainer>
-      <Form form={form} component={false}>
-        <Button
-          onClick={handleAddPerson}
-          type="primary"
-          style={{
-            marginBottom: 16,
-          }}
-        >
+  // 搜索
+  const handleOnSearch = (value) => {
+    console.log(value);
+  };
+
+  // 导出数据表
+  const handleExportTable = () => {
+    console.log('导出');
+  };
+
+  function renderButtons() {
+    return (
+      <>
+        <Button onClick={handleAddPerson} type="primary">
           添加成员
         </Button>
-        <Table
-          components={{
-            body: {
-              cell: EditableCell,
-            },
-          }}
-          bordered
-          dataSource={tableData}
-          columns={mergedColumns}
-          rowClassName="editable-row"
-          pagination={{
-            onChange: cancel,
-          }}
-          scroll={{ x: 1300 }}
+        <Search
+          style={{ width: '20%', marginLeft: 16 }}
+          placeholder="请输入姓名或学号"
+          onSearch={handleOnSearch}
+          enterButton
         />
-      </Form>
+        <ExcelFile filename="队员信息表" element={<Button type="dashed">导出数据表</Button>}>
+          <ExcelSheet data={tableData} name="队员信息表">
+            {/* <ExcelColumn
+                label="Marital Status"
+                value={(col) => (col.is_married ? 'Married' : 'Single')}
+              /> */}
+            <ExcelColumn label="姓名" value="name" />
+            <ExcelColumn label="学号" value="studentId" />
+            <ExcelColumn label="年级" value="grade" />
+            <ExcelColumn label="属性" value="attr" />
+            <ExcelColumn label="司职" value="take_charge" />
+            <ExcelColumn label="年龄" value="age" />
+            <ExcelColumn label="地址" value="address" />
+            <ExcelColumn label="邮箱" value="em" />
+            <ExcelColumn label="电话" value="phone" />
+            <ExcelColumn label="球衣号码" value="jersey_number" />
+            <ExcelColumn label="球衣尺寸" value="jersey_size" />
+            <ExcelColumn label="身高" value="height" />
+            <ExcelColumn label="体重" value="weight" />
+            <ExcelColumn label="备注" value="remark" />
+          </ExcelSheet>
+        </ExcelFile>
+      </>
+    );
+  }
+
+  function renderTable() {
+    return (
+      <Table
+        components={{
+          body: {
+            cell: EditableCell,
+          },
+        }}
+        bordered
+        dataSource={tableData}
+        columns={mergedColumns}
+        rowClassName="editable-row"
+        pagination={{
+          onChange: cancel,
+        }}
+        scroll={{ x: 1300 }}
+      />
+    );
+  }
+
+  return (
+    <PageContainer>
+      <div className={styles.formWrapper}>
+        <Form form={form} component={false}>
+          {renderButtons()}
+          {renderTable()}
+        </Form>
+      </div>
     </PageContainer>
   );
 };
