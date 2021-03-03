@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
-import { AudioOutlined } from '@ant-design/icons';
 import ReactExport from 'react-export-excel';
+import { AudioOutlined } from '@ant-design/icons';
 import {
   Table,
   Button,
@@ -17,18 +16,19 @@ import {
 } from 'antd';
 import _ from 'lodash';
 import { getDifference } from '@/utils/utils.js';
-import styles from './styles/rouster.less';
+import { PageContainer } from '@ant-design/pro-layout';
+import styles from './styles/roster.less';
 
 export default () => {
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState('');
   const [tableData, setTableData] = useState([]);
   const [count, setCount] = useState(0);
-
+  // 导出文件相关
   const ExcelFile = ReactExport.ExcelFile;
   const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
   const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
-
+  // 搜索框相关
   const { Search } = Input;
   const suffix = (
     <AudioOutlined
@@ -273,7 +273,7 @@ export default () => {
               title="确认删除吗？请慎重！"
               onConfirm={() => handleDelete(record.studentId)}
             >
-              <Button style={{ marginLeft: 20 }} type="dashed" danger>
+              <Button style={{ marginLeft: 20 }} type="primary" danger>
                 删除
               </Button>
             </Popconfirm>

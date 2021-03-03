@@ -84,8 +84,8 @@ const columns = [
   },
   {
     title: '篮板',
-    dataIndex: 'rebouncd',
-    sorter: (a, b) => a.rebouncd - b.rebouncd,
+    dataIndex: 'rebound',
+    sorter: (a, b) => a.rebound - b.rebound,
   },
   {
     title: '助攻',
@@ -140,7 +140,7 @@ for (let i = 0; i < 15; i++) {
     key: i + 1,
     name: `data111 ${i}`,
     score: Math.floor(Math.random() * 20),
-    rebouncd: Math.floor(Math.random() * 10),
+    rebound: Math.floor(Math.random() * 10),
     assist: Math.floor(Math.random() * 10),
     shot: '10/15',
     threepoint: '3/5',
