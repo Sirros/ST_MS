@@ -13,7 +13,7 @@ import {
   DatePicker,
   Typography,
 } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { MinusCircleOutlined, PlusOutlined, CheckCircleTwoTone } from '@ant-design/icons';
 import styles from './styles/data.less';
 import moment from 'moment';
 
@@ -415,7 +415,10 @@ export default () => {
   function renderRemark() {
     return (
       <div className={styles.doneArea}>
-        <Title>录入成功！</Title>
+        <Title>
+          录入成功！
+          <CheckCircleTwoTone twoToneColor="#52c41a" />
+        </Title>
       </div>
     );
   }
@@ -443,7 +446,7 @@ export default () => {
             <Step key={item.title} title={item.title} />
           ))}
         </Steps>
-        <div className={styles.stepsContent}>{steps[current + 2].content}</div>
+        <div className={styles.stepsContent}>{steps[current].content}</div>
         <div className={styles.stepsAction}>
           {current < steps.length - 1 && (
             <Button type="primary" onClick={() => next()}>
