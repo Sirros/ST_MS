@@ -43,6 +43,8 @@
   .homeTopRight {
     width: 27%;
     margin-left: 15px;
+    display: flex;
+    flex-direction: column;
     .carouselItem > img {
       display: block;
       width: 100%;
@@ -56,7 +58,7 @@
     .myText {
       font-size: 14px;
       font-weight: 350;
-      color:rgba(0, 0, 0, 0.35);
+      color: rgba(0, 0, 0, 0.35);
     }
     .listText {
       height: 250px;
@@ -65,8 +67,27 @@
       border-radius: 0;
       overflow: hidden;
     }
-    // .autoScroll {
-    //   color: red;
-    // }
+    .parent {
+      width: 100%;
+      height: 35vh;
+      overflow-y: scroll;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .parent::-webkit-scrollbar {
+      display: none;
+    }
+    /*设置的子盒子高度大于父盒子，产生溢出效果*/
+    .child {
+      height: auto;
+    }
+    .child li {
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      margin: 2px 0;
+      list-style: none;
+      background: #fff;
+    }
   }
 }

@@ -105,7 +105,8 @@
     "pro-download": "1.0.1",
     "puppeteer-core": "^5.0.0",
     "stylelint": "^13.0.0",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "webpack-chain": "^6.5.1"
   },
   "engines": {
     "node": ">=10.0.0"

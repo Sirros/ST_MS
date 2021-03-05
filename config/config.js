@@ -9,7 +9,7 @@ export default defineConfig({
   hash: true,
   antd: {},
   dva: {
-    hmr: true,
+    hmr: true, // 热更新
   },
   history: {
     type: 'browser',
