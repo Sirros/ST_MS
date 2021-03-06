@@ -1,12 +1,5 @@
 @import '~antd/lib/style/themes/default.less';
 
-// .pre {
-//   margin: 12px 0;
-//   padding: 12px 20px;
-//   background: @input-bg;
-//   box-shadow: @card-shadow;
-// }
-
 :global(.ant-card-head) {
   border-bottom: none;
 }
@@ -25,18 +18,75 @@
   }
   .homeTopLeft {
     width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     margin-right: 15px;
     :global(.ant-card) {
       border: none;
       border-radius: 0;
     }
+    .leftTop {
+      height: 200px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      :global(.ant-card, .ant-card-body) {
+        height: 100%;
+        padding: 17px;
+      }
+    }
+    .leftBottom {
+      flex: 1;
+      :global(.ant-card) {
+        height: 100%;
+      }
+    }
   }
 
   .homeTopMid {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     .listText {
       border: none;
       margin-top: 5px;
+    }
+    .midTop {
+      height: 200px;
+      width: 100%;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      :global(.ant-row) {
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .firstRow,
+        .secondRow {
+          padding: 0 5px;
+          height: 200px;
+          width: 50%;
+          display: flex;
+          flex-direction: column;
+          :global(.ant-col, .ant-card, .ant-card-body) {
+            width: 100%;
+          }
+        }
+      }
+    }
+    .midBottom {
+      flex: 1;
+      :global(.ant-card) {
+        height: 100%;
+      }
+      .listText {
+        height: 250px;
+        background-color: #fff;
+        border: none;
+        border-radius: 0;
+        overflow: hidden;
+      }
     }
   }
 
@@ -45,49 +95,64 @@
     margin-left: 15px;
     display: flex;
     flex-direction: column;
-    .carouselItem > img {
-      display: block;
-      width: 100%;
+    .rightOne {
       height: 200px;
-      line-height: 200px;
-      text-align: center;
-    }
-    :global(.ant-statistic-content) {
-      font-size: 18px;
-    }
-    .myText {
-      font-size: 14px;
-      font-weight: 350;
-      color: rgba(0, 0, 0, 0.35);
-    }
-    .listText {
-      height: 250px;
-      background-color: #fff;
-      border: none;
-      border-radius: 0;
+      margin-bottom: 10px;
       overflow: hidden;
+      .carouselItem > img {
+        display: block;
+        width: 100%;
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+      }
     }
-    .parent {
-      width: 100%;
-      height: 35vh;
-      overflow-y: scroll;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
-    .parent::-webkit-scrollbar {
-      display: none;
-    }
-    /*设置的子盒子高度大于父盒子，产生溢出效果*/
-    .child {
-      height: auto;
-    }
-    .child li {
-      height: 40px;
-      line-height: 40px;
-      text-align: center;
-      margin: 2px 0;
-      list-style: none;
-      background: #fff;
+    .rightTwo {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      :global(.ant-statistic-content) {
+        font-size: 18px;
+      }
+
+      .weather {
+        height: 25%;
+      }
+      .personSay {
+        height: 10%;
+        margin-bottom: 15px;
+        .myText {
+          font-size: 14px;
+          font-weight: 350;
+          color: rgba(0, 0, 0, 0.35);
+        }
+      }
+      .runList {
+        .parent {
+          width: 100%;
+          height: 35vh;
+          overflow-y: scroll;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        .parent::-webkit-scrollbar {
+          display: none;
+        }
+        /*设置的子盒子高度大于父盒子，产生溢出效果*/
+        .child {
+          height: auto;
+        }
+        .child li {
+          height: 40px;
+          line-height: 40px;
+          text-align: center;
+          margin: 2px 0;
+          list-style: none;
+          background: #fff;
+        }
+      }
+      // 以下是滚动效果样式
     }
   }
 }
