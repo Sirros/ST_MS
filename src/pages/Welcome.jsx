@@ -1,33 +1,64 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Row, Col, Carousel, Statistic, Divider, List, Badge, Card } from 'antd';
 import { LikeOutlined, ArrowUpOutlined, NotificationOutlined } from '@ant-design/icons';
-// import { history } from 'umi';
 import TeamLogo from '../assets/logo.png';
 import styles from './Welcome.less';
+import { connect } from 'umi';
 
 const { Meta } = Card;
 
-const data = [
-  '1Racing car sprays burning fuel into crowd.',
-  '2Japanese princecommoner.',
-  '3Australian walks 100km after outback crash.',
-  '4Man charged over missing wedding girl.',
-  '5Los Angeles battles huge wildfires.',
-  '6Japanprincess to wed commoner.',
-  '7Ausks 100km after outback crash.',
-  '8Man cver missing wedding girl.',
-  '9Los Anges huge wildfires.',
-];
-
-export default () => {
-  const [list, setList] = useState(data);
+const Welcome = ({ dispatch, team }) => {
   const [isScrolle, setIsScrolle] = useState(true);
+
+  const [teamTitle, setTeamTitle] = useState('');
+  const [teamManagers, setTeamManagers] = useState(0);
+  const [teamPlayers, setTeamPlayers] = useState(0);
+  const [teamPhotos, setTeamPhotos] = useState(0);
+  const [teamComingMatch, setTeamComingMatch] = useState(0);
+  const [teamDiscription, setTeamDiscription] = useState('');
+  const [teamAnnouncements, setTeamAnnounce] = useState([]);
+  const [weather, setWeather] = useState({});
+  const [autoScrollList, setAutoScrollList] = useState([]);
+  const [slideShow, setSlideShow] = useState([]);
 
   // 滚动速度，值越小，滚动越快
   const speed = 30;
   const warper = useRef();
   const childDom1 = useRef();
   const childDom2 = useRef();
+
+  useEffect(() => {
+    dispatch({
+      type: 'welcome/getMainInfo',
+    });
+  }, []);
+
+  useEffect(() => {
+    const {
+      title,
+      managers,
+      players,
+      photos,
+      comingMatch,
+      discription,
+      announcement,
+      weather,
+      autoScrollList,
+      slideShow,
+    } = team.mainInfo;
+    console.log(team);
+
+    setTeamTitle(title);
+    setTeamManagers(managers);
+    setTeamPlayers(players);
+    setTeamComingMatch(comingMatch);
+    setTeamDiscription(discription);
+    setTeamPhotos(photos);
+    setTeamAnnounce(announcement);
+    setWeather(weather);
+    setAutoScrollList(autoScrollList);
+    setSlideShow(slideShow);
+  }, [team]);
 
   useEffect(() => {
     console.log(localStorage.getItem('antd-pro-authority'));
@@ -60,7 +91,7 @@ export default () => {
         <div className={styles.leftTop}>
           <Card>
             <img src={TeamLogo} alt="logo" />
-            <Meta title="title" description="xxxxxxx" style={{ marginTop: 15 }} />
+            <Meta title={teamTitle} description={teamDiscription} style={{ marginTop: 15 }} />
           </Card>
         </div>
         <div className={styles.leftBottom}>
@@ -75,25 +106,21 @@ export default () => {
             <div className={styles.firstRow}>
               <Card hoverable={true}>
                 运动员
-                <br />
-                #10
+                <br />#{teamPlayers}
               </Card>
               <Card hoverable={true}>
                 管理员
-                <br />
-                #10
+                <br />#{teamManagers}
               </Card>
             </div>
             <div className={styles.secondRow}>
               <Card hoverable={true}>
                 即将到来的比赛
-                <br />
-                #10
+                <br />#{teamComingMatch}
               </Card>
               <Card hoverable={true}>
                 照片
-                <br />
-                #10
+                <br />#{teamPhotos}
               </Card>
             </div>
           </Row>
@@ -108,7 +135,7 @@ export default () => {
               className={styles.listText}
               size="small"
               bordered
-              dataSource={data}
+              dataSource={teamAnnouncements}
               renderItem={(item) => <List.Item>{item}</List.Item>}
             />
           </Card>
@@ -117,18 +144,14 @@ export default () => {
       <div className={styles.homeTopRight}>
         <div className={styles.rightOne}>
           <Carousel style={{ marginBottom: 10 }} autoplay dotPosition="bottom">
-            <div className={styles.carouselItem}>
-              <img
-                src="https://images.pexels.com/photos/5168816/pexels-photo-5168816.jpeg?cs=srgb&dl=pexels-alex-kozlov-5168816.jpg&fm=jpg"
-                alt=""
-              />
-            </div>
-            <div className={styles.carouselItem}>
-              <img
-                src="https://images.pexels.com/photos/1842580/pexels-photo-1842580.jpeg?cs=srgb&dl=pexels-matt-hardy-1842580.jpg&fm=jpg"
-                alt=""
-              />
-            </div>
+            {slideShow &&
+              slideShow.map((item, index) => {
+                return (
+                  <div className={styles.carouselItem} key={index}>
+                    <img src={item} alt={index} />
+                  </div>
+                );
+              })}
           </Carousel>
         </div>
         <div className={styles.rightTwo}>
@@ -138,7 +161,7 @@ export default () => {
                 <Card>
                   <Statistic
                     title="今日气温"
-                    value={21.28}
+                    value={weather && weather.today}
                     precision={2}
                     valueStyle={{ color: '#3f8600' }}
                     suffix="%"
@@ -149,7 +172,7 @@ export default () => {
                 <Card>
                   <Statistic
                     title="明日气温"
-                    value={23.4}
+                    value={weather && weather.tomorrow}
                     precision={2}
                     valueStyle={{ color: '#3f8600' }}
                     prefix={<ArrowUpOutlined />}
@@ -167,15 +190,16 @@ export default () => {
           <div className={styles.runList}>
             <div className={styles.parent} ref={warper}>
               <div className={styles.child} ref={childDom1}>
-                {list.map((item) => (
-                  <li
-                    key={item}
-                    onMouseOver={() => hoverHandler(false)}
-                    onMouseLeave={() => hoverHandler(true)}
-                  >
-                    {item}
-                  </li>
-                ))}
+                {autoScrollList &&
+                  autoScrollList.map((item) => (
+                    <li
+                      key={item}
+                      onMouseOver={() => hoverHandler(false)}
+                      onMouseLeave={() => hoverHandler(true)}
+                    >
+                      {item}
+                    </li>
+                  ))}
               </div>
               <div className={styles.child} ref={childDom2}></div>
             </div>
@@ -185,3 +209,8 @@ export default () => {
     </div>
   );
 };
+
+export default connect(({ welcome, loading }) => ({
+  team: welcome,
+  submitting: loading.effects['welcome/getMainInfo'],
+}))(Welcome);

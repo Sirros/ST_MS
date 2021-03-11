@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ReactExport from 'react-export-excel';
+// import ReactExport from 'react-export-excel';
 import { AudioOutlined } from '@ant-design/icons';
 import {
   Table,
@@ -25,9 +25,9 @@ export default () => {
   const [tableData, setTableData] = useState([]);
   const [count, setCount] = useState(0);
   // 导出文件相关
-  const ExcelFile = ReactExport.ExcelFile;
-  const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-  const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+  // const ExcelFile = ReactExport.ExcelFile;
+  // const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+  // const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
   // 搜索框相关
   const { Search } = Input;
   const suffix = (

@@ -1,10 +1,6 @@
-import {
-  LockTwoTone,
-  UserOutlined,
-  GithubOutlined
-} from '@ant-design/icons';
+import { LockTwoTone, UserOutlined, GithubOutlined } from '@ant-design/icons';
 import { Alert, Radio, Tabs } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { connect, useIntl, FormattedMessage } from 'umi';
 // import { getFakeCaptcha } from '@/services/login';
@@ -64,8 +60,8 @@ const Login = (props) => {
     const { dispatch } = props;
     dispatch({
       type: 'login/selectedUser',
-      payload: e.target.value
-    })
+      payload: e.target.value,
+    });
   };
   return (
     <div className={styles.main}>
@@ -162,26 +158,21 @@ const Login = (props) => {
             <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
           </ProFormCheckbox> */}
           <Radio.Group onChange={handleSelectUser} value={selectedUser}>
-            <Radio value='baller'>球员</Radio>
-            <Radio value='captain'>队长/经理</Radio>
-            <Radio value='admin'>管理员</Radio>
+            <Radio value="baller">球员</Radio>
+            <Radio value="captain">队长/经理</Radio>
+            <Radio value="admin">管理员</Radio>
           </Radio.Group>
           <a
             style={{
               float: 'right',
-              marginBottom: 10
+              marginBottom: 10,
             }}
           >
-            <FormattedMessage
-              id="pages.login.forgotPassword"
-              defaultMessage="忘记密码"
-            />
+            <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
           </a>
         </div>
       </ProForm>
-      <div className={styles.footBox}>
-        {defaultFooterDom}
-      </div>
+      <div className={styles.footBox}>{defaultFooterDom}</div>
     </div>
   );
 };
