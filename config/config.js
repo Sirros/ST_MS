@@ -48,4 +48,11 @@ export default defineConfig({
     babelPlugins: [],
     babelOptions: {},
   },
+  chainWebpack(memo, { env, webpack, createCSSRule }) {
+    env === 'development'
+      ? memo
+          .plugin('open-browser-webpack-plugin')
+          .use('open-browser-webpack-plugin', [{ url: 'http://localhost:8000' }])
+      : ''; // 项目运行拉起浏览器
+  },
 });

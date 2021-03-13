@@ -28,5 +28,12 @@ export default {
       'https://images.pexels.com/photos/5168816/pexels-photo-5168816.jpeg?cs=srgb&dl=pexels-alex-kozlov-5168816.jpg&fm=jpg',
       'https://images.pexels.com/photos/1842580/pexels-photo-1842580.jpeg?cs=srgb&dl=pexels-matt-hardy-1842580.jpg&fm=jpg',
     ],
+    rules: [
+      '1、不迟到、不早退；',
+      '2、不迟到、不早退；',
+      '3、不迟到、不早退；',
+      '4、不迟到、不早退；',
+      '5、不迟到、不早退；',
+    ],
   },
 };

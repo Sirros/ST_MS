@@ -3,23 +3,24 @@ import { Row, Col, Carousel, Statistic, Divider, List, Badge, Card } from 'antd'
 import { LikeOutlined, ArrowUpOutlined, NotificationOutlined } from '@ant-design/icons';
 import TeamLogo from '../assets/logo.png';
 import styles from './Welcome.less';
-import { connect } from 'umi';
+import { connect, history } from 'umi';
 
 const { Meta } = Card;
 
 const Welcome = ({ dispatch, team }) => {
-  const [isScrolle, setIsScrolle] = useState(true);
-
-  const [teamTitle, setTeamTitle] = useState('');
+  const [isScrolle, setIsScrolle] = useState(false);
+  const [teamTitle, setTeamTitle] = useState('默认');
   const [teamManagers, setTeamManagers] = useState(0);
   const [teamPlayers, setTeamPlayers] = useState(0);
   const [teamPhotos, setTeamPhotos] = useState(0);
   const [teamComingMatch, setTeamComingMatch] = useState(0);
-  const [teamDiscription, setTeamDiscription] = useState('');
+  const [teamDiscription, setTeamDiscription] = useState('默认');
   const [teamAnnouncements, setTeamAnnounce] = useState([]);
   const [weather, setWeather] = useState({});
   const [autoScrollList, setAutoScrollList] = useState([]);
   const [slideShow, setSlideShow] = useState([]);
+  const [teamExpenditure, setTeamExpenditure] = useState(0);
+  const [teamRules, setTeamRules] = useState([]);
 
   // 滚动速度，值越小，滚动越快
   const speed = 30;
@@ -45,6 +46,8 @@ const Welcome = ({ dispatch, team }) => {
       weather,
       autoScrollList,
       slideShow,
+      expenditure,
+      rules,
     } = team.mainInfo;
     console.log(team);
 
@@ -58,6 +61,9 @@ const Welcome = ({ dispatch, team }) => {
     setWeather(weather);
     setAutoScrollList(autoScrollList);
     setSlideShow(slideShow);
+    setTeamExpenditure(expenditure);
+    setTeamRules(rules);
+    setIsScrolle(true);
   }, [team]);
 
   useEffect(() => {
@@ -96,14 +102,23 @@ const Welcome = ({ dispatch, team }) => {
         </div>
         <div className={styles.leftBottom}>
           <Card hoverable={true}>
-            <Statistic title="团队经费" value={1128} prefix={<LikeOutlined />} />
+            {/* <Statistic title="团队经费" value={`${teamExpenditure}¥`} prefix={<LikeOutlined />} />
+            <Divider dashed /> */}
+            <List
+              header={<div>规章制度</div>}
+              // footer={<div>2021.03.13</div>}
+              // bordered
+              locale={{ emptyText: '暂无数据' }}
+              dataSource={teamRules}
+              renderItem={(item) => <List.Item>{item}</List.Item>}
+            />
           </Card>
         </div>
       </div>
       <div className={styles.homeTopMid}>
         <div className={styles.midTop}>
           <Row justify="center" gutter={10}>
-            <div className={styles.firstRow}>
+            <div className={styles.firstRow} onClick={() => history.push('/roster')}>
               <Card hoverable={true}>
                 运动员
                 <br />#{teamPlayers}
@@ -114,11 +129,11 @@ const Welcome = ({ dispatch, team }) => {
               </Card>
             </div>
             <div className={styles.secondRow}>
-              <Card hoverable={true}>
+              <Card hoverable={true} onClick={() => history.push('/schedule')}>
                 即将到来的比赛
                 <br />#{teamComingMatch}
               </Card>
-              <Card hoverable={true}>
+              <Card hoverable={true} onClick={() => history.push('/moment')}>
                 照片
                 <br />#{teamPhotos}
               </Card>
