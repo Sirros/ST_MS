@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Row, Col, Carousel, Statistic, Divider, List, Badge, Card } from 'antd';
 import { LikeOutlined, ArrowUpOutlined, NotificationOutlined } from '@ant-design/icons';
-import TeamLogo from '../assets/logo.png';
 import styles from './Welcome.less';
 import { connect, history } from 'umi';
 
@@ -21,6 +20,7 @@ const Welcome = ({ dispatch, team }) => {
   const [slideShow, setSlideShow] = useState([]);
   const [teamExpenditure, setTeamExpenditure] = useState(0);
   const [teamRules, setTeamRules] = useState([]);
+  const [teamLogoUrl, setTeamLogoUrl] = useState('');
 
   // 滚动速度，值越小，滚动越快
   const speed = 30;
@@ -48,6 +48,7 @@ const Welcome = ({ dispatch, team }) => {
       slideShow,
       expenditure,
       rules,
+      logoUrl,
     } = team.mainInfo;
     console.log(team);
 
@@ -63,6 +64,7 @@ const Welcome = ({ dispatch, team }) => {
     setSlideShow(slideShow);
     setTeamExpenditure(expenditure);
     setTeamRules(rules);
+    setTeamLogoUrl(logoUrl);
     setIsScrolle(true);
   }, [team]);
 
@@ -96,7 +98,7 @@ const Welcome = ({ dispatch, team }) => {
       <div className={styles.homeTopLeft}>
         <div className={styles.leftTop}>
           <Card>
-            <img src={TeamLogo} alt="logo" />
+            <img src={teamLogoUrl} alt="logo" />
             <Meta title={teamTitle} description={teamDiscription} style={{ marginTop: 15 }} />
           </Card>
         </div>
@@ -106,8 +108,6 @@ const Welcome = ({ dispatch, team }) => {
             <Divider dashed /> */}
             <List
               header={<div>规章制度</div>}
-              // footer={<div>2021.03.13</div>}
-              // bordered
               locale={{ emptyText: '暂无数据' }}
               dataSource={teamRules}
               renderItem={(item) => <List.Item>{item}</List.Item>}
@@ -158,7 +158,7 @@ const Welcome = ({ dispatch, team }) => {
       </div>
       <div className={styles.homeTopRight}>
         <div className={styles.rightOne}>
-          <Carousel style={{ marginBottom: 10 }} autoplay dotPosition="bottom">
+          <Carousel effect="fade" style={{ marginBottom: 10 }} autoplay dotPosition="bottom">
             {slideShow &&
               slideShow.map((item, index) => {
                 return (
