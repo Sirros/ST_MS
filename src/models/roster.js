@@ -1,14 +1,14 @@
-import { getFakeWelcomeData } from '@/services/welcome';
+import { getFakeRosterData } from '@/services/roster';
 
 const WelcomeModel = {
-  namespace: 'welcome',
+  namespace: 'roster',
   state: {
     mainInfo: {},
   },
   effects: {
     // 获取 home 页所有基本信息
     *getMainInfo({ payload }, { put, call }) {
-      const response = yield call(getFakeWelcomeData);
+      const response = yield call(getFakeRosterData);
       yield put({
         type: 'saveMainInfo',
         payload: response,
@@ -16,7 +16,7 @@ const WelcomeModel = {
     },
   },
   reducers: {
-    saveMainInfo(state, { payload }) {
+    saveRoster(state, { payload }) {
       return {
         ...state,
         mainInfo: { ...payload },

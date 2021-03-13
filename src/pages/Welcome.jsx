@@ -227,5 +227,4 @@ const Welcome = ({ dispatch, team }) => {
 
 export default connect(({ welcome, loading }) => ({
   team: welcome,
-  submitting: loading.effects['welcome/getMainInfo'],
 }))(Welcome);

@@ -1,14 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, Badge, Row, Col, List, Divider } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
+import { connect } from 'umi';
 import styles from './index.less';
 import moment from 'moment';
 
-export default () => {
+const Sechedule = ({ dispatch, events }) => {
   const [defaultDate, setDefaultDate] = useState(moment());
   const [selectedDate, setSelectedDate] = useState(moment());
   const [selectedList, setSelectedList] = useState([]);
   const [panelMode, setPanelMode] = useState('month');
+  const [dateEvents, setDateEvents] = useState({});
+
+  useEffect(() => {
+    dispatch({
+      type: 'sechdule/getDataEvents',
+    });
+  }, []);
+
+  useEffect(() => {
+    setDateEvents(events.events);
+  }, [events]);
 
   // 日期选择回调
   const handleSelect = (value) => {
@@ -25,34 +37,18 @@ export default () => {
   // 获取数据
   const getListData = (value) => {
     let listData;
-    switch (value.date()) {
-      case 8:
-        if (value.month() === 9) {
-          listData = [
-            { type: 'warning', content: 'kkp.' },
-            { type: 'success', content: 'sudu kkp' },
-          ];
-        }
-        break;
-      case 10:
-        listData = [
-          { type: 'warning', content: 'This is warning event.' },
-          { type: 'success', content: 'This is usual event.' },
-          { type: 'error', content: 'This is error event.' },
-        ];
-        break;
-      case 15:
-        listData = [
-          { type: 'warning', content: 'This is warning event' },
-          { type: 'success', content: 'This is very long usual event.' },
-          { type: 'error', content: 'This is error event 1.' },
-          { type: 'error', content: 'This is error event 2.' },
-          { type: 'error', content: 'This is error event 3.' },
-          { type: 'error', content: 'This is error event 4.' },
-        ];
-        break;
-      default:
-    }
+    const { mon = [], details = {} } = dateEvents;
+
+    mon.forEach((m) => {
+      if (value.month() + 1 === m) {
+        details[m].eventsDay.forEach((d) => {
+          if (value.date() === d) {
+            listData = details[m].dayDetail[d];
+          }
+        });
+      }
+    });
+
     return listData || [];
   };
 
@@ -108,11 +104,15 @@ export default () => {
           </p>
           <Divider dashed />
           <List>
-            {selectedList.map((item) => (
-              <List.Item key={item.content} style={{ fontSize: 16 }}>
-                <Badge status={item.type} /> {item.content}
-              </List.Item>
-            ))}
+            {selectedList && selectedList.length > 0 ? (
+              selectedList.map((item) => (
+                <List.Item key={item.content} style={{ fontSize: 16 }}>
+                  <Badge status={item.type} /> {item.content}
+                </List.Item>
+              ))
+            ) : (
+              <p>暂无安排</p>
+            )}
           </List>
         </Col>
         <Col span={13} style={{ borderLeft: '1px solid #e4e4e4' }}>
@@ -127,3 +127,8 @@ export default () => {
     </PageContainer>
   );
 };
+
+export default connect(({ sechdule, loading }) => ({
+  events: sechdule,
+  submitting: loading.effects['sechdule/getDateEvents'],
+}))(Sechedule);
