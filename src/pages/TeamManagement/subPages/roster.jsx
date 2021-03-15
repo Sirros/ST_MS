@@ -344,12 +344,12 @@ export default () => {
           onSearch={handleOnSearch}
           enterButton
         />
-        <ExcelFile filename="队员信息表" element={<Button type="dashed">导出数据表</Button>}>
+        {/* <ExcelFile filename="队员信息表" element={<Button type="dashed">导出数据表</Button>}>
           <ExcelSheet data={tableData} name="队员信息表">
-            {/* <ExcelColumn
+            <ExcelColumn
                 label="Marital Status"
                 value={(col) => (col.is_married ? 'Married' : 'Single')}
-              /> */}
+              />
             <ExcelColumn label="姓名" value="name" />
             <ExcelColumn label="学号" value="studentId" />
             <ExcelColumn label="年级" value="grade" />
@@ -365,7 +365,7 @@ export default () => {
             <ExcelColumn label="体重" value="weight" />
             <ExcelColumn label="备注" value="remark" />
           </ExcelSheet>
-        </ExcelFile>
+        </ExcelFile> */}
       </>
     );
   }

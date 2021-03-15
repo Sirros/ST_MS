@@ -14,6 +14,7 @@ import {
 } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
+import moment from 'moment';
 import ImgCrop from 'antd-img-crop';
 // 富文本编辑器相关
 import BraftEditor from 'braft-editor';
@@ -24,11 +25,7 @@ import { formWrapper, tipsText, displayBox } from './styleComponent';
 import styles from './index.less';
 
 export default () => {
-  const [visible, setVisible] = useState(false);
   const [editorState, setEditorState] = useState(BraftEditor.createEditorState(null));
-  const [powerInner, setPowerInner] = useState('');
-  const [isDisable, setIsDisable] = useState(false);
-
   const [editMode, setEditMode] = useState('list');
   const [eventType, setEventType] = useState('drill');
   const [isCourtRequired, setIsCourtRequired] = useState(true);
@@ -59,11 +56,6 @@ export default () => {
     },
   };
 
-  // drawer 关闭
-  const handleDrawerClose = () => {
-    setVisible(false);
-  };
-
   // 地点改变
   const onSiteChange = (site) => {
     console.log(site);
@@ -84,9 +76,11 @@ export default () => {
 
   // 提交
   const onFinish = (values) => {
+    const { dateTime } = values;
     if (values.powerContent) {
       values.powerContent = values.powerContent.toHTML(); // 富文本内容转 html
     }
+    values.dateTime = moment(dateTime).valueOf(); // 转时间戳
     console.log(values);
   };
 
