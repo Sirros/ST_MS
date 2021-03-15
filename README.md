@@ -10,7 +10,7 @@ yarn
 yarn start
 ```
 
-## poj build
+## 项目打包
 
 ```bash
 yarn build
