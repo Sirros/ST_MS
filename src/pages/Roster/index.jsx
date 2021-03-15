@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Badge,
   Table,
@@ -15,262 +15,95 @@ import {
   Divider,
 } from 'antd';
 import { QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import Highlighter from 'react-highlight-words';
 import { PageContainer } from '@ant-design/pro-layout';
 import styles from './index.less';
-// import { connect } from 'umi';
-import avatar from '@/assets/01.jpg';
+import { connect } from 'umi';
+// import Highlighter from 'react-highlight-words';
+// import avatar from '@/assets/01.jpg';
 
 const { Meta } = Card;
-const tempData = [
+
+const columns = [
   {
-    key: 1,
-    name: '温蒂',
-    attr: '队长',
-    studentId: '2017141463199',
-    grade: '2017',
-    height: '182',
-    weight: '83',
-    jersey_number: '1',
-    charge: 'C/PF',
-    em: '121970263@qq.com',
-    birthday: '1998-08-03',
-    phone: '13032867907',
-    description: '暂无备注信息',
+    title: '姓名',
+    dataIndex: 'name',
+    key: 'name',
+    fixed: 'left',
+    width: 100,
   },
   {
-    key: 2,
-    name: '来了',
-    attr: '队长',
-    studentId: '2017141463192',
-    grade: '2017',
-    height: '192',
-    weight: '93',
-    jersey_number: '1',
-    charge: 'C/PF',
-    em: '121970263@qq.com',
-    birthday: '1998-08-03',
-    phone: '13032867907',
-    description: '暂无备注信息',
+    title: '属性',
+    dataIndex: 'attr',
+    key: 'attr',
+    width: 100,
   },
   {
-    key: 3,
-    name: '温蒂',
-    attr: '队员',
-    studentId: '2017141463192',
-    grade: '2016',
-    height: '172',
-    weight: '73',
-    jersey_number: '1',
-    charge: 'C/PF',
-    em: '121970263@qq.com',
-    birthday: '1998-08-03',
-    phone: '13032867907',
-    description: '暂无备注信息',
+    // 自定义渲染
+    title: '照片',
+    dataIndex: 'avatar',
+    key: 'avatar',
+    render: (r, avatar) => (
+      <Avatar src={avatar.avatar} size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }} />
+    ),
   },
   {
-    key: 4,
-    name: '温蒂',
-    attr: '队员',
-    studentId: '2017141463192',
-    grade: '2017',
-    height: '182',
-    weight: '83',
-    jersey_number: '1',
-    charge: 'C/PF',
-    em: '121970263@qq.com',
-    birthday: '1998-08-03',
-    phone: '13032867907',
-    description: '暂无备注信息',
+    title: '学号',
+    dataIndex: 'studentId',
+    key: 'studentId',
+    sorter: (a, b) => a.studentId - b.studentId,
   },
   {
-    key: 5,
-    name: '温蒂',
-    attr: '队员',
-    studentId: '2017141463192',
-    grade: '2017',
-    height: '182',
-    weight: '83',
-    jersey_number: '1',
-    charge: 'C/PF',
-    em: '121970263@qq.com',
-    birthday: '1998-08-03',
-    phone: '13032867907',
-    description: '暂无备注信息',
+    title: '年级',
+    dataIndex: 'grade',
+    key: 'grade',
+    sorter: (a, b) => a.grade - b.grade,
   },
   {
-    key: 6,
-    name: '温蒂',
-    attr: '队员',
-    studentId: '2017141463192',
-    grade: '2017',
-    height: '182',
-    weight: '83',
-    jersey_number: '1',
-    charge: 'C/PF',
-    em: '121970263@qq.com',
-    birthday: '1998-08-03',
-    phone: '13032867907',
-    description: '暂无备注信息',
+    title: '身高/厘米',
+    dataIndex: 'height',
+    key: 'height',
+    sorter: (a, b) => a.height - b.height,
   },
   {
-    key: 7,
-    name: '温蒂',
-    attr: '经理',
-    studentId: '2017141463192',
-    grade: '2017',
-    height: '182',
-    weight: '83',
-    jersey_number: '1',
-    charge: 'C/PF',
-    em: '121970263@qq.com',
-    birthday: '1998-08-03',
-    phone: '13032867907',
-    description: '暂无备注信息',
+    title: '体重/斤',
+    dataIndex: 'weight',
+    key: 'weight',
+    sorter: (a, b) => a.weight - b.weight,
   },
   {
-    key: 8,
-    name: '温蒂',
-    attr: '经理',
-    studentId: '2017141463192',
-    grade: '2017',
-    height: '182',
-    weight: '83',
-    jersey_number: '1',
-    charge: 'C/PF',
-    em: '121970263@qq.com',
-    birthday: '1998-08-03',
-    phone: '13032867907',
-    description: '暂无备注信息',
+    title: '号码',
+    dataIndex: 'jersey_number',
+    key: 'jersey_number',
+    sorter: (a, b) => a.jersey_number - b.jersey_number,
   },
-  {
-    key: 9,
-    name: '温蒂',
-    attr: '队员',
-    studentId: '2017141463192',
-    grade: '2017',
-    height: '182',
-    weight: '83',
-    jersey_number: '1',
-    charge: 'C/PF',
-    em: '121970263@qq.com',
-    birthday: '1998-08-03',
-    phone: '13032867907',
-    description: '暂无备注信息',
-  },
-  {
-    key: 10,
-    name: '温蒂',
-    attr: '队员',
-    studentId: '2017141463192',
-    grade: '2017',
-    height: '182',
-    weight: '83',
-    jersey_number: '1',
-    charge: 'C/PF',
-    em: '121970263@qq.com',
-    birthday: '1998-08-03',
-    phone: '13032867907',
-    description: '暂无备注信息',
-  },
-  {
-    key: 11,
-    name: '温蒂',
-    attr: '队员',
-    studentId: '2017141463192',
-    grade: '2017',
-    height: '182',
-    weight: '83',
-    jersey_number: '1',
-    charge: 'C/PF',
-    em: '121970263@qq.com',
-    birthday: '1998-08-03',
-    phone: '13032867907',
-    description: '暂无备注信息',
-  },
+  { title: '位置', dataIndex: 'charge', key: 'charge' },
+  { title: '邮箱', dataIndex: 'em', key: 'em' },
+  { title: '生日', dataIndex: 'birthday', key: 'birthday' },
+  { title: '电话', dataIndex: 'phone', key: 'phone' },
 ];
 
-const Roster = () => {
+const Roster = ({ totalPerson, dispatch }) => {
   const [isShow, setIsShow] = useState(false);
-  const [data, setData] = useState(tempData);
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
   const [inputText, setInputText] = useState('');
+  const [totalMembers, setTotalMembers] = useState([]);
+  const [tempArr, setTempArr] = useState([]);
+  const [players, setPlayers] = useState([]);
+  const [managers, setManagers] = useState([]);
 
-  const searchInput = useRef(null);
+  useEffect(() => {
+    dispatch({
+      type: 'roster/getTotalPerson',
+    });
+  }, []);
 
-  // table inline search func
-  const getColumnSearchProps = (dataIndex) => {
-    const helper = (selectedKeys, confirm, dataIndex) => {};
-    return {
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => {
-        return (
-          <div style={{ padding: 8 }}>
-            <Input
-              ref={searchInput}
-              placeholder={`Search ${dataIndex}`}
-              value={selectedKeys[0]}
-              onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-              onPressEnter={helper(selectedKeys, confirm, dataIndex)}
-              style={{ width: 188, marginBottom: 8, display: 'block' }}
-            />
-            <Space>
-              <Button
-                type="primary"
-                onClick={helper(selectedKeys, confirm, dataIndex)}
-                icon={<SearchOutlined />}
-                size="small"
-                style={{ width: 90 }}
-              >
-                搜索
-              </Button>
-              <Button
-                // onClick={handleReset(clearFilters)}
-                size="small"
-                style={{ width: 90 }}
-              >
-                重置
-              </Button>
-            </Space>
-          </div>
-        );
-      },
-      filterIcon: (filtered) => (
-        <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-      ),
-      onFilter: (value, record) =>
-        record[dataIndex]
-          ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-          : '',
-      onFilterDropdownVisibleChange: (visible) => {
-        if (visible) {
-          setTimeout(() => searchInput.current.select(), 100);
-        }
-      },
-      render: (text) =>
-        searchedColumn === dataIndex ? (
-          <Highlighter
-            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-            searchWords={[searchText]}
-            autoEscape
-            textToHighlight={text ? text.toString() : ''}
-          />
-        ) : (
-          text
-        ),
-    };
-  };
-
-  // const handleSearch = (selectedKeys, confirm, dataIndex) => {
-  //   confirm();
-  //   setSearchText(selectedKeys[0]);
-  //   setSearchedColumn(dataIndex);
-  // };
-
-  // const handleReset = (clearFilters) => {
-  //   clearFilters();
-  //   setSearchText('');
-  // };
+  useEffect(() => {
+    const { total } = totalPerson;
+    const { players = [], managers = [] } = total;
+    setPlayers(players);
+    setManagers(managers);
+    setTotalMembers([...players, ...managers]);
+    setTempArr(total);
+  }, [totalPerson]);
 
   const setShow = () => {
     setIsShow(!isShow);
@@ -281,7 +114,7 @@ const Roster = () => {
     return (
       <Table
         columns={c}
-        dataSource={data}
+        dataSource={totalMembers}
         style={{ marginTop: 15 }}
         expandable={{
           expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p>, // 展开内容 description
@@ -299,15 +132,16 @@ const Roster = () => {
       <div style={{ marginTop: 15 }}>
         <h4 style={{ marginBottom: 5 }}>管理员</h4>
         <Row gutter={24} className={styles.cwrapper}>
-          {data &&
-            data.map((item) => {
+          {managers &&
+            managers.map((item) => {
               if (item.attr === '队长' || item.attr === '经理') {
                 return (
                   <Col key={item.key} span={6} style={{ marginBottom: 15 }}>
                     <Card
                       hoverable={true}
                       bordered={false}
-                      cover={<Image alt="avatar" src={avatar} />}
+                      // 图片大小一致就可以使卡片看起来一致，但是不能设置image的大小
+                      cover={<Image alt="avatar" src={item.avatar} />}
                     >
                       <Meta title={`${item.name}(${item.attr})`} description={item.studentId} />
                     </Card>
@@ -319,15 +153,17 @@ const Roster = () => {
         <Divider dashed />
         <h4 style={{ marginBottom: 5 }}>运动员</h4>
         <Row gutter={24} className={styles.cwrapper}>
-          {data &&
-            data.map((item) => {
+          {players &&
+            players.map((item) => {
               if (item.attr === '队员') {
                 return (
                   <Col key={item.key} span={6} style={{ marginBottom: 15 }}>
                     <Card
                       hoverable={true}
                       bordered={false}
-                      cover={<Image alt="avatar" src={avatar} />}
+                      cover={
+                        <Image style={{ border: '1px solid red' }} alt="avatar" src={item.avatar} />
+                      }
                     >
                       <Meta title={item.name} description={item.studentId} />
                     </Card>
@@ -353,89 +189,23 @@ const Roster = () => {
 
   // table outline search func
   const handleMySearch = () => {
-    const res = data.filter((i) => {
+    const res = totalMembers.filter((i) => {
       return (
         i.studentId.indexOf(inputText) > -1 ||
         i.name.indexOf(inputText) > -1 ||
         i.grade.indexOf(inputText) > -1
       );
     });
-    setData(res);
+    setTotalMembers(res);
   };
 
   const handleMyReset = () => {
-    setData(tempData);
+    setTotalMembers(tempArr);
   };
 
   const handleMyChange = (e) => {
     setInputText(e.target.value);
   };
-
-  const columns = [
-    {
-      title: '姓名',
-      dataIndex: 'name',
-      key: 'name',
-      fixed: 'left',
-      width: 100,
-      ...getColumnSearchProps('name'),
-    },
-    {
-      title: '属性',
-      dataIndex: 'attr',
-      key: 'attr',
-      width: 100,
-      ...getColumnSearchProps('attr'),
-    },
-    {
-      // 自定义渲染
-      title: '照片',
-      dataIndex: 'avatar',
-      key: 'avatar',
-      render: () => (
-        <Avatar src={avatar} size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }} />
-      ),
-    },
-    {
-      title: '学号',
-      dataIndex: 'studentId',
-      key: 'studentId',
-      sorter: (a, b) => a.studentId - b.studentId,
-      ...getColumnSearchProps('studentId'),
-    },
-    {
-      title: '年级',
-      dataIndex: 'grade',
-      key: 'grade',
-      sorter: (a, b) => a.grade - b.grade,
-      ...getColumnSearchProps('grade'),
-    },
-    {
-      title: '身高/厘米',
-      dataIndex: 'height',
-      key: 'height',
-      sorter: (a, b) => a.height - b.height,
-      ...getColumnSearchProps('height'),
-    },
-    {
-      title: '体重/斤',
-      dataIndex: 'weight',
-      key: 'weight',
-      sorter: (a, b) => a.weight - b.weight,
-      ...getColumnSearchProps('weight'),
-    },
-    {
-      title: '号码',
-      dataIndex: 'jersey_number',
-      key: 'jersey_number',
-      sorter: (a, b) => a.jersey_number - b.jersey_number,
-      ...getColumnSearchProps('jersey_number'),
-    },
-    { title: '位置', dataIndex: 'charge', key: 'charge', ...getColumnSearchProps('charge') },
-    { title: '邮箱', dataIndex: 'em', key: 'em', ...getColumnSearchProps('em') },
-    { title: '生日', dataIndex: 'birthday', key: 'birthday' },
-    { title: '电话', dataIndex: 'phone', key: 'phone', ...getColumnSearchProps('phone') },
-  ];
 
   return (
     <PageContainer title="运动员信息">
@@ -477,4 +247,6 @@ const Roster = () => {
   );
 };
 
-export default Roster;
+export default connect(({ roster }) => ({
+  totalPerson: roster,
+}))(Roster);

@@ -1,28 +1,29 @@
 import { getFakeRosterData } from '@/services/roster';
 
-const WelcomeModel = {
+const RosterModel = {
   namespace: 'roster',
   state: {
-    mainInfo: {},
+    total: {},
   },
   effects: {
     // 获取 home 页所有基本信息
-    *getMainInfo({ payload }, { put, call }) {
+    *getTotalPerson({ payload }, { put, call }) {
       const response = yield call(getFakeRosterData);
       yield put({
-        type: 'saveMainInfo',
+        type: 'saveTotal',
         payload: response,
       });
     },
   },
   reducers: {
-    saveRoster(state, { payload }) {
+    saveTotal(state, { payload }) {
+      const { managers, players } = payload.total;
       return {
         ...state,
-        mainInfo: { ...payload },
+        total: { managers, players },
       };
     },
   },
 };
 
-export default WelcomeModel;
+export default RosterModel;
