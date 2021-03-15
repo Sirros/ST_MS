@@ -161,9 +161,7 @@ const Roster = ({ totalPerson, dispatch }) => {
                     <Card
                       hoverable={true}
                       bordered={false}
-                      cover={
-                        <Image style={{ border: '1px solid red' }} alt="avatar" src={item.avatar} />
-                      }
+                      cover={<Image alt="avatar" src={item.avatar} />}
                     >
                       <Meta title={item.name} description={item.studentId} />
                     </Card>
