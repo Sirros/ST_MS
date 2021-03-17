@@ -1,38 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Upload,
-  Divider,
-  Radio,
-  Drawer,
-  Row,
-  Col,
-  Button,
-  Form,
-  Input,
-  Select,
-  DatePicker,
-} from 'antd';
+import { Radio, Button, Form, Input, Select, DatePicker, message, Spin } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import moment from 'moment';
-import ImgCrop from 'antd-img-crop';
+// import ImgCrop from 'antd-img-crop';
+import { connect } from 'umi';
 // 富文本编辑器相关
 import BraftEditor from 'braft-editor';
 import 'braft-editor/dist/index.css';
 import 'braft-editor/dist/output.css';
 // 自定义样式相关
-import { formWrapper, tipsText, displayBox } from './styleComponent';
 import styles from './index.less';
 
-export default () => {
+const Announcement = ({ postStatus, dispatch }) => {
   const [editorState, setEditorState] = useState(BraftEditor.createEditorState(null));
   const [editMode, setEditMode] = useState('list');
   const [eventType, setEventType] = useState('drill');
   const [isCourtRequired, setIsCourtRequired] = useState(true);
   const [isTimeRequired, setIsTimeRequired] = useState(true);
+  const [spinningStatus, setSpinningStatus] = useState(false);
 
   const [form] = Form.useForm();
   const { Option } = Select;
+
+  useEffect(() => {
+    console.log(postStatus);
+    if (Object.keys(postStatus).length > 0) {
+      if (postStatus.status === 200) {
+        setSpinningStatus(false);
+        message.success('公告发布成功~😊');
+        // onReset();
+      }
+    }
+  }, [postStatus]);
 
   const onValuesChange = (values) => {
     console.log(values);
@@ -76,12 +76,16 @@ export default () => {
 
   // 提交
   const onFinish = (values) => {
+    setSpinningStatus(true);
     const { dateTime } = values;
     if (values.powerContent) {
       values.powerContent = values.powerContent.toHTML(); // 富文本内容转 html
     }
     values.dateTime = moment(dateTime).valueOf(); // 转时间戳
-    console.log(values);
+    dispatch({
+      type: 'announcement/postAnnouncementData',
+      payload: { ...values },
+    });
   };
 
   // 重置
@@ -273,35 +277,41 @@ export default () => {
 
   return (
     <PageContainer>
-      <div style={formWrapper}>
-        <Form
-          {...formItemLayout}
-          form={form}
-          initialValues={{
-            title: '默认',
-            site: 'court_3',
-            editMode: 'list',
-            eventType: 'drill',
-            powerContent: editorState,
-          }}
-          name="anno-form"
-          onFinish={onFinish}
-          onValuesChange={handleOnValuesChange}
-        >
-          {renderBasicFunc()}
-          {editMode === 'list' && renderListEvents()}
-          {editMode === 'simpleText' && renderSimpleText()}
-          {editMode === 'powerText' && renderPowerText()}
-          <Form.Item {...formItemLayoutWithOutLabel}>
-            <Button type="primary" htmlType="submit" style={{ marginRight: 15 }}>
-              发布
-            </Button>
-            <Button htmlType="button" onClick={onReset}>
-              重置
-            </Button>
-          </Form.Item>
-        </Form>
+      <div className={styles.formWrapper}>
+        <Spin spinning={spinningStatus}>
+          <Form
+            {...formItemLayout}
+            form={form}
+            initialValues={{
+              title: '默认',
+              site: 'court_3',
+              editMode: 'list',
+              eventType: 'drill',
+              powerContent: editorState,
+            }}
+            name="anno-form"
+            onFinish={onFinish}
+            onValuesChange={handleOnValuesChange}
+          >
+            {renderBasicFunc()}
+            {editMode === 'list' && renderListEvents()}
+            {editMode === 'simpleText' && renderSimpleText()}
+            {editMode === 'powerText' && renderPowerText()}
+            <Form.Item {...formItemLayoutWithOutLabel}>
+              <Button type="primary" htmlType="submit" style={{ marginRight: 15 }}>
+                发布
+              </Button>
+              <Button htmlType="button" onClick={onReset}>
+                重置
+              </Button>
+            </Form.Item>
+          </Form>
+        </Spin>
       </div>
     </PageContainer>
   );
 };
+
+export default connect(({ announcement }) => ({
+  postStatus: announcement,
+}))(Announcement);
