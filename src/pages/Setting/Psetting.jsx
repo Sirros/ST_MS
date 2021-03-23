@@ -1,18 +1,22 @@
-import React, { Component, useState, useRef, useEffect } from 'react';
-import ImgCrop from 'antd-img-crop';
+import React, { useState, useRef, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { TweenOneGroup } from 'rc-tween-one';
+import { LoadingOutlined, PlusOutlined, AntDesignOutlined } from '@ant-design/icons';
 import {
-  UploadOutlined,
-  LoadingOutlined,
-  PlusOutlined,
-  AntDesignOutlined,
-} from '@ant-design/icons';
-import {
-  Card, Form, Input, InputNumber, Button, Upload,
-  Image, message, Select, Avatar, List, Row,
-  Col, Divider, Tag,
+  Card,
+  Form,
+  Input,
+  Button,
+  Upload,
+  message,
+  Select,
+  Avatar,
+  Row,
+  Col,
+  Divider,
+  Tag,
 } from 'antd';
+import { connect } from 'umi';
 import styles from './psettingStyle.less';
 import ava from '@/assets/01.jpg';
 
@@ -61,13 +65,18 @@ function beforeUpload(file) {
   return isJpgOrPng && isLt2M;
 }
 
-const PSetting = () => {
-  const [tag, setTag] = useState(true);
+const PSetting = ({ dispatch, userInfo }) => {
+  const [bodyInfo, setBodyInfo] = useState({});
+  const [basicInfo, setBasicInfo] = useState({});
+
   const [loading, setLoading] = useState(false);
+
   const [province, setProvince] = useState(provinceData[0]);
   const [cities, setCities] = useState(cityData[provinceData[0]]);
   const [city, setCity] = useState(cityData[provinceData[0]][0]);
+
   const [tags, setTags] = useState(['默认标签']);
+
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -76,10 +85,48 @@ const PSetting = () => {
   const inputRef = useRef();
 
   useEffect(() => {
-    if(inputRef.current && typeof inputRef.current.focus === 'function') {
-      inputRef.current.focus()
+    dispatch({
+      type: 'personalSetting/getUserInfo',
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(userInfo);
+    const {
+      bodyInfo = {},
+      uid,
+      name,
+      avatar,
+      phoneNumber,
+      area,
+      signature,
+      grade,
+      email,
+    } = userInfo.user;
+    setBasicInfo({
+      uid,
+      name,
+      avatar,
+      phoneNumber,
+      area,
+      signature,
+      grade,
+      email,
+    });
+    setBodyInfo(bodyInfo);
+  }, [userInfo.user]);
+
+  useEffect(() => {
+    if (userInfo.result && userInfo.result.status === 200) {
+      message.success('数据更新提交');
     }
-  }, [inputVisible])
+  }, [userInfo.result]);
+
+  useEffect(() => {
+    if (inputRef.current && typeof inputRef.current.focus === 'function') {
+      inputRef.current.focus();
+    }
+  }, [inputVisible]);
 
   const handleClose = (removedTag) => {
     const _tags = tags.filter((tag) => tag !== removedTag);
@@ -97,7 +144,7 @@ const PSetting = () => {
   const handleInputConfirm = () => {
     let _temp = [];
     if (inputValue && tags.indexOf(inputValue) === -1) {
-      _temp = [...tags, inputValue]
+      _temp = [...tags, inputValue];
     }
     setTags(_temp);
     setInputValue('');
@@ -130,13 +177,10 @@ const PSetting = () => {
       return;
     }
     if (info.file.status === 'done') {
-      getBase64(
-        info.file.originFileObj,
-        (imageUrl) => {
-          setImageUrl(imageUrl);
-          setLoading(false);
-        },
-      );
+      getBase64(info.file.originFileObj, (imageUrl) => {
+        setImageUrl(imageUrl);
+        setLoading(false);
+      });
     }
   };
   // 省份修改
@@ -165,10 +209,10 @@ const PSetting = () => {
     if (Object.values(v).every((item) => item === '' || item === undefined)) {
       message.info('数据无需更新');
     } else {
-      /**
-       * 做数据请求
-       */
-      message.success('数据更新提交');
+      dispatch({
+        type: 'personalSetting/updateUser',
+        payload: v,
+      });
     }
     console.log(v);
   };
@@ -210,45 +254,43 @@ const PSetting = () => {
                     <span className={styles.title}>年级:</span>
                   </Col>
                   <Col span={16}>
-                    <span>2017</span>
+                    <span>{basicInfo.grade}</span>
                   </Col>
                   <Col span={8}>
                     <span className={styles.title}>身高:</span>
                   </Col>
                   <Col span={16}>
-                    <span>182cm</span>
+                    <span>{`${bodyInfo.height}cm`}</span>
                   </Col>
                   <Col span={8}>
                     <span className={styles.title}>体重:</span>
                   </Col>
                   <Col span={16}>
-                    <span>100kg</span>
+                    <span>{`${bodyInfo.weight}kg`}</span>
                   </Col>
                   <Col span={8}>
                     <span className={styles.title}>联系电话:</span>
                   </Col>
                   <Col span={16}>
-                    <span>13032867907</span>
+                    <span>{basicInfo.phoneNumber}</span>
                   </Col>
                   <Col span={8}>
                     <span className={styles.title}>邮箱:</span>
                   </Col>
                   <Col span={16}>
-                    <span>13032867907@163.com</span>
+                    <span>{basicInfo.email}</span>
                   </Col>
                   <Col span={8}>
                     <span className={styles.title}>地区:</span>
                   </Col>
                   <Col span={16}>
-                    <span>四川成都</span>
+                    <span>{basicInfo.area}</span>
                   </Col>
                   <Col span={8}>
                     <span className={styles.title}>个性签名:</span>
                   </Col>
                   <Col span={16}>
-                    <span>
-                      小星星小星星小星星小星星小星星小星星小星星小星星小星星小星星小星星小星星
-                    </span>
+                    <span>{basicInfo.signature}</span>
                   </Col>
                 </Row>
               </div>
@@ -318,7 +360,7 @@ const PSetting = () => {
                 opinion: '',
                 size: '',
                 email: '',
-                body_info: ''
+                body_info: '',
               }}
             >
               <Form.Item label="姓名" name="name">
@@ -334,7 +376,11 @@ const PSetting = () => {
                 <Input min={0} max={6} placeholder="请输入有效的电话号码" />
               </Form.Item>
               <Form.Item label="球衣号码" name="number" rules={[{ required: false }]}>
-                <Input min={0} max={99} placeholder="请输入球衣号码，如果有多个请用'/'分隔：新生杯/三十二院" />
+                <Input
+                  min={0}
+                  max={99}
+                  placeholder="请输入球衣号码，如果有多个请用'/'分隔：新生杯/三十二院"
+                />
               </Form.Item>
               <Form.Item label="球衣码数" name="size" rules={[{ required: false }]}>
                 <Input min={0} max={6} placeholder="请输入球衣码数" />
@@ -401,4 +447,6 @@ const PSetting = () => {
   );
 };
 
-export default PSetting;
+export default connect(({ personalSetting }) => ({
+  userInfo: personalSetting,
+}))(PSetting);
