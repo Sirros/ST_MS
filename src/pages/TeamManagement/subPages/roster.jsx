@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-// import ReactExport from 'react-export-excel';
-import { AudioOutlined } from '@ant-design/icons';
+import React, { useEffect, useState, useRef } from 'react';
+import ReactExport from 'react-export-excel';
+import { AudioOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import {
   Table,
   Button,
@@ -11,23 +11,31 @@ import {
   Form,
   Typography,
   Tooltip,
-  Space,
-  Card,
+  Modal,
 } from 'antd';
 import _ from 'lodash';
+import { connect } from 'umi';
 import { getDifference } from '@/utils/utils.js';
 import { PageContainer } from '@ant-design/pro-layout';
 import styles from './styles/roster.less';
 
-export default () => {
+const sub_Roster = ({ list, dispatch }) => {
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [count, setCount] = useState(0);
+  const [tableBasicData, setTableBasicData] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
   // 导出文件相关
-  // const ExcelFile = ReactExport.ExcelFile;
-  // const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-  // const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+  const ExcelFile = ReactExport.ExcelFile;
+  const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+  const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+
+  const formRef = useRef();
+
+  const { confirm } = Modal;
+
   // 搜索框相关
   const { Search } = Input;
   const suffix = (
@@ -39,26 +47,34 @@ export default () => {
     />
   );
 
+  // 表单校验提示信息
+  const validateMessages = {
+    required: '${label} is required!',
+    types: {
+      email: '${label} is not a valid email!',
+      number: '${label} is not a valid number!',
+    },
+    number: {
+      range: '${label} must be between ${min} and ${max}',
+    },
+  };
+
   useEffect(() => {
-    const data = {
-      key: 123,
-      name: `林子博`,
-      attr: '队员',
-      grade: '2017',
-      age: 32,
-      address: `中国香港`,
-      studentId: '2017141463192',
-      take_charge: 'SF/PF',
-      em: '121970263@qq.com',
-      phone: '13032867907',
-      jersey_number: '1',
-      jersey_size: 'xxxl',
-      height: '182cm',
-      weight: '80kg',
-      remark: '暂无伤病信息暂无伤病信息暂无伤病信息暂无伤病信息',
-    };
-    setTableData([...tableData, data]);
+    dispatch({
+      type: 'subRoster/getTotalPerson',
+    });
   }, []);
+
+  useEffect(() => {
+    console.log(list);
+    const { members, retList } = list;
+    setTableBasicData([...members]);
+    if (retList.length > 0) {
+      setTableData([...retList]);
+    } else {
+      setTableData([...members]);
+    }
+  }, [list]);
 
   // 可编辑控件
   const EditableCell = ({
@@ -105,7 +121,6 @@ export default () => {
   const save = async (key) => {
     try {
       const row = await form.validateFields();
-      console.log(row);
       // 更新一行数据，后台根据唯一学号更改
       const newData = [...tableData];
       // 修改
@@ -114,11 +129,18 @@ export default () => {
         if (!Object.keys(getDifference(row, newData[index])).length) {
           message.info('数据没有修改');
         } else {
+          console.log(getDifference(row, newData[index]));
+          // 这里发请求
+          dispatch({
+            type: 'subRoster/updateUser',
+            payload: {
+              uid: row.studentId,
+              changeKey: Object.keys(getDifference(row, newData[index])),
+              changeRow: row,
+            },
+          });
           newData.splice(index, 1, { ...newData[index], ...row });
           setTableData(newData);
-          // 这里发请求
-          //
-          //
           message.success('修改成功');
         }
       } else {
@@ -135,10 +157,6 @@ export default () => {
         message.warn(`${i.errors}`);
       });
     }
-  };
-
-  const handleDelete = (deleteId) => {
-    console.log('删除队员', deleteId);
   };
 
   const isEditing = (record) => record.key === editingKey;
@@ -268,15 +286,14 @@ export default () => {
             <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
               编辑
             </Typography.Link>
-
-            <Popconfirm
-              title="确认删除吗？请慎重！"
-              onConfirm={() => handleDelete(record.studentId)}
+            <Button
+              onClick={() => showDeleteConfirm(record.studentId)}
+              style={{ marginLeft: 20 }}
+              type="primary"
+              danger
             >
-              <Button style={{ marginLeft: 20 }} type="primary" danger>
-                删除
-              </Button>
-            </Popconfirm>
+              删除
+            </Button>
           </>
         );
       },
@@ -300,42 +317,71 @@ export default () => {
     };
   });
 
-  // 添加成员
-  const handleAddPerson = () => {
-    const newData = {
-      key: `*&-${count}`,
-      name: `名字`,
-      attr: '队员',
-      age: 0,
-      address: `四川成都`,
-      studentId: '',
-      take_charge: 'SF/PF',
-      em: '',
-      phone: '',
-      jersey_number: '',
-      jersey_size: 'l',
-      height: '',
-      weight: '',
-      remark: '暂无伤病信息暂无伤病信息暂无伤病信息暂无伤病信息',
-    };
-    setCount(count + 1);
-    setTableData([newData, ...tableData]);
+  const showDeleteConfirm = (deleteId) => {
+    confirm({
+      title: '提示',
+      icon: <ExclamationCircleOutlined />,
+      content: '确定要删除此队员吗？',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        console.log('OK');
+        console.log('删除队员', deleteId);
+        dispatch({
+          type: 'subRoster/deleteUser',
+          payload: deleteId,
+        });
+        message.success('删除成员成功！');
+      },
+      onCancel() {
+        console.log('取消');
+      },
+    });
   };
 
   // 搜索
   const handleOnSearch = (value) => {
-    console.log(value);
+    dispatch({
+      type: 'subRoster/searchPlayer',
+      payload: value,
+    });
   };
 
-  // 导出数据表
-  const handleExportTable = () => {
-    console.log('导出');
+  const handleResetTable = () => {
+    setTableData(tableBasicData);
+  };
+
+  const handleOk = () => {
+    const newMemberInfo = formRef.current.getFieldsValue().player;
+    console.log(newMemberInfo);
+    dispatch({
+      type: 'subRoster/addMember',
+      payload: newMemberInfo,
+    });
+    newMemberInfo.key = newMemberInfo.studentId;
+    setConfirmLoading(true);
+    setTimeout(() => {
+      setVisible(false);
+      setTableData([...tableData, newMemberInfo]);
+      setConfirmLoading(false);
+      message.success('添加完成，如有信息未填写，请尽量完善😊～');
+    }, 2000);
+  };
+
+  const handleCancel = () => {
+    console.log('Clicked cancel button');
+    setVisible(false);
+  };
+
+  const onFinish = (values) => {
+    console.log(values);
   };
 
   function renderButtons() {
     return (
       <>
-        <Button onClick={handleAddPerson} type="primary">
+        <Button onClick={() => setVisible(true)} type="primary">
           添加成员
         </Button>
         <Search
@@ -344,28 +390,30 @@ export default () => {
           onSearch={handleOnSearch}
           enterButton
         />
-        {/* <ExcelFile filename="队员信息表" element={<Button type="dashed">导出数据表</Button>}>
-          <ExcelSheet data={tableData} name="队员信息表">
-            <ExcelColumn
-                label="Marital Status"
-                value={(col) => (col.is_married ? 'Married' : 'Single')}
-              />
+
+        <Button onClick={handleResetTable} style={{ marginLeft: 10 }} type="primary">
+          重置
+        </Button>
+        <ExcelFile
+          filename="队员信息表"
+          element={
+            <Button style={{ marginLeft: 50 }} type="dashed">
+              导出excel表格
+            </Button>
+          }
+        >
+          <ExcelSheet data={tableBasicData} name="队员信息表">
             <ExcelColumn label="姓名" value="name" />
-            <ExcelColumn label="学号" value="studentId" />
             <ExcelColumn label="年级" value="grade" />
-            <ExcelColumn label="属性" value="attr" />
+            <ExcelColumn label="学号" value="studentId" />
             <ExcelColumn label="司职" value="take_charge" />
-            <ExcelColumn label="年龄" value="age" />
-            <ExcelColumn label="地址" value="address" />
-            <ExcelColumn label="邮箱" value="em" />
-            <ExcelColumn label="电话" value="phone" />
-            <ExcelColumn label="球衣号码" value="jersey_number" />
-            <ExcelColumn label="球衣尺寸" value="jersey_size" />
+            <ExcelColumn label="球衣码数" value="jersey_size" />
             <ExcelColumn label="身高" value="height" />
             <ExcelColumn label="体重" value="weight" />
-            <ExcelColumn label="备注" value="remark" />
+            <ExcelColumn label="电话" value="phone" />
+            <ExcelColumn label="邮箱" value="em" />
           </ExcelSheet>
-        </ExcelFile> */}
+        </ExcelFile>
       </>
     );
   }
@@ -390,9 +438,166 @@ export default () => {
     );
   }
 
+  function renderForm() {
+    return (
+      <Form
+        ref={formRef}
+        name="add-new-people"
+        onFinish={onFinish}
+        validateMessages={validateMessages}
+      >
+        <Form.Item
+          name={['player', 'name']}
+          label="姓名"
+          rules={[
+            {
+              required: true,
+              type: 'string',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name={['player', 'studentId']}
+          label="学号"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name={['player', 'grade']}
+          label="年级"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name={['player', 'attr']}
+          label="属性"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Input placeholder="「队长、队员、经理」" />
+        </Form.Item>
+        <Form.Item
+          name={['player', 'phone']}
+          label="电话"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Input placeholder="" />
+        </Form.Item>
+        <Form.Item
+          name={['player', 'take_charge']}
+          label="司职"
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+        >
+          <Input placeholder="「PG｜SG｜SF｜PF｜C」可混合，以‘/’分割" />
+        </Form.Item>
+        <Form.Item
+          name={['player', 'em']}
+          label="邮箱"
+          rules={[
+            {
+              type: 'email',
+            },
+          ]}
+        >
+          <Input placeholder="" />
+        </Form.Item>
+        <Form.Item
+          name={['player', 'jersey_number']}
+          label="球衣号码"
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+        >
+          <Input placeholder="" />
+        </Form.Item>
+        <Form.Item
+          name={['player', 'jersey_size']}
+          label="球衣码数"
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+        >
+          <Input placeholder="「s m l xl xxl xxxl xxxxl」" />
+        </Form.Item>
+        <Form.Item
+          name={['player', 'height']}
+          label="身高"
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+        >
+          <Input placeholder="单位cm" />
+        </Form.Item>
+        <Form.Item
+          name={['player', 'weight']}
+          label="体重"
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+        >
+          <Input placeholder="单位kg" />
+        </Form.Item>
+        <Form.Item
+          name={['player', 'address']}
+          label="地址"
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+        >
+          <Input placeholder="" />
+        </Form.Item>
+        <Form.Item name={['player', 'remark']} label="备注">
+          <Input.TextArea />
+        </Form.Item>
+      </Form>
+    );
+  }
+
   return (
     <PageContainer>
       <div className={styles.formWrapper}>
+        <Modal
+          title="添加成员"
+          visible={visible}
+          onOk={handleOk}
+          confirmLoading={confirmLoading}
+          onCancel={handleCancel}
+        >
+          {renderForm()}
+        </Modal>
         <Form form={form} component={false}>
           {renderButtons()}
           {renderTable()}
@@ -401,3 +606,7 @@ export default () => {
     </PageContainer>
   );
 };
+
+export default connect(({ subRoster }) => ({
+  list: subRoster,
+}))(sub_Roster);
