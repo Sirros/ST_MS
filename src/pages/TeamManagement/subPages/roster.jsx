@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import ReactExport from 'react-export-excel';
-import { AudioOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import {
   Table,
   Button,
@@ -38,14 +38,6 @@ const sub_Roster = ({ list, dispatch }) => {
 
   // 搜索框相关
   const { Search } = Input;
-  const suffix = (
-    <AudioOutlined
-      style={{
-        fontSize: 16,
-        color: '#1890ff',
-      }}
-    />
-  );
 
   // 表单校验提示信息
   const validateMessages = {
@@ -144,9 +136,6 @@ const sub_Roster = ({ list, dispatch }) => {
           message.success('修改成功');
         }
       } else {
-        // 新增请求
-        //
-        //
         newData.push(row);
         setTableData(newData);
       }

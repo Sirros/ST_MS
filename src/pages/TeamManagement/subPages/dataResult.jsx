@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import {
   Card,
@@ -14,6 +14,8 @@ import {
   Typography,
 } from 'antd';
 import { MinusCircleOutlined, PlusOutlined, CheckCircleTwoTone } from '@ant-design/icons';
+import { connect } from 'umi';
+import _ from 'lodash';
 import styles from './styles/data.less';
 import moment from 'moment';
 
@@ -21,15 +23,24 @@ const { Step } = Steps;
 const { Option } = Select;
 const { Title } = Typography;
 
-export default () => {
+const sub_DataResult = ({ dispatch, postStatus }) => {
   const [form] = Form.useForm();
   const [current, setCurrent] = React.useState(0);
   const [matchInfo, setMatchInfo] = useState({});
   const [matchDetail, setMatchDetail] = useState([]);
-  const [totalMatchData, setTotalMatchData] = useState({});
 
-  const names = ['林子博'];
-  const [players, setPlayers] = useState(names);
+  const matchRef = useRef();
+  const detailRef = useRef();
+
+  useEffect(() => {
+    if (postStatus.status === 200) {
+      message.success('上传成功😊～');
+      setCurrent(0);
+      setMatchInfo({});
+      setMatchDetail([]);
+      form.resetFields(); // 重置表单
+    }
+  }, [postStatus]);
 
   const layout = {
     labelCol: {
@@ -38,24 +49,6 @@ export default () => {
     wrapperCol: {
       span: 9,
     },
-  };
-  const tailLayout = {
-    wrapperCol: {
-      offset: 9,
-      span: 9,
-    },
-  };
-
-  // 数据确认
-  const onFinish = (values) => {
-    values.time = moment(values.time).valueOf();
-    console.log(values);
-    setMatchInfo(values);
-    message.success('数据确认~');
-  };
-  // 重置
-  const onReset = () => {
-    form.resetFields();
   };
 
   // 不可选时间
@@ -75,37 +68,44 @@ export default () => {
   };
   // 下一步
   const next = () => {
-    if (current === 0 && Object.keys(matchInfo).length) {
-      setTotalMatchData({ ...totalMatchData, matchInfo: { ...matchInfo } });
-      setCurrent(current + 1);
-    } else if (current === 1) {
-      if (!matchDetail.length) {
-        message.warn('请确认数据后再跳转到下一步！');
+    if (current === 0) {
+      const formData = matchRef.current.getFieldsValue();
+      if (Object.values(formData).some((item) => !item)) {
+        message.warn('数据请填写完整！');
       } else {
-        setTotalMatchData({ ...totalMatchData, matchDetail });
-        setCurrent(current + 1);
+        const _g = Object.values(formData.guest).some((item) => !item || isNaN(item));
+        const _h = Object.values(formData.home).some((item) => !item || isNaN(item));
+        if (_g || _h) {
+          message.warn('数据请填写完整，并且确保数据类型正确！');
+        } else {
+          formData.time = moment(formData.time).valueOf();
+          setMatchInfo(formData);
+          setCurrent(current + 1);
+        }
       }
     } else {
-      message.warn('请确认数据后再跳转到下一步！');
+      const detailData = detailRef.current.getFieldsValue().personalData;
+      if (!detailData || detailData.length < 5) {
+        message.warn('请添加五条以上数据～');
+      } else {
+        if (detailData.some((item) => !item.name)) {
+          message.warn('请务必填写姓名！');
+        } else {
+          setMatchDetail(detailData);
+          setCurrent(current + 1);
+        }
+      }
     }
   };
   // 完成
   const done = () => {
-    console.log(totalMatchData);
-    setCurrent(0);
-    form.resetFields(); // 重置表单
-    message.success('录入成功');
-  };
-
-  // 第二步表单提交
-  const onSecondFinish = (values) => {
-    console.log(values);
-    if (!values.personalData) {
-      message.warn('数据为空，请录入数据！');
-    } else {
-      setMatchDetail(values.personalData);
-      message.success('数据确认~');
-    }
+    dispatch({
+      type: 'sub_dataResult/postData',
+      payload: {
+        matchInfo,
+        matchDetail,
+      },
+    });
   };
 
   // 第一步
@@ -118,10 +118,10 @@ export default () => {
 
     return (
       <Form
+        ref={matchRef}
         {...layout}
         form={form}
         name="match-info"
-        onFinish={onFinish}
         className={styles.myFormWrapper}
         initialValues={{
           opponent: 'xx',
@@ -241,14 +241,6 @@ export default () => {
             </Form.Item>
           </Input.Group>
         </Form.Item>
-        <Form.Item {...tailLayout}>
-          <Button type="dashed" htmlType="submit" style={{ marginRight: 16 }}>
-            确认数据
-          </Button>
-          <Button type="dashed" htmlType="button" danger onClick={onReset}>
-            重置
-          </Button>
-        </Form.Item>
       </Form>
     );
   }
@@ -278,7 +270,7 @@ export default () => {
   function renderDataImport() {
     return (
       <>
-        <Form form={form} name="match-details" onFinish={onSecondFinish} autoComplete="off">
+        <Form form={form} name="match-details" ref={detailRef} autoComplete="off">
           <Form.List name="personalData">
             {(fields, { add, remove }) => {
               return (
@@ -308,13 +300,6 @@ export default () => {
                             fieldKey={[field.fieldKey, 'name']}
                             rules={[{ required: true, message: '请输入姓名' }]}
                           >
-                            {/* <Select>
-                          {(players || []).map((item) => (
-                            <Option key={item} value={item}>
-                              {item}
-                            </Option>
-                          ))}
-                        </Select> */}
                             <Input />
                           </Form.Item>
                         )}
@@ -437,6 +422,7 @@ export default () => {
       content: renderRemark(),
     },
   ];
+
   // 内容区域
   function renderContentArea() {
     return (
@@ -474,3 +460,7 @@ export default () => {
     </PageContainer>
   );
 };
+
+export default connect(({ sub_dataResult }) => ({
+  postStatus: sub_dataResult,
+}))(sub_DataResult);
