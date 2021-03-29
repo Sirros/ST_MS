@@ -28,11 +28,22 @@ const sub_DataResult = ({ dispatch, postStatus }) => {
   const [current, setCurrent] = React.useState(0);
   const [matchInfo, setMatchInfo] = useState({});
   const [matchDetail, setMatchDetail] = useState([]);
+  const [optionsList, setOptionsList] = useState([]);
 
   const matchRef = useRef();
   const detailRef = useRef();
 
   useEffect(() => {
+    dispatch({
+      type: 'sub_dataResult/getData',
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(postStatus);
+    if (postStatus.list && postStatus.list.length) {
+      setOptionsList(postStatus.list);
+    }
     if (postStatus.status === 200) {
       message.success('上传成功😊～');
       setCurrent(0);
@@ -99,6 +110,8 @@ const sub_DataResult = ({ dispatch, postStatus }) => {
   };
   // 完成
   const done = () => {
+    console.log(matchInfo);
+    console.log(matchDetail);
     dispatch({
       type: 'sub_dataResult/postData',
       payload: {
@@ -245,29 +258,19 @@ const sub_DataResult = ({ dispatch, postStatus }) => {
     );
   }
 
-  function renderItemInfo(params) {
-    const { field, label, rule, uid, msg } = params;
-    let _str = '';
-    // if (uid === 'threepoint') {
-    //   _str = '命中/总数';
-    // }
-    return (
-      <>
-        <Form.Item
-          {...field}
-          label={label}
-          name={[field.name, uid]}
-          fieldKey={[field.fieldKey, uid]}
-          rules={[{ required: rule, message: msg }]}
-        >
-          <Input placeholder={_str} />
-        </Form.Item>
-      </>
-    );
-  }
-
   // 第二步
   function renderDataImport() {
+    const item_list = [
+      { label: '得分', uid: 'score', rule: false, msg: '请输入得分' },
+      { label: '篮板', uid: 'rebound', rule: false, msg: '请输入篮板数' },
+      { label: '助攻', uid: 'assist', rule: false, msg: '请输入助攻次数' },
+      { label: '抢断', uid: 'steal', rule: false, msg: '请输入抢断次数' },
+      { label: '盖帽', uid: 'block', rule: false, msg: '请输入盖帽次数' },
+      { label: '失误', uid: 'fault', rule: false, msg: '请输入失误次数' },
+      { label: '犯规', uid: 'foul', rule: false, msg: '请输入犯规次数' },
+      { label: '投篮', uid: 'shot', rule: false, msg: '请输入投篮次数' },
+      { label: '三分', uid: 'threepoint', rule: false, msg: '请输入三分进球数' },
+    ];
     return (
       <>
         <Form form={form} name="match-details" ref={detailRef} autoComplete="off">
@@ -295,78 +298,48 @@ const sub_DataResult = ({ dispatch, postStatus }) => {
                         {() => (
                           <Form.Item
                             {...field}
-                            label="姓名"
                             name={[field.name, 'name']}
                             fieldKey={[field.fieldKey, 'name']}
-                            rules={[{ required: true, message: '请输入姓名' }]}
+                            rules={[{ required: true, message: '请选择队员' }]}
                           >
-                            <Input />
+                            <Select
+                              showSearch
+                              style={{ width: 200 }}
+                              placeholder="请选择人员"
+                              optionFilterProp="children"
+                              // onChange={onChange}
+                              // onFocus={onFocus}
+                              // onBlur={onBlur}
+                              // onSearch={onSearch}
+                              filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                              }
+                            >
+                              {optionsList &&
+                                optionsList.map((option) => {
+                                  return (
+                                    <Option value={option.name} key={option.key}>
+                                      {option.name}
+                                    </Option>
+                                  );
+                                })}
+                            </Select>
                           </Form.Item>
                         )}
                       </Form.Item>
-                      {renderItemInfo({
-                        field,
-                        label: '得分',
-                        rule: false,
-                        uid: 'score',
-                        msg: '请输入得分',
-                      })}
-                      {renderItemInfo({
-                        field,
-                        label: '篮板',
-                        rule: false,
-                        uid: 'rebound',
-                        msg: '请输入篮板数',
-                      })}
-                      {renderItemInfo({
-                        field,
-                        label: '助攻',
-                        rule: false,
-                        uid: 'assist',
-                        msg: '请输入助攻数',
-                      })}
-                      {renderItemInfo({
-                        field,
-                        label: '抢断',
-                        rule: false,
-                        uid: 'steal',
-                        msg: '请输入抢断数',
-                      })}
-                      {renderItemInfo({
-                        field,
-                        label: '盖帽',
-                        rule: false,
-                        uid: 'block',
-                        msg: '请输入盖帽数',
-                      })}
-                      {renderItemInfo({
-                        field,
-                        label: '失误',
-                        rule: false,
-                        uid: 'fault',
-                        msg: '请输入失误数',
-                      })}
-                      {renderItemInfo({
-                        field,
-                        label: '犯规',
-                        rule: false,
-                        uid: 'foul',
-                        msg: '请输入犯规数',
-                      })}
-                      {renderItemInfo({
-                        field,
-                        label: '投篮',
-                        rule: false,
-                        uid: 'shot',
-                        msg: '请输入投篮数',
-                      })}
-
-                      {renderItemInfo({
-                        field,
-                        label: '三分',
-                        rule: false,
-                        uid: 'threepoint',
-                        msg: '请输入三分数',
+                      {item_list.map((renderItem) => {
+                        const { label, uid, rule, msg } = renderItem;
+                        return (
+                          <Form.Item
+                            key={uid}
+                            {...field}
+                            name={[field.name, uid]}
+                            fieldKey={[field.fieldKey, uid]}
+                            rules={[{ required: rule, message: msg }]}
+                          >
+                            <Input placeholder={label} />
+                          </Form.Item>
+                        );
                       })}
                       <MinusCircleOutlined onClick={() => remove(field.name)} />
                     </Space>
@@ -386,11 +359,6 @@ const sub_DataResult = ({ dispatch, postStatus }) => {
               );
             }}
           </Form.List>
-          <Form.Item style={{ textAlign: 'center' }}>
-            <Button type="dashed" htmlType="submit">
-              确认数据
-            </Button>
-          </Form.Item>
         </Form>
       </>
     );

@@ -1,12 +1,19 @@
-import { postMatchTotalInfo } from '@/services/sub_dataResult';
+import { postMatchTotalInfo, getPlayers } from '@/services/sub_dataResult';
 
 const sub_DataResultModel = {
   namespace: 'sub_dataResult',
   state: {
-    // data: {},
+    list: [],
   },
   effects: {
-    // 获取 home 页所有基本信息
+    *getData({ payload }, { put, call }) {
+      const response = yield call(getPlayers);
+      console.log(response);
+      yield put({
+        type: 'saveData',
+        payload: response,
+      });
+    },
     *postData({ payload }, { put, call }) {
       console.log(payload);
       const response = yield call(postMatchTotalInfo, payload);
@@ -24,6 +31,12 @@ const sub_DataResultModel = {
       return {
         ...state,
         status: status,
+      };
+    },
+    saveData(state, { payload }) {
+      state.list = payload.list;
+      return {
+        ...state,
       };
     },
   },

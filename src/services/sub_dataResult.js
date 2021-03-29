@@ -6,3 +6,9 @@ export async function postMatchTotalInfo(params) {
     data: params,
   });
 }
+
+export async function getPlayers() {
+  return request('/api/getPlayers', {
+    method: 'GET',
+  });
+}
