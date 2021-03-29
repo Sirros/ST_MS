@@ -4,23 +4,37 @@ import { InboxOutlined } from '@ant-design/icons';
 import styles from './index.less';
 import folderImg from '@/assets/folder.png';
 import fileImg from '@/assets/file.png';
+import { connect } from 'umi';
 
 import { Card } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 
-export default () => {
+const Moment = ({ dispatch, fileTotal }) => {
   const [toggleDetail, setToggleDetail] = useState(false);
   const [selectFoldetItem, setSelectFoldetItem] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [createType, setCreateType] = useState('file');
-  const [createFolderInfo, setCreateFolderInfo] = useState({});
-  const [createFolderTitle, setCreateFolderTitle] = useState('');
-  const [createFolderCreator, setCreateFolderCreator] = useState('');
+  const [createType, setCreateType] = useState('file'); // 创建类型
+  const [createFolderTitle, setCreateFolderTitle] = useState(''); // 新文件夹名称
+  const [createFolderCreator, setCreateFolderCreator] = useState(''); // 新文件夹创建人
 
-  // test data hook
-  const [folderList, setFolderList] = useState(['2019年32院照片', '2018年队员训练照片']);
-  const [fileList, setFileList] = useState(['期末考试真题']);
+  const [createInfo, setCreateInfo] = useState({});
+
+  const [fileList, setFileList] = useState([]);
+
+  useEffect(() => {
+    console.log(123);
+    dispatch({
+      type: 'moment/getListData',
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(fileTotal);
+    const { list } = fileTotal;
+    if (list && list.length) {
+      setFileList(list);
+    }
+  }, [fileTotal]);
 
   const { Dragger } = Upload;
 
@@ -29,9 +43,9 @@ export default () => {
     multiple: true,
     // 这里写接口，收到上传的数据之后，服务端向数据库存储，并确认返回首页
     // 获取文件列表的接口读取数据库最新内容，做页面更新
-    action: '',
+    action: '/api/postPicture',
     onChange(info) {
-      console.log(info);
+      console.log(info.file);
       const { status } = info.file;
       if (status === 'done') {
         message.success(`${info.file.name} 文件上传成功.`);
@@ -41,17 +55,8 @@ export default () => {
     },
     beforeUpload: (file) => {
       console.log(file.type);
-      // 对应类型[xlsx, xls, doc, pdf, jepg, jpg, png, svg]
-      const allowType = [
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/vnd.ms-excel',
-        'application/wps-writer',
-        'application/pdf',
-        'image/jpeg',
-        'image/jpg',
-        'image/png',
-        'image/svg+xml',
-      ];
+      // 对应类型[jepg, jpg, png, svg]
+      const allowType = ['image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml'];
       // 文件格式限制
       if (allowType.findIndex((i) => i === file.type) < 0) {
         message.error(`[${file.name}] - 不支持该格式的文件上传`);
@@ -62,58 +67,18 @@ export default () => {
     // withCredentials: false, //上传请求时是否携带 cookie
   };
 
-  useEffect(() => {
-    console.log(createFolderInfo);
-    // 这里发请求更新列表
-    // dispatch()
-  }, [createFolderInfo]);
-
+  // 文件夹点击
   const handleFolderItemClick = (e) => {
     setSelectFoldetItem(e.currentTarget.id);
     setToggleDetail(true);
   };
 
-  const handleFileItemClick = (e) => {
-    console.log('文件下载');
-    // 文件下载
-    // const downLoad = (fileKey, fileName) => {
-    //   const params = { fileKey: fileKey };
-    //   const downloadUrl = contextPath + '/api/regulated/info/file/downLoad';
-    //   fetch(downloadUrl, {
-    //     method: 'POST',
-    //     body: window.JSON.stringify(params),
-    //     credentials: 'include',
-    //     headers: new Headers({
-    //       'Content-Type': 'application/json',
-    //     }),
-    //   })
-    //   .then((response) => {
-    //     response.blob().then((blob) => {
-    //       const aLink = document.createElement('a');
-    //       document.body.appendChild(aLink);
-    //       aLink.style.display = 'none';
-    //       const objectUrl = window.URL.createObjectURL(blob);
-    //       aLink.href = objectUrl;
-    //       aLink.download = fileName;
-    //       aLink.click();
-    //       document.body.removeChild(aLink);
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    // };
-  };
-
+  // 返回
   const handleGoBack = () => {
     setToggleDetail(false);
   };
 
-  const handleDeleteFile = () => {
-    console.log('删除文件夹');
-    setDeleteModalVisible(true);
-  };
-
+  // “添加” 点击
   const handleOpenAddCard = () => {
     setIsModalVisible(true);
   };
@@ -121,26 +86,24 @@ export default () => {
   const handleOk = () => {
     setIsModalVisible(false);
     if (createType === 'folder') {
-      setCreateFolderInfo({
-        createFolderTitle,
-        createFolderCreator,
-        createFolderTime: Date.now(),
+      const temp = {
+        title: createFolderTitle,
+        creator: createFolderCreator,
+        createTime: Date.now(),
+      };
+      setCreateInfo(temp);
+      dispatch({
+        type: 'moment/addFile',
+        payload: createInfo,
       });
-      setFolderList([...folderList, createFolderTitle]);
       message.success('创建文件夹成功！');
     } else {
       message.success('上传文件成功！');
     }
   };
 
-  const handleDeleteOk = () => {
-    setDeleteModalVisible(false);
-    console.log('确认删除文件夹！');
-  };
-
   const handleCancel = () => {
     setIsModalVisible(false);
-    setDeleteModalVisible(false);
   };
 
   const handleCreateTypeChange = (e) => {
@@ -155,57 +118,53 @@ export default () => {
     setCreateFolderCreator(e.target.value);
   };
 
-  function renderAddContent() {
-    return (
-      <div className={styles.folderContainer} onClick={(e) => handleOpenAddCard(e)}>
-        <div className={styles.addFolder}>
-          <p>+</p>
-        </div>
-      </div>
-    );
-  }
   // 文件/文件夹渲染
   function renderFolderList() {
     return (
       <Row>
-        {folderList.map((item) => {
-          return (
-            <Col span={3} key={item}>
-              <div id={item} onClick={handleFolderItemClick} className={styles.folderContainer}>
-                <img src={folderImg} />
-                <span>
-                  <b>{item}</b>
-                </span>
-              </div>
-            </Col>
-          );
-        })}
-        {fileList.map((item) => {
-          return (
-            <Col span={3} key={item}>
-              <div id={item} onClick={handleFileItemClick} className={styles.folderContainer}>
-                <img src={fileImg} />
-                <span>
-                  <b>{item}</b>
-                </span>
-              </div>
-            </Col>
-          );
-        })}
-        <Col span={3}>{renderAddContent()}</Col>
+        {fileList &&
+          fileList.length &&
+          fileList.map((item) => {
+            return (
+              <Col span={3} key={item.title}>
+                <div
+                  id={item.title}
+                  onClick={handleFolderItemClick}
+                  className={styles.folderContainer}
+                >
+                  <img src={folderImg} />
+                  <span>
+                    <b>{item.title}</b>
+                  </span>
+                </div>
+              </Col>
+            );
+          })}
       </Row>
     );
   }
 
   // 当前选择
   function renderPictureWall() {
+    console.log(fileList);
+    const idx = fileList.findIndex((item) => item.title == selectFoldetItem);
+    console.log(idx);
     return (
       <>
         <Row gutter={10} type="flex">
-          <Col span={4}>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-          </Col>
-          <Col span={4}>{renderAddContent()}</Col>
+          <Image.PreviewGroup>
+            {fileList && fileList[idx].picList ? (
+              fileList[idx].picList.map((url) => {
+                return (
+                  <Col span={4} key={url}>
+                    <Image src={url} />
+                  </Col>
+                );
+              })
+            ) : (
+              <p>暂无内容</p>
+            )}
+          </Image.PreviewGroup>
         </Row>
       </>
     );
@@ -219,9 +178,6 @@ export default () => {
             返回
           </Button>
           <b>{selectFoldetItem}</b>
-          <Button danger style={{ marginRight: 15, float: 'right' }} onClick={handleDeleteFile}>
-            删除文件夹
-          </Button>
           <Divider dashed />
         </div>
         <div className={styles.DetailContent}>{renderPictureWall()}</div>
@@ -229,6 +185,7 @@ export default () => {
     );
   }
 
+  // 添加图片/文件夹
   function renderUploadFile() {
     return (
       <div className={styles.uploadArea}>
@@ -243,6 +200,7 @@ export default () => {
     );
   }
 
+  // 模式选择
   function renderModal(option) {
     return (
       <>
@@ -276,28 +234,24 @@ export default () => {
             )}
           </Modal>
         )}
-        {option === 'delete' && (
-          <Modal
-            title="提示"
-            visible={deleteModalVisible}
-            onOk={handleDeleteOk}
-            onCancel={handleCancel}
-          >
-            确认删除文件夹吗，删除后文件夹内容不可找回！
-          </Modal>
-        )}
       </>
     );
   }
 
   return (
     <PageContainer className={styles.folderWrapper}>
+      <Button type="dashed" style={{ marginBottom: 10 }} onClick={(e) => handleOpenAddCard(e)}>
+        添加
+      </Button>
       <Card>
         {!toggleDetail && renderFolderList()}
         {!!toggleDetail && renderFolderDetail()}
         {!!isModalVisible && renderModal('add')}
-        {!!deleteModalVisible && renderModal('delete')}
       </Card>
     </PageContainer>
   );
 };
+
+export default connect(({ moment }) => ({
+  fileTotal: moment,
+}))(Moment);

@@ -59,16 +59,16 @@ const TSetting = ({ dispatch, updateStatus }) => {
   // 表单布局
   const layout = {
     labelCol: {
-      span: 4,
+      span: 2,
     },
     wrapperCol: {
-      span: 12,
+      span: 10,
     },
   };
   const tailLayout = {
     wrapperCol: {
-      offset: 4,
-      span: 12,
+      offset: 2,
+      span: 10,
     },
   };
 
