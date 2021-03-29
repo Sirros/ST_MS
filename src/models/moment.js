@@ -1,6 +1,6 @@
 import { getFileList, postNewFile } from '@/services/moment';
 
-const PersonalSettingModule = {
+const MomentModule = {
   namespace: 'moment',
   state: {
     list: [],
@@ -39,4 +39,4 @@ const PersonalSettingModule = {
   },
 };
 
-export default PersonalSettingModule;
+export default MomentModule;
