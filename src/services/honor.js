@@ -6,7 +6,7 @@ export async function getHonorList() {
   });
 }
 
-export async function updateHonorItem() {
+export async function updateHonorItem(params) {
   return request('/api/updateHonorItem', {
     method: 'POST',
     data: params,

@@ -51,7 +51,8 @@ const Honor = ({ dispatch, totalList }) => {
 
   useEffect(() => {
     console.log(totalList);
-    const { anta, freshman } = totalList.honorList;
+    const { honorList } = totalList;
+    const { anta, freshman } = honorList;
     setAntaData(anta);
     setFreshmanData(freshman);
   }, [totalList]);
@@ -68,39 +69,6 @@ const Honor = ({ dispatch, totalList }) => {
     setSwitchState(value);
   };
 
-  // 表单提交
-  // const handleFormFinish = (value) => {
-  //   const { type, dateTime } = value;
-  //   let _diff = null;
-  //   // 如果是修改则要过滤，过滤出修改了的item
-  //   if (value.hasOwnProperty('type')) {
-  //     value.dateTime = moment(dateTime).valueOf();
-  //     if (type === 'anta') {
-  //       // 接口请求 新建「32」院荣誉
-  //       message.info('新建「32」院荣誉');
-  //       console.log(value);
-  //     } else {
-  //       // 接口请求 新建「新生杯」荣誉
-  //       message.info('新建「新生杯」荣誉');
-  //       console.log(value);
-  //     }
-  //   } else {
-  //     // 如果是修改，则没有创建类型和时间这两个key，直接删除
-  //     delete value.dateTime;
-  //     delete initialValues.type;
-
-  //     if (_.isEqual(initialValues, value)) {
-  //       message.info('荣誉无变更');
-  //     } else {
-  //       // 找出修改项
-  //       _diff = getDifference(value, initialValues);
-  //       console.log(_diff);
-  //       message.success('荣誉发生变更');
-  //     }
-  //   }
-  //   setVisible(false);
-  // };
-
   const onClose = () => {
     setVisible(false);
     setSwitchState(true);
@@ -110,25 +78,31 @@ const Honor = ({ dispatch, totalList }) => {
     const formData = formRef.current.getFieldsValue();
     if (Object.keys(formData).length && Object.keys(formData).includes('newVal')) {
       console.log('修改');
-      dispatch({}); //修改请求
+      dispatch({
+        type: 'honor/updateItem',
+        payload: formData,
+      }); //修改请求
+      console.log(formData);
     } else {
       console.log('新建');
-      dispatch({}); //新建请求
+      formData.dateTime = moment(formData.date).valueOf();
+      console.log(formData);
+      dispatch({
+        type: 'honor/createItem',
+        payload: formData,
+      }); //新建请求
     }
     setConfirmLoading(true);
     setTimeout(() => {
       setVisible(false);
       setConfirmLoading(false);
+      message.success('操作成功😊');
     }, 2000);
   };
 
   const handleEditTypeChange = (e) => {
     setUpdateType(e.target.value);
   };
-
-  // const targetEventChange = (value) => {
-  //   console.log(value);
-  // };
 
   // 新建荣誉
   function newHonorArea() {
@@ -194,7 +168,6 @@ const Honor = ({ dispatch, totalList }) => {
                 style={{ width: '100%' }}
                 placeholder="请选择具体荣誉"
                 optionFilterProp="children"
-                // onChange={targetEventChange}
                 filterOption={(input, option) =>
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }

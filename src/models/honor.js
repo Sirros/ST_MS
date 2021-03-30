@@ -4,6 +4,7 @@ const HonorModule = {
   namespace: 'honor',
   state: {
     honorList: [],
+    updateStatus: -1,
   },
   effects: {
     *getList({ payload }, { put, call }) {
@@ -14,10 +15,18 @@ const HonorModule = {
         payload: response,
       });
     },
-    *updateUser({ payload }, { put, call }) {
-      const response = yield call(updateUsernfo, payload);
+    *updateItem({ payload }, { put, call }) {
+      const response = yield call(updateHonorItem, payload);
       yield put({
         type: 'saveUpdateState',
+        payload: response,
+      });
+    },
+    *createItem({ payload }, { put, call }) {
+      const response = yield call(createHonorItem, payload);
+      console.log(response);
+      yield put({
+        type: 'saveNewList',
         payload: response,
       });
     },
@@ -30,9 +39,15 @@ const HonorModule = {
       };
     },
     saveUpdateState(state, { payload }) {
+      state.updateStatus = payload.status;
       return {
         ...state,
-        result: { ...payload },
+      };
+    },
+    saveNewList(state, { payload }) {
+      state.honorList = payload.newList;
+      return {
+        ...state,
       };
     },
   },
