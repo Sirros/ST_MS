@@ -8,19 +8,12 @@
 export default {
   dev: {
     '/api/': {
-      target: 'https://preview.pro.ant.design',
-      changeOrigin: true,
-      pathRewrite: {
-        '^': '',
-      },
-    },
-    '/node/': {
       target: 'http://localhost:3000',
       changeOrigin: true,
       pathRewrite: {
         '^': '',
       },
-    }
+    },
   },
   test: {
     '/api/': {

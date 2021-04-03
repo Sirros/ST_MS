@@ -110,7 +110,7 @@ const Welcome = ({ dispatch, team }) => {
               header={<div>规章制度</div>}
               locale={{ emptyText: '暂无数据' }}
               dataSource={teamRules}
-              renderItem={(item) => <List.Item>{item}</List.Item>}
+              renderItem={(item) => <List.Item>{item.item}</List.Item>}
             />
           </Card>
         </div>
@@ -151,7 +151,7 @@ const Welcome = ({ dispatch, team }) => {
               size="small"
               bordered
               dataSource={teamAnnouncements}
-              renderItem={(item) => <List.Item>{item}</List.Item>}
+              renderItem={(item) => <List.Item>{item.content}</List.Item>}
             />
           </Card>
         </div>
@@ -163,7 +163,7 @@ const Welcome = ({ dispatch, team }) => {
               slideShow.map((item, index) => {
                 return (
                   <div className={styles.carouselItem} key={index}>
-                    <img src={item} alt={index} />
+                    <img src={item.url} alt={index} />
                   </div>
                 );
               })}
