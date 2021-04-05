@@ -14,12 +14,10 @@ import {
   Button,
   Divider,
 } from 'antd';
-import { QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import styles from './index.less';
 import { connect } from 'umi';
-// import Highlighter from 'react-highlight-words';
-// import avatar from '@/assets/01.jpg';
 
 const { Meta } = Card;
 
@@ -102,7 +100,7 @@ const Roster = ({ totalPerson, dispatch }) => {
     setPlayers(players);
     setManagers(managers);
     setTotalMembers([...players, ...managers]);
-    setTempArr(total);
+    setTempArr([...players, ...managers]);
   }, [totalPerson]);
 
   const setShow = () => {
@@ -117,8 +115,12 @@ const Roster = ({ totalPerson, dispatch }) => {
         dataSource={totalMembers}
         style={{ marginTop: 15 }}
         expandable={{
-          expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p>, // 展开内容 description
-          rowExpandable: (record) => record.name !== 'Not Expandable', // 根据 name 控制可否展开，可更改
+          expandedRowRender: (record) => (
+            <p key={record.studentId} style={{ margin: 0 }}>
+              {record.remark || '暂无其他信息'}
+            </p>
+          ), // 展开内容 description
+          // rowExpandable: (record) => record.name !== 'Not Expandable', // 根据 name 控制可否展开，可更改
         }}
         pagination
         scroll={{ x: 1500 }}
@@ -136,7 +138,7 @@ const Roster = ({ totalPerson, dispatch }) => {
             managers.map((item) => {
               if (item.attr === '队长' || item.attr === '经理') {
                 return (
-                  <Col key={item.key} span={6} style={{ marginBottom: 15 }}>
+                  <Col key={item.studentId} span={6} style={{ marginBottom: 15 }}>
                     <Card
                       hoverable={true}
                       bordered={false}
@@ -157,7 +159,7 @@ const Roster = ({ totalPerson, dispatch }) => {
             players.map((item) => {
               if (item.attr === '队员') {
                 return (
-                  <Col key={item.key} span={6} style={{ marginBottom: 15 }}>
+                  <Col key={item.studentId} span={6} style={{ marginBottom: 15 }}>
                     <Card
                       hoverable={true}
                       bordered={false}
@@ -187,7 +189,7 @@ const Roster = ({ totalPerson, dispatch }) => {
 
   // table outline search func
   const handleMySearch = () => {
-    const res = totalMembers.filter((i) => {
+    const res = tempArr.filter((i) => {
       return (
         i.studentId.indexOf(inputText) > -1 ||
         i.name.indexOf(inputText) > -1 ||
@@ -199,6 +201,7 @@ const Roster = ({ totalPerson, dispatch }) => {
 
   const handleMyReset = () => {
     setTotalMembers(tempArr);
+    setInputText('');
   };
 
   const handleMyChange = (e) => {

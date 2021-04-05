@@ -14,6 +14,13 @@ export default {
         '^': '',
       },
     },
+    '/images/': {
+      target: 'http://localhost:3000',
+      changeOrigin: true,
+      pathRewrite: {
+        '^': '',
+      },
+    },
   },
   test: {
     '/api/': {
