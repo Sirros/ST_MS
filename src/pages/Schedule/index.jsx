@@ -24,7 +24,16 @@ const Sechedule = ({ dispatch, events }) => {
 
   // 日期选择回调
   const handleSelect = (value) => {
-    const data = getListData(value);
+    let data = getListData(value);
+    if (data[0] && data[0].content.indexOf('；') > -1) {
+      data = data[0].content.split('；');
+      for (let i = 0; i < data.length; i++) {
+        data[i] = {
+          type: 'warning',
+          content: data[i],
+        };
+      }
+    }
     setDefaultDate(value);
     setSelectedDate(value);
     setSelectedList(data);
@@ -54,7 +63,16 @@ const Sechedule = ({ dispatch, events }) => {
 
   // 自定义日期渲染
   const dateCellRender = (value) => {
-    const data = getListData(value);
+    let data = getListData(value);
+    if (data[0] && data[0].content.indexOf('；') > -1) {
+      data = data[0].content.split('；');
+      for (let i = 0; i < data.length; i++) {
+        data[i] = {
+          type: 'warning',
+          content: data[i],
+        };
+      }
+    }
     return (
       <ul className={styles.Events}>
         {data.map((item) => (
