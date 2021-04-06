@@ -12,6 +12,7 @@ import {
   Coordinate,
   Interaction,
   getTheme,
+  Legend,
 } from 'bizcharts';
 import { connect } from 'umi';
 import { scoreColumns, personalColumns } from '@/utils/columns';
@@ -58,6 +59,7 @@ const DataResult = ({ total, dispatch }) => {
             columns={scoreColumns}
             dataSource={twoTeamInfo}
             pagination={false}
+            rowKey="id"
           />
         </Col>
         <Col span={5}>
@@ -93,6 +95,7 @@ const DataResult = ({ total, dispatch }) => {
           reload: false,
           density: false,
         }}
+        rowKey="id"
         scroll={{ x: 1300 }}
         className={styles.pt}
       />
@@ -107,7 +110,7 @@ const DataResult = ({ total, dispatch }) => {
         formatter: (v) => {
           return {
             team_1: '软件',
-            team_2: '网安',
+            team_2: '对手',
           }[v];
         },
       },
@@ -141,6 +144,15 @@ const DataResult = ({ total, dispatch }) => {
                 color="team"
                 label="temperature"
               />
+              <Legend
+                background={{
+                  padding: [5, 100, 5, 36],
+                  style: {
+                    fill: '#eaeaea',
+                    stroke: '#fff',
+                  },
+                }}
+              />
               <Tooltip shared showCrosshairs />
             </Chart>
           </Col>
@@ -162,7 +174,7 @@ const DataResult = ({ total, dispatch }) => {
                   'count',
                   {
                     content: (data) => {
-                      return `${data.item}: ${data.percent * 100}%`;
+                      return `${data.item}: ${(data.percent * 100).toFixed(2)}%`;
                     },
                   },
                 ]}

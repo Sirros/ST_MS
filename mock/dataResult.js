@@ -21,7 +21,6 @@ for (let i = 0; i < 15; i++) {
 export default {
   // 支持值为 Object 和 Array
   'GET /api/getResultData': {
-    data: 'hello world!',
     details: [
       {
         our_team: {
