@@ -1,5 +1,5 @@
 import request from '@/utils/request';
 
-export async function getFakeResultData() {
-  return request(`/api/getFakeResultData`);
+export async function getResultData() {
+  return request(`/api/getResultData`);
 }

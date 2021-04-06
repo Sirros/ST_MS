@@ -1,4 +1,4 @@
-import { getFakeResultData } from '@/services/dataResult';
+import { getResultData } from '@/services/dataResult';
 
 const DataResultModel = {
   namespace: 'dataResult',
@@ -8,7 +8,7 @@ const DataResultModel = {
   effects: {
     // 获取 home 页所有基本信息
     *getData({ payload }, { put, call }) {
-      const response = yield call(getFakeResultData);
+      const response = yield call(getResultData);
       console.log(response);
       yield put({
         type: 'saveData',
