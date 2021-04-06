@@ -114,6 +114,7 @@ const Roster = ({ totalPerson, dispatch }) => {
         columns={c}
         dataSource={totalMembers}
         style={{ marginTop: 15 }}
+        rowKey="studentId" // 指定每行唯一值
         expandable={{
           expandedRowRender: (record) => (
             <p key={record.studentId} style={{ margin: 0 }}>
