@@ -13,12 +13,12 @@ const Moment = ({ dispatch, fileTotal }) => {
   const [toggleDetail, setToggleDetail] = useState(false);
   const [selectFoldetItem, setSelectFoldetItem] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = React.useState(false);
   const [createType, setCreateType] = useState('file'); // 创建类型
   const [createFolderTitle, setCreateFolderTitle] = useState(''); // 新文件夹名称
   const [createFolderCreator, setCreateFolderCreator] = useState(''); // 新文件夹创建人
 
   const [createInfo, setCreateInfo] = useState({});
-
   const [fileList, setFileList] = useState([]);
 
   useEffect(() => {
@@ -35,6 +35,15 @@ const Moment = ({ dispatch, fileTotal }) => {
       setFileList(list.rows);
     }
   }, [fileTotal]);
+
+  useEffect(() => {
+    if (Object.keys(createInfo).length) {
+      dispatch({
+        type: 'moment/addFile',
+        payload: createInfo,
+      });
+    }
+  }, [createInfo]);
 
   const { Dragger } = Upload;
 
@@ -84,18 +93,20 @@ const Moment = ({ dispatch, fileTotal }) => {
   };
 
   const handleOk = () => {
-    setIsModalVisible(false);
+    setConfirmLoading(true);
+
     if (createType === 'folder') {
       const temp = {
         title: createFolderTitle,
         creator: createFolderCreator,
         createTime: Date.now(),
       };
+      setTimeout(() => {
+        setIsModalVisible(false);
+        setConfirmLoading(false);
+        setFileList([...fileList, temp]);
+      }, 2000);
       setCreateInfo(temp);
-      dispatch({
-        type: 'moment/addFile',
-        payload: createInfo,
-      });
       message.success('创建文件夹成功！');
     } else {
       message.success('上传文件成功！');
@@ -122,24 +133,24 @@ const Moment = ({ dispatch, fileTotal }) => {
   function renderFolderList() {
     return (
       <Row>
-        {fileList &&
-          fileList.length &&
-          fileList.map((item) => {
-            return (
-              <Col span={3} key={item.title}>
-                <div
-                  id={item.title}
-                  onClick={handleFolderItemClick}
-                  className={styles.folderContainer}
-                >
-                  <img src={folderImg} />
-                  <span>
-                    <b>{item.title}</b>
-                  </span>
-                </div>
-              </Col>
-            );
-          })}
+        {fileList && fileList.length
+          ? fileList.map((item) => {
+              return (
+                <Col span={3} key={item.title}>
+                  <div
+                    id={item.title}
+                    onClick={handleFolderItemClick}
+                    className={styles.folderContainer}
+                  >
+                    <img src={folderImg} />
+                    <span>
+                      <b>{item.title}</b>
+                    </span>
+                  </div>
+                </Col>
+              );
+            })
+          : '暂无内容'}
       </Row>
     );
   }
@@ -154,9 +165,9 @@ const Moment = ({ dispatch, fileTotal }) => {
         <Row gutter={10} type="flex">
           <Image.PreviewGroup>
             {fileList && fileList[idx].picList ? (
-              fileList[idx].picList.map((item, idx) => {
+              fileList[idx].picList.map((item) => {
                 return (
-                  <Col span={4} key={idx}>
+                  <Col span={4} key={item.id}>
                     <Image src={item.url} />
                   </Col>
                 );
@@ -205,7 +216,13 @@ const Moment = ({ dispatch, fileTotal }) => {
     return (
       <>
         {option === 'add' && (
-          <Modal title="添加内容" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+          <Modal
+            title="添加内容"
+            confirmLoading={confirmLoading}
+            visible={isModalVisible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          >
             添加类型：
             <Radio.Group value={createType} onChange={handleCreateTypeChange}>
               <Radio.Button value="file">文件</Radio.Button>

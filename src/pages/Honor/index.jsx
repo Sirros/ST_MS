@@ -256,7 +256,11 @@ const Honor = ({ dispatch, totalList }) => {
           </Divider>
           <List
             dataSource={antaData}
-            renderItem={(item) => <List.Item key={item.key}>{item.text}</List.Item>}
+            renderItem={(item) => (
+              <List.Item key={item.id}>
+                {item.info} - {moment(item.dateTime).format('YYYY-MM-DD')}
+              </List.Item>
+            )}
           />
         </div>
         <div className={styles.freshman}>
@@ -265,7 +269,11 @@ const Honor = ({ dispatch, totalList }) => {
           </Divider>
           <List
             dataSource={freshmanData}
-            renderItem={(item) => <List.Item key={item.key}>{item.text}</List.Item>}
+            renderItem={(item) => (
+              <List.Item key={item.id}>
+                {item.info} - {moment(item.dateTime).format('YYYY-MM-DD')}
+              </List.Item>
+            )}
           />
         </div>
       </>

@@ -16,7 +16,6 @@ const MomentModule = {
     },
     *addFile({ payload }, { put, call }) {
       const response = yield call(postNewFile, payload);
-      console.log(response);
       yield put({
         type: 'saveAddFile',
         payload: response,
@@ -31,6 +30,7 @@ const MomentModule = {
       };
     },
     saveAddFile(state, { payload }) {
+      console.log(payload);
       state.addStatus = payload.status;
       return {
         ...state,
