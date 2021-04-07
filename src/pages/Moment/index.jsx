@@ -31,8 +31,8 @@ const Moment = ({ dispatch, fileTotal }) => {
   useEffect(() => {
     console.log(fileTotal);
     const { list } = fileTotal;
-    if (list && list.length) {
-      setFileList(list);
+    if (list && Object.keys(list).length) {
+      setFileList(list.rows);
     }
   }, [fileTotal]);
 
@@ -154,10 +154,10 @@ const Moment = ({ dispatch, fileTotal }) => {
         <Row gutter={10} type="flex">
           <Image.PreviewGroup>
             {fileList && fileList[idx].picList ? (
-              fileList[idx].picList.map((url) => {
+              fileList[idx].picList.map((item, idx) => {
                 return (
-                  <Col span={4} key={url}>
-                    <Image src={url} />
+                  <Col span={4} key={idx}>
+                    <Image src={item.url} />
                   </Col>
                 );
               })
