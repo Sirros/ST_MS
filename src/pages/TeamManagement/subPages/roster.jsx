@@ -59,12 +59,15 @@ const sub_Roster = ({ list, dispatch }) => {
 
   useEffect(() => {
     console.log(list);
-    const { members, retList } = list;
+    const { members, retList, operaStatus } = list;
     setTableBasicData([...members]);
     if (retList.length > 0) {
       setTableData([...retList]);
     } else {
       setTableData([...members]);
+    }
+    if (operaStatus.status !== -1) {
+      message.success(operaStatus.text);
     }
   }, [list]);
 
@@ -116,7 +119,7 @@ const sub_Roster = ({ list, dispatch }) => {
       // 更新一行数据，后台根据唯一学号更改
       const newData = [...tableData];
       // 修改
-      const index = newData.findIndex((item) => key === item.key);
+      const index = newData.findIndex((item) => key === item.studentId);
       if (index > -1) {
         if (!Object.keys(getDifference(row, newData[index])).length) {
           message.info('数据没有修改');
@@ -133,7 +136,7 @@ const sub_Roster = ({ list, dispatch }) => {
           });
           newData.splice(index, 1, { ...newData[index], ...row });
           setTableData(newData);
-          message.success('修改成功');
+          // message.success('修改成功');
         }
       } else {
         newData.push(row);
@@ -148,12 +151,12 @@ const sub_Roster = ({ list, dispatch }) => {
     }
   };
 
-  const isEditing = (record) => record.key === editingKey;
+  const isEditing = (record) => record.id === editingKey;
   const edit = (record) => {
     form.setFieldsValue({
       ...record,
     });
-    setEditingKey(record.key);
+    setEditingKey(record.id);
   };
 
   const columns = [
@@ -186,7 +189,7 @@ const sub_Roster = ({ list, dispatch }) => {
     },
     {
       title: '司职',
-      dataIndex: 'take_charge',
+      dataIndex: 'charge',
       width: '100px',
       editable: true,
     },
@@ -209,12 +212,6 @@ const sub_Roster = ({ list, dispatch }) => {
       editable: true,
     },
     {
-      title: '球衣码数',
-      dataIndex: 'jersey_size',
-      width: '100px',
-      editable: true,
-    },
-    {
       title: '身高/cm',
       dataIndex: 'height',
       width: '110px',
@@ -230,7 +227,7 @@ const sub_Roster = ({ list, dispatch }) => {
     },
     {
       title: '地址',
-      dataIndex: 'address',
+      dataIndex: 'area',
       width: '140px',
       editable: true,
     },
@@ -416,6 +413,7 @@ const sub_Roster = ({ list, dispatch }) => {
           },
         }}
         bordered
+        rowkey="id"
         dataSource={tableData}
         columns={mergedColumns}
         rowClassName="editable-row"

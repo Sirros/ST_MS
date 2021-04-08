@@ -19,3 +19,10 @@ export async function addUser(params) {
     data: params,
   });
 }
+
+export async function updateUser(params) {
+  return request('/api/updateUser', {
+    method: 'POST',
+    data: params,
+  });
+}

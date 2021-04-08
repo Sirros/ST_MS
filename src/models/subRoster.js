@@ -1,10 +1,11 @@
-import { getTotalRosterData, deleteUser, addUser } from '@/services/subRoster';
+import { getTotalRosterData, deleteUser, addUse, updateUser } from '@/services/subRoster';
 
 const subRosterModel = {
   namespace: 'subRoster',
   state: {
     members: [],
     retList: [],
+    operaStatus: { status: -1, text: '' },
   },
   effects: {
     // 获取 home 页所有基本信息
@@ -21,8 +22,12 @@ const subRosterModel = {
         payload: payload,
       });
     },
-    *updateUser({ payload }, { put }) {
-      console.log(payload);
+    *updateUser({ payload }, { put, call }) {
+      const response = yield call(updateUser, payload);
+      yield put({
+        type: 'saveOperaStatus',
+        payload: response,
+      });
     },
     *deleteUser({ payload }, { put, call }) {
       const response = yield call(deleteUser, payload);
@@ -43,6 +48,13 @@ const subRosterModel = {
   reducers: {
     saveTotal(state, { payload }) {
       state.members = payload.total;
+      return {
+        ...state,
+      };
+    },
+    saveOperaStatus(state, { payload }) {
+      state.members = payload.newTotal;
+      state.operaStatus = { status: payload.status, text: payload.text };
       return {
         ...state,
       };
