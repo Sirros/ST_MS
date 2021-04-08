@@ -31,10 +31,9 @@ const subRosterModel = {
     },
     *deleteUser({ payload }, { put, call }) {
       const response = yield call(deleteUser, payload);
-      console.log(response);
       yield put({
         type: 'updateMembers',
-        payload: { ...response, target: payload },
+        payload: response,
       });
     },
     *addMember({ payload }, { put, call }) {
@@ -72,11 +71,8 @@ const subRosterModel = {
       };
     },
     updateMembers(state, { payload }) {
-      if (payload.status === 200) {
-        state.members = state.members.filter((item) => {
-          return item.studentId !== payload.target;
-        });
-      }
+      state.members = payload.newList;
+      state.operaStatus = { status: payload.status, text: payload.text };
       return {
         ...state,
       };

@@ -316,9 +316,8 @@ const sub_Roster = ({ list, dispatch }) => {
         console.log('删除队员', deleteId);
         dispatch({
           type: 'subRoster/deleteUser',
-          payload: deleteId,
+          payload: { uid: deleteId },
         });
-        message.success('删除成员成功！');
       },
       onCancel() {
         console.log('取消');
