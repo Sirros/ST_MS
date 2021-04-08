@@ -51,10 +51,12 @@ const Honor = ({ dispatch, totalList }) => {
 
   useEffect(() => {
     console.log(totalList);
-    const { honorList } = totalList;
-    const { anta, freshman } = honorList;
-    setAntaData(anta);
-    setFreshmanData(freshman);
+    if (totalList.honorList) {
+      const { honorList } = totalList;
+      const { anta, freshman } = honorList;
+      setAntaData(anta);
+      setFreshmanData(freshman);
+    }
   }, [totalList]);
 
   const showModal = () => {
@@ -78,6 +80,11 @@ const Honor = ({ dispatch, totalList }) => {
     const formData = formRef.current.getFieldsValue();
     if (Object.keys(formData).length && Object.keys(formData).includes('newVal')) {
       console.log('修改');
+      if (formData.type === 'anta') {
+        formData.type = '安踏杯';
+      } else {
+        formData.type = '新生杯';
+      }
       dispatch({
         type: 'honor/updateItem',
         payload: formData,
@@ -86,6 +93,11 @@ const Honor = ({ dispatch, totalList }) => {
     } else {
       console.log('新建');
       formData.dateTime = moment(formData.date).valueOf();
+      if (formData.type === 'anta') {
+        formData.type = '安踏杯';
+      } else {
+        formData.type = '新生杯';
+      }
       console.log(formData);
       dispatch({
         type: 'honor/createItem',
@@ -174,14 +186,14 @@ const Honor = ({ dispatch, totalList }) => {
               >
                 {updateType === 'anta' &&
                   antaData.map((item) => (
-                    <Option key={item.key} value={item.key}>
-                      {item.text}
+                    <Option key={item.id} value={item.id}>
+                      {item.info}
                     </Option>
                   ))}
                 {updateType === 'freshman' &&
                   freshmanData.map((item) => (
-                    <Option key={item.key} value={item.key}>
-                      {item.text}
+                    <Option key={item.id} value={item.id}>
+                      {item.info}
                     </Option>
                   ))}
               </Select>
@@ -258,7 +270,7 @@ const Honor = ({ dispatch, totalList }) => {
             dataSource={antaData}
             renderItem={(item) => (
               <List.Item key={item.id}>
-                {item.info} - {moment(item.dateTime).format('YYYY-MM-DD')}
+                <b>{item.info}</b> - {moment(parseInt(item.dateTime)).format('YYYY-MM-DD')}
               </List.Item>
             )}
           />
@@ -271,7 +283,7 @@ const Honor = ({ dispatch, totalList }) => {
             dataSource={freshmanData}
             renderItem={(item) => (
               <List.Item key={item.id}>
-                {item.info} - {moment(item.dateTime).format('YYYY-MM-DD')}
+                <b>{item.info}</b> - {moment(parseInt(item.dateTime)).format('YYYY-MM-DD')}
               </List.Item>
             )}
           />

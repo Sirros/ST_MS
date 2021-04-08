@@ -40,6 +40,7 @@ const HonorModule = {
     },
     saveUpdateState(state, { payload }) {
       state.updateStatus = payload.status;
+      state.honorList = payload.updatedList;
       return {
         ...state,
       };
