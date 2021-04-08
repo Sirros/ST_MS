@@ -1,4 +1,4 @@
-import { getTotalRosterData, deleteUser, addUse, updateUser } from '@/services/subRoster';
+import { getTotalRosterData, deleteUser, addUser, updateUser } from '@/services/subRoster';
 
 const subRosterModel = {
   namespace: 'subRoster',
@@ -61,10 +61,8 @@ const subRosterModel = {
     },
     saveSearch(state, { payload }) {
       if (!payload.length) {
-        console.log('asdasdasdasd');
         state.retList = state.members;
       } else {
-        console.log('haha');
         state.retList = state.members.filter((item) => {
           return item.studentId === payload || item.name === payload;
         });
@@ -85,9 +83,6 @@ const subRosterModel = {
     },
     saveNewMember(state, { payload }) {
       console.log(payload);
-      if (payload.status === 200) {
-        console.log(payload.text);
-      }
       return {
         ...state,
       };

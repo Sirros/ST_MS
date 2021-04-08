@@ -340,16 +340,16 @@ const sub_Roster = ({ list, dispatch }) => {
 
   const handleOk = () => {
     const newMemberInfo = formRef.current.getFieldsValue().player;
+    newMemberInfo.key = newMemberInfo.studentId;
     console.log(newMemberInfo);
     dispatch({
       type: 'subRoster/addMember',
       payload: newMemberInfo,
-    });
-    newMemberInfo.key = newMemberInfo.studentId;
+    }).catch((e) => console.log(e));
     setConfirmLoading(true);
     setTimeout(() => {
       setVisible(false);
-      setTableData([...tableData, newMemberInfo]);
+      setTableData([newMemberInfo, ...tableData]);
       setConfirmLoading(false);
       message.success('添加完成，如有信息未填写，请尽量完善😊～');
     }, 2000);
@@ -392,7 +392,7 @@ const sub_Roster = ({ list, dispatch }) => {
             <ExcelColumn label="姓名" value="name" />
             <ExcelColumn label="年级" value="grade" />
             <ExcelColumn label="学号" value="studentId" />
-            <ExcelColumn label="司职" value="take_charge" />
+            <ExcelColumn label="司职" value="charge" />
             <ExcelColumn label="球衣码数" value="jersey_size" />
             <ExcelColumn label="身高" value="height" />
             <ExcelColumn label="体重" value="weight" />
@@ -490,7 +490,7 @@ const sub_Roster = ({ list, dispatch }) => {
           <Input placeholder="" />
         </Form.Item>
         <Form.Item
-          name={['player', 'take_charge']}
+          name={['player', 'charge']}
           label="司职"
           rules={[
             {
@@ -556,7 +556,7 @@ const sub_Roster = ({ list, dispatch }) => {
           <Input placeholder="单位kg" />
         </Form.Item>
         <Form.Item
-          name={['player', 'address']}
+          name={['player', 'area']}
           label="地址"
           rules={[
             {
