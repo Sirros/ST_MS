@@ -8,7 +8,7 @@ export async function postMatchTotalInfo(params) {
 }
 
 export async function getPlayers() {
-  return request('/api/getPlayers', {
+  return request('/api/getRosterData', {
     method: 'GET',
   });
 }

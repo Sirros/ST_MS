@@ -44,8 +44,8 @@ const sub_DataResult = ({ dispatch, postStatus }) => {
     if (postStatus.list && postStatus.list.length) {
       setOptionsList(postStatus.list);
     }
-    if (postStatus.status === 200) {
-      message.success('上传成功😊～');
+    if (postStatus.status === 5001) {
+      message.success('录入成功😊～');
       setCurrent(0);
       setMatchInfo({});
       setMatchDetail([]);
@@ -110,8 +110,6 @@ const sub_DataResult = ({ dispatch, postStatus }) => {
   };
   // 完成
   const done = () => {
-    console.log(matchInfo);
-    console.log(matchDetail);
     dispatch({
       type: 'sub_dataResult/postData',
       payload: {
@@ -268,8 +266,12 @@ const sub_DataResult = ({ dispatch, postStatus }) => {
       { label: '盖帽', uid: 'block', rule: false, msg: '请输入盖帽次数' },
       { label: '失误', uid: 'fault', rule: false, msg: '请输入失误次数' },
       { label: '犯规', uid: 'foul', rule: false, msg: '请输入犯规次数' },
-      { label: '投篮', uid: 'shot', rule: false, msg: '请输入投篮次数' },
-      { label: '三分', uid: 'threepoint', rule: false, msg: '请输入三分进球数' },
+      { label: '罚球命中', uid: 'onepoint_get', rule: false, msg: '请输入罚球进球数' },
+      { label: '罚球出手', uid: 'penalty_time', rule: false, msg: '请输入罚球出手数' },
+      { label: '两分命中', uid: 'twopoint_get', rule: false, msg: '请输入两分进球数' },
+      { label: '两分出手', uid: 'shot_time', rule: false, msg: '请输入两分出手数' },
+      { label: '三分命中', uid: 'threepoint_get', rule: false, msg: '请输入三分进球数' },
+      { label: '三分出手', uid: 'threepoint_time', rule: false, msg: '请输入三分出手数' },
     ];
     return (
       <>
@@ -304,8 +306,8 @@ const sub_DataResult = ({ dispatch, postStatus }) => {
                           >
                             <Select
                               showSearch
-                              style={{ width: 200 }}
-                              placeholder="请选择人员"
+                              // style={{ width: 100 }}
+                              placeholder="人员"
                               optionFilterProp="children"
                               // onChange={onChange}
                               // onFocus={onFocus}
@@ -369,7 +371,7 @@ const sub_DataResult = ({ dispatch, postStatus }) => {
     return (
       <div className={styles.doneArea}>
         <Title>
-          录入成功！
+          数据已就绪！
           <CheckCircleTwoTone twoToneColor="#52c41a" />
         </Title>
       </div>
@@ -409,7 +411,7 @@ const sub_DataResult = ({ dispatch, postStatus }) => {
           )}
           {current === steps.length - 1 && (
             <Button type="primary" onClick={done}>
-              完成
+              数据录入
             </Button>
           )}
           {current > 0 && (

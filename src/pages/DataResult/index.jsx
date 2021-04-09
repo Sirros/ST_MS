@@ -59,7 +59,7 @@ const DataResult = ({ total, dispatch }) => {
             columns={scoreColumns}
             dataSource={twoTeamInfo}
             pagination={false}
-            rowKey="id"
+            rowKey="team"
           />
         </Col>
         <Col span={5}>
@@ -86,7 +86,6 @@ const DataResult = ({ total, dispatch }) => {
             success: true,
           };
         }}
-        rowKey="key"
         dateFormatter="string"
         search={false}
         pagination={false}

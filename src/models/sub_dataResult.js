@@ -8,16 +8,13 @@ const sub_DataResultModel = {
   effects: {
     *getData({ payload }, { put, call }) {
       const response = yield call(getPlayers);
-      console.log(response);
       yield put({
         type: 'saveData',
         payload: response,
       });
     },
     *postData({ payload }, { put, call }) {
-      console.log(payload);
       const response = yield call(postMatchTotalInfo, payload);
-      console.log(response);
       yield put({
         type: 'saveStatus',
         payload: response,
@@ -27,14 +24,13 @@ const sub_DataResultModel = {
   reducers: {
     saveStatus(state, { payload }) {
       const { status } = payload;
-      console.log(status);
       return {
         ...state,
         status: status,
       };
     },
     saveData(state, { payload }) {
-      state.list = payload.list;
+      state.list = [...payload.total.managers, ...payload.total.players];
       return {
         ...state,
       };
