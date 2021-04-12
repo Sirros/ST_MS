@@ -3,7 +3,6 @@ import { Row, Col, Button, Modal, Radio, Upload, message, Input, Image, Divider 
 import { InboxOutlined } from '@ant-design/icons';
 import styles from './index.less';
 import folderImg from '@/assets/folder.png';
-import fileImg from '@/assets/file.png';
 import { connect } from 'umi';
 
 import { Card } from 'antd';
@@ -20,6 +19,9 @@ const Moment = ({ dispatch, fileTotal }) => {
 
   const [createInfo, setCreateInfo] = useState({});
   const [fileList, setFileList] = useState([]);
+  const [pictureList, setPictureList] = useState([]);
+  const [level, setLevel] = useState(1);
+  // const [targetFolder, setTargetFolder] = useState({});
 
   useEffect(() => {
     console.log(123);
@@ -37,6 +39,7 @@ const Moment = ({ dispatch, fileTotal }) => {
   }, [fileTotal]);
 
   useEffect(() => {
+    console.log(createInfo);
     if (Object.keys(createInfo).length) {
       dispatch({
         type: 'moment/addFile',
@@ -47,30 +50,36 @@ const Moment = ({ dispatch, fileTotal }) => {
 
   const { Dragger } = Upload;
 
+  function getBase64(img, callback) {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  }
+
   const props = {
     name: 'file',
     multiple: true,
-    // 这里写接口，收到上传的数据之后，服务端向数据库存储，并确认返回首页
-    // 获取文件列表的接口读取数据库最新内容，做页面更新
-    action: '/api/postPicture',
+    // action: '/api/postPicture',
     onChange(info) {
-      console.log(info.file);
-      const { status } = info.file;
+      console.log(info);
+      const { status, name, uid } = info.file;
       if (status === 'done') {
-        message.success(`${info.file.name} 文件上传成功.`);
+        getBase64(info.file.originFileObj, (imageUrl) => {
+          setPictureList([...pictureList, { b64: imageUrl, name, uid }]);
+        });
+        message.success(`${info.file.name} 文件添加成功.`);
       } else if (status === 'error') {
-        message.error(`${info.file.name} 文件上传失败.`);
+        message.error(`${info.file.name} 文件添加失败.`);
       }
     },
     beforeUpload: (file) => {
-      console.log(file.type);
       // 对应类型[jepg, jpg, png, svg]
       const allowType = ['image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml'];
       // 文件格式限制
       if (allowType.findIndex((i) => i === file.type) < 0) {
         message.error(`[${file.name}] - 不支持该格式的文件上传`);
       }
-      return allowType.findIndex((i) => i === file.type) > 0;
+      return allowType.includes(file.type);
     },
     // headers: {},
     // withCredentials: false, //上传请求时是否携带 cookie
@@ -78,6 +87,7 @@ const Moment = ({ dispatch, fileTotal }) => {
 
   // 文件夹点击
   const handleFolderItemClick = (e) => {
+    setLevel(level + 1);
     setSelectFoldetItem(e.currentTarget.id);
     setToggleDetail(true);
   };
@@ -94,23 +104,29 @@ const Moment = ({ dispatch, fileTotal }) => {
 
   const handleOk = () => {
     setConfirmLoading(true);
-
     if (createType === 'folder') {
       const temp = {
         title: createFolderTitle,
         creator: createFolderCreator,
         createTime: Date.now(),
       };
-      setTimeout(() => {
-        setIsModalVisible(false);
-        setConfirmLoading(false);
-        setFileList([...fileList, temp]);
-      }, 2000);
+      setFileList([...fileList, temp]);
       setCreateInfo(temp);
       message.success('创建文件夹成功！');
     } else {
-      message.success('上传文件成功！');
+      dispatch({
+        type: 'moment/uploadPicture',
+        payload: {
+          picture_list: pictureList,
+          target_folder: selectFoldetItem,
+        },
+      });
     }
+    setTimeout(() => {
+      setIsModalVisible(false);
+      setConfirmLoading(false);
+      setPictureList([]);
+    }, 2000);
   };
 
   const handleCancel = () => {
@@ -157,9 +173,9 @@ const Moment = ({ dispatch, fileTotal }) => {
 
   // 当前选择
   function renderPictureWall() {
-    console.log(fileList);
     const idx = fileList.findIndex((item) => item.title == selectFoldetItem);
-    console.log(idx);
+    console.log(fileList);
+    console.log(fileList[idx]);
     return (
       <>
         <Row gutter={10} type="flex">
@@ -226,7 +242,7 @@ const Moment = ({ dispatch, fileTotal }) => {
             添加类型：
             <Radio.Group value={createType} onChange={handleCreateTypeChange}>
               <Radio.Button value="file">文件</Radio.Button>
-              <Radio.Button value="folder">文件夹</Radio.Button>
+              {level < 2 && <Radio.Button value="folder">文件夹</Radio.Button>}
             </Radio.Group>
             {createType === 'file' && renderUploadFile()}
             {createType === 'folder' && (
@@ -258,7 +274,7 @@ const Moment = ({ dispatch, fileTotal }) => {
   return (
     <PageContainer className={styles.folderWrapper}>
       <Button type="dashed" style={{ marginBottom: 10 }} onClick={(e) => handleOpenAddCard(e)}>
-        添加
+        添加文件夹
       </Button>
       <Card>
         {!toggleDetail && renderFolderList()}
