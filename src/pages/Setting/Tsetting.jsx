@@ -18,7 +18,6 @@ const TSetting = ({ dispatch, updateStatus }) => {
     captain: [],
     vice_captain: [],
     manager: [],
-    criterion: '',
   });
   const [playerOptions, setPlayerOptions] = useState([]);
   const [headofDepOptions, setHeadofDepOptions] = useState([]);
@@ -32,14 +31,22 @@ const TSetting = ({ dispatch, updateStatus }) => {
   }, []);
 
   useEffect(() => {
-    const { Info = {}, result = {} } = updateStatus;
-    const { departmentInfo = {}, groupChat = '', teamMembers = [], rules = [] } = Info;
+    console.log(updateStatus);
+    const { Info = {} } = updateStatus;
+    const {
+      departmentInfo = {},
+      groupChat,
+      teamMembers = [],
+      captain = [],
+      vice_captain = [],
+      manager = [],
+    } = Info;
     const { teamAttr, department, HeadofDep } = departmentInfo;
 
-    if (Object.keys(result).length > 0) {
-      if (result.status === 200) {
-        message.success('更新成功！');
-      }
+    if (Info.status === 9000) {
+      message.success('更新成功！');
+    } else if (Info.status === 9001) {
+      message.warn('更新失败，请重试...');
     }
 
     setPlayerOptions(teamMembers);
@@ -49,10 +56,9 @@ const TSetting = ({ dispatch, updateStatus }) => {
       team: teamAttr,
       belong: department,
       qq_number: groupChat,
-      captain: ['林子博'],
-      vice_captain: ['张南南', '李志成'],
-      manager: ['吴青云', '刘雨欣', '田鸿榕'],
-      criterion: rules,
+      captain: captain,
+      vice_captain: vice_captain,
+      manager: manager,
     });
   }, [updateStatus]);
 
@@ -159,16 +165,15 @@ const TSetting = ({ dispatch, updateStatus }) => {
               initialValues={init}
             >
               <Form.Item label="队伍" name="team">
-                <Input />
+                <Input disabled />
               </Form.Item>
               <Form.Item label="隶属学院" name="belong">
-                <Input />
+                <Input disabled />
               </Form.Item>
               <Form.Item label="qq群/微信群" name="qq_number" rules={[{ required: false }]}>
                 <Input placeholder="" />
               </Form.Item>
               <Form.Item label="学院负责人" name="principal" rules={[{ required: false }]}>
-                {/* <Input placeholder="" /> */}
                 <Select
                   mode="multiple"
                   showArrow

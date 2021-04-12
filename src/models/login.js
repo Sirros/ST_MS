@@ -5,16 +5,24 @@ import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { message } from 'antd';
 
+const waitTime = (time = 100) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+};
+
 const Model = {
   namespace: 'login',
   state: {
     status: undefined,
-    selectedUser: 'baller'
+    selectedUser: 'baller',
   },
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
-      console.log(response)
+      console.log(response);
       yield put({
         type: 'changeLoginStatus',
         payload: response,
@@ -36,7 +44,9 @@ const Model = {
               redirect = redirect.substr(redirect.indexOf('#') + 1);
             }
           } else {
-            window.location.href = '/';
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 500);
             return;
           }
         }
@@ -44,11 +54,11 @@ const Model = {
         history.replace(redirect || '/');
       }
     },
-    *selectedUser ({ payload }, { put }) {
+    *selectedUser({ payload }, { put }) {
       yield put({
         type: 'changeSelectedUser',
-        payload
-      })
+        payload,
+      });
     },
 
     logout() {
@@ -70,8 +80,8 @@ const Model = {
       return { ...state, status: payload.status, type: payload.type };
     },
     changeSelectedUser(state, { payload }) {
-      return { ...state, selectedUser: payload}
-    }
+      return { ...state, selectedUser: payload };
+    },
   },
 };
 export default Model;

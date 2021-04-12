@@ -111,7 +111,7 @@ const Login = (props) => {
               }}
               placeholder={intl.formatMessage({
                 id: 'pages.login.username.placeholder',
-                defaultMessage: '用户名: admin',
+                defaultMessage: '用户名: root',
               })}
               rules={[
                 {
@@ -133,7 +133,7 @@ const Login = (props) => {
               }}
               placeholder={intl.formatMessage({
                 id: 'pages.login.password.placeholder',
-                defaultMessage: '密码: ant.design',
+                defaultMessage: '密码: 123456',
               })}
               rules={[
                 {
@@ -154,9 +154,6 @@ const Login = (props) => {
             marginBottom: 24,
           }}
         >
-          {/* <ProFormCheckbox noStyle name="autoLogin">
-            <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
-          </ProFormCheckbox> */}
           <Radio.Group onChange={handleSelectUser} value={selectedUser}>
             <Radio value="baller">球员</Radio>
             <Radio value="captain">队长/经理</Radio>

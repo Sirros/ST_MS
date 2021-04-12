@@ -29,9 +29,10 @@ const TeamSettingModule = {
       };
     },
     saveUpdateState(state, { payload }) {
+      state.Info = { ...payload };
       return {
         ...state,
-        result: { ...payload },
+        // result: { ...payload },
       };
     },
   },
