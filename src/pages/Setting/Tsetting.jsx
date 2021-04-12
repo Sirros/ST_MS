@@ -108,7 +108,7 @@ const TSetting = ({ dispatch, updateStatus }) => {
     );
   }
 
-  // 头像选择
+  // logo选择
   const handleUploadChange = (info) => {
     if (info.file.status === 'uploading') {
       setLoading(true);
@@ -129,7 +129,7 @@ const TSetting = ({ dispatch, updateStatus }) => {
   };
   // 提交
   const onFinish = (v) => {
-    v = { ...v, imageUrl };
+    v = { ...v, imgB64: imageUrl };
     if (Object.values(v).every((item) => item === '' || item === undefined)) {
       message.info('数据无需更新');
     } else {
@@ -223,7 +223,7 @@ const TSetting = ({ dispatch, updateStatus }) => {
                     listType="picture-card"
                     className="avatar-uploader"
                     showUploadList={false}
-                    action="" // url
+                    action="/img/logo" // url
                     beforeUpload={beforeUpload}
                     onChange={handleUploadChange}
                   >
