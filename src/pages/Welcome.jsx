@@ -151,7 +151,15 @@ const Welcome = ({ dispatch, team }) => {
               size="small"
               bordered
               dataSource={teamAnnouncements}
-              renderItem={(item) => <List.Item>{item.content}</List.Item>}
+              renderItem={(item) => (
+                <List.Item>
+                  {item.edit_mode === 'powerText' ? (
+                    <div dangerouslySetInnerHTML={{ __html: item.content }}></div>
+                  ) : (
+                    item.content
+                  )}
+                </List.Item>
+              )}
             />
           </Card>
         </div>

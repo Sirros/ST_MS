@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 
-export async function postFakeData(params) {
-  return request('/api/postFakeData', {
+export async function postAnnData(params) {
+  return request('/api/postAnnData', {
     method: 'POST',
     data: params,
   });

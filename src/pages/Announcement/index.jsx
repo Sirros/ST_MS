@@ -3,7 +3,6 @@ import { Radio, Button, Form, Input, Select, DatePicker, message, Spin } from 'a
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import moment from 'moment';
-// import ImgCrop from 'antd-img-crop';
 import { connect } from 'umi';
 // 富文本编辑器相关
 import BraftEditor from 'braft-editor';
@@ -26,11 +25,13 @@ const Announcement = ({ postStatus, dispatch }) => {
   useEffect(() => {
     console.log(postStatus);
     if (Object.keys(postStatus).length > 0) {
-      if (postStatus.status === 200) {
-        setSpinningStatus(false);
+      if (postStatus.status === 9000) {
         message.success('公告发布成功~😊');
         // onReset();
+      } else {
+        message.warn('发布失败...');
       }
+      setSpinningStatus(false);
     }
   }, [postStatus]);
 
@@ -63,7 +64,6 @@ const Announcement = ({ postStatus, dispatch }) => {
 
   // 类型改变
   const onTypeChange = (type) => {
-    console.log(type);
     setEventType(type);
     if (type === 'daily') {
       setIsCourtRequired(false);
@@ -131,21 +131,24 @@ const Announcement = ({ postStatus, dispatch }) => {
             <Option value="daily">日常事务</Option>
           </Select>
         </Form.Item>
-        <Form.Item
-          name="site"
-          label="地点"
-          rules={[
-            {
-              required: isCourtRequired,
-            },
-          ]}
-        >
-          <Select placeholder="请选择场地" onChange={onSiteChange} allowClear>
-            <Option value="court_2">二号场</Option>
-            <Option value="court_3">三号场</Option>
-            <Option value="other">待定</Option>
-          </Select>
-        </Form.Item>
+
+        {eventType !== 'daily' && (
+          <Form.Item
+            name="site"
+            label="地点"
+            rules={[
+              {
+                required: isCourtRequired,
+              },
+            ]}
+          >
+            <Select placeholder="请选择场地" onChange={onSiteChange} allowClear>
+              <Option value="court_2">二号场</Option>
+              <Option value="court_3">三号场</Option>
+              <Option value="other">待定</Option>
+            </Select>
+          </Form.Item>
+        )}
         <Form.Item
           name="dateTime"
           rules={[

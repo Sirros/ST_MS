@@ -1,4 +1,4 @@
-import { postFakeData } from '@/services/announcement';
+import { postAnnData } from '@/services/announcement';
 
 const AnnouncementModel = {
   namespace: 'announcement',
@@ -8,7 +8,7 @@ const AnnouncementModel = {
   effects: {
     // 获取 home 页所有基本信息
     *postAnnouncementData({ payload }, { put, call }) {
-      const response = yield call(postFakeData, payload);
+      const response = yield call(postAnnData, payload);
       yield put({
         type: 'savePostState',
         payload: response,
@@ -17,6 +17,7 @@ const AnnouncementModel = {
   },
   reducers: {
     savePostState(state, { payload }) {
+      console.log(payload);
       return {
         ...state,
         status: payload.status,
