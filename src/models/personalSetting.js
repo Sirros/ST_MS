@@ -4,7 +4,7 @@ const PersonalSettingModule = {
   namespace: 'personalSetting',
   state: {
     user: {},
-    result: {},
+    result: -1,
   },
   effects: {
     *getUserInfo({ payload }, { put, call }) {
@@ -30,9 +30,10 @@ const PersonalSettingModule = {
       };
     },
     saveUpdateState(state, { payload }) {
+      state.user = { ...payload.newInfo };
       return {
         ...state,
-        result: { ...payload },
+        result: payload.status,
       };
     },
   },

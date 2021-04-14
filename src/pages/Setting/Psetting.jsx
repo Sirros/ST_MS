@@ -2,26 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { TweenOneGroup } from 'rc-tween-one';
 import { LoadingOutlined, PlusOutlined, AntDesignOutlined } from '@ant-design/icons';
-import {
-  Card,
-  Form,
-  Input,
-  Button,
-  Upload,
-  message,
-  Select,
-  Avatar,
-  Row,
-  Col,
-  Divider,
-  Tag,
-} from 'antd';
+import { Card, Form, Input, Button, Upload, message, Avatar, Row, Col, Divider, Tag } from 'antd';
 import { connect } from 'umi';
 import styles from './psettingStyle.less';
-import ava from '@/assets/01.jpg';
+import { getDifference } from '@/utils/utils.js';
 
 const { TextArea } = Input;
-const { Option } = Select;
 
 // 表单布局
 const layout = {
@@ -37,13 +23,6 @@ const tailLayout = {
     offset: 4,
     span: 16,
   },
-};
-
-// 地区
-const provinceData = ['四川', '广东'];
-const cityData = {
-  四川: ['成都', '乐山', '郫县'],
-  广东: ['广州', '深圳', '东莞'],
 };
 
 // 头像 func
@@ -66,17 +45,9 @@ function beforeUpload(file) {
 }
 
 const PSetting = ({ dispatch, userInfo }) => {
-  const [bodyInfo, setBodyInfo] = useState({});
   const [basicInfo, setBasicInfo] = useState({});
-
   const [loading, setLoading] = useState(false);
-
-  const [province, setProvince] = useState(provinceData[0]);
-  const [cities, setCities] = useState(cityData[provinceData[0]]);
-  const [city, setCity] = useState(cityData[provinceData[0]][0]);
-
   const [tags, setTags] = useState(['默认标签']);
-
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -93,31 +64,46 @@ const PSetting = ({ dispatch, userInfo }) => {
   useEffect(() => {
     console.log(userInfo);
     const {
-      bodyInfo = {},
-      uid,
+      studentId,
       name,
       avatar,
-      phoneNumber,
+      phone,
       area,
       signature,
       grade,
-      email,
+      em,
+      height,
+      weight,
+      jersey_number,
     } = userInfo.user;
     setBasicInfo({
-      uid,
+      studentId,
       name,
       avatar,
-      phoneNumber,
+      phone,
       area,
       signature,
       grade,
-      email,
+      em,
+      height,
+      weight,
+      jersey_number,
     });
-    setBodyInfo(bodyInfo);
+    formRef.current.setFieldsValue({
+      name,
+      studentId,
+      area,
+      signature,
+      phone,
+      height,
+      weight,
+      jersey_number,
+      em,
+    });
   }, [userInfo.user]);
 
   useEffect(() => {
-    if (userInfo.result && userInfo.result.status === 200) {
+    if (userInfo.result && userInfo.result === 9000) {
       message.success('数据更新提交');
     }
   }, [userInfo.result]);
@@ -183,30 +169,20 @@ const PSetting = ({ dispatch, userInfo }) => {
       });
     }
   };
-  // 省份修改
-  const handleProvinceChange = (value) => {
-    setCities(cityData[value]);
-    setProvince(value);
-    setCity(cityData[value][0]);
-  };
-  // 城市修改
-  const onCityChange = (value) => {
-    setCity(value);
-  };
+
   // 重置
   const onReset = () => {
     formRef.current.resetFields();
     setImageUrl('');
   };
+
   // 提交
   const onFinish = (v) => {
-    v = { ...v, imageUrl, area: { province, city } };
-    delete v.name;
-    delete v.id;
-    if (v.area && v.area.province === '四川' && v.area.city === '成都') {
-      delete v.area;
+    if (imageUrl) {
+      v.imageUrl = imageUrl;
     }
-    if (Object.values(v).every((item) => item === '' || item === undefined)) {
+    console.log();
+    if (Object.keys(getDifference(v, basicInfo)).length === 0) {
       message.info('数据无需更新');
     } else {
       dispatch({
@@ -233,17 +209,17 @@ const PSetting = ({ dispatch, userInfo }) => {
               <div className={styles.info}>
                 <div className={styles.ava}>
                   <Avatar
-                    src={ava}
+                    src={basicInfo.avatar}
                     size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
                     icon={<AntDesignOutlined />}
                   />
                 </div>
                 <div className={styles.infoTitle}>
                   <div>
-                    <h2>raj</h2>
+                    <h2>{basicInfo.name}</h2>
                   </div>
                   <div>
-                    <span>2017141463192</span>
+                    <span>{basicInfo.studentId}</span>
                   </div>
                 </div>
               </div>
@@ -260,25 +236,25 @@ const PSetting = ({ dispatch, userInfo }) => {
                     <span className={styles.title}>身高:</span>
                   </Col>
                   <Col span={16}>
-                    <span>{`${bodyInfo.height}cm`}</span>
+                    <span>{`${basicInfo.height}cm`}</span>
                   </Col>
                   <Col span={8}>
                     <span className={styles.title}>体重:</span>
                   </Col>
                   <Col span={16}>
-                    <span>{`${bodyInfo.weight}kg`}</span>
+                    <span>{`${basicInfo.weight}kg`}</span>
                   </Col>
                   <Col span={8}>
                     <span className={styles.title}>联系电话:</span>
                   </Col>
                   <Col span={16}>
-                    <span>{basicInfo.phoneNumber}</span>
+                    <span>{basicInfo.phone}</span>
                   </Col>
                   <Col span={8}>
                     <span className={styles.title}>邮箱:</span>
                   </Col>
                   <Col span={16}>
-                    <span>{basicInfo.email}</span>
+                    <span>{basicInfo.em}</span>
                   </Col>
                   <Col span={8}>
                     <span className={styles.title}>地区:</span>
@@ -347,47 +323,38 @@ const PSetting = ({ dispatch, userInfo }) => {
             </Card>
           </div>
           <div className={styles.contentBoxRight}>
-            <Form
-              {...layout}
-              ref={formRef}
-              name="control-ref"
-              onFinish={onFinish}
-              initialValues={{
-                name: 'raj',
-                id: '2017141463192',
-                area: '',
-                message: '',
-                opinion: '',
-                size: '',
-                email: '',
-                body_info: '',
-              }}
-            >
+            <Form {...layout} ref={formRef} name="control-ref" onFinish={onFinish}>
               <Form.Item label="姓名" name="name">
                 <Input disabled />
               </Form.Item>
-              <Form.Item label="学号" name="id">
+              <Form.Item label="学号" name="studentId">
                 <Input disabled />
               </Form.Item>
-              <Form.Item label="邮箱" name="email" rules={[{ required: false, type: 'email' }]}>
+              <Form.Item label="邮箱" name="em" rules={[{ required: false, type: 'email' }]}>
                 <Input min={0} max={6} placeholder="请输入有效的邮箱地址" />
               </Form.Item>
-              <Form.Item label="联系电话" name="phoneNumber" rules={[{ required: false }]}>
+              <Form.Item label="联系电话" name="phone" rules={[{ required: false }]}>
                 <Input min={0} max={6} placeholder="请输入有效的电话号码" />
               </Form.Item>
-              <Form.Item label="球衣号码" name="number" rules={[{ required: false }]}>
-                <Input
-                  min={0}
-                  max={99}
-                  placeholder="请输入球衣号码，如果有多个请用'/'分隔：新生杯/三十二院"
-                />
+              <Form.Item label="球衣号码" name="jersey_number" rules={[{ required: false }]}>
+                <Input min={0} max={99} placeholder="优先使用32院球衣号码" />
               </Form.Item>
-              <Form.Item label="球衣码数" name="size" rules={[{ required: false }]}>
-                <Input min={0} max={6} placeholder="请输入球衣码数" />
+              <Form.Item label="身高" name="height" rules={[{ required: false }]}>
+                <Input min={0} max={6} placeholder="请输入身高cm" />
               </Form.Item>
-              <Form.Item label="身高体重" name="body_info" rules={[{ required: false }]}>
-                <Input min={0} max={6} placeholder="请输入身高体重，请用'/'分隔：身高cm/体重kg" />
+              <Form.Item label="体重" name="weight" rules={[{ required: false }]}>
+                <Input min={0} max={6} placeholder="请输入体重kg" />
               </Form.Item>
+
+              <Form.Item label="地区" name="area" rules={[{ required: false }]}>
+                <Input placeholder="省 - 市" allowClear />
+              </Form.Item>
+              <Form.Item label="个性签名" name="signature" rules={[{ required: false }]}>
+                <Input placeholder="将会展示于个人信息与首页" allowClear />
+              </Form.Item>
+              {/* <Form.Item label="意见" name="opinion" rules={[{ required: false }]}>
+                <TextArea allowClear placeholder="针对队伍的管理，请提出您的宝贵意见！" />
+              </Form.Item> */}
               <Form.Item label="头像" rules={[{ required: false }]}>
                 <>
                   <Upload
@@ -406,30 +373,6 @@ const PSetting = ({ dispatch, userInfo }) => {
                     )}
                   </Upload>
                 </>
-              </Form.Item>
-              <Form.Item label="地区" name="area" rules={[{ required: false }]}>
-                <>
-                  <Select
-                    defaultValue={provinceData[0]}
-                    style={{ width: 120 }}
-                    onChange={handleProvinceChange}
-                  >
-                    {provinceData.map((province) => (
-                      <Option key={province}>{province}</Option>
-                    ))}
-                  </Select>
-                  <Select style={{ width: 120 }} value={city} onChange={onCityChange}>
-                    {cities.map((city) => (
-                      <Option key={city}>{city}</Option>
-                    ))}
-                  </Select>
-                </>
-              </Form.Item>
-              <Form.Item label="个性签名" name="message" rules={[{ required: false }]}>
-                <Input placeholder="将会展示于个人信息与首页" allowClear />
-              </Form.Item>
-              <Form.Item label="意见" name="opinion" rules={[{ required: false }]}>
-                <TextArea allowClear placeholder="针对队伍的管理，请提出您的宝贵意见！" />
               </Form.Item>
               <Form.Item {...tailLayout}>
                 <Button type="primary" htmlType="submit" style={{ marginRight: 10 }}>

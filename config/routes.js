@@ -1,6 +1,7 @@
 const ALL_ALLOW = ['admin', 'captain', 'manager', 'baller'];
 const EXCEPT_BALLER = ['admin', 'captain', 'manager'];
 const BALLER = ['baller'];
+const EXCEPT_ADMIN = ['captain', 'manager'];
 // const CAPTAIN_AND_ADMIN = ['admin', 'captain'];
 
 export default [
@@ -133,7 +134,7 @@ export default [
                 name: 'p_setting',
                 icon: 'user',
                 component: './Setting/Psetting.jsx',
-                authority: ALL_ALLOW,
+                authority: EXCEPT_ADMIN,
               },
               {
                 component: './Welcome',
