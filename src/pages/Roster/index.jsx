@@ -158,7 +158,7 @@ const Roster = ({ totalPerson, dispatch }) => {
         <Row gutter={24} className={styles.cwrapper}>
           {players &&
             players.map((item) => {
-              if (item.attr === '队员') {
+              if (item.attr === '队员' || item.attr === '副队长') {
                 return (
                   <Col key={item.studentId} span={6} style={{ marginBottom: 15 }}>
                     <Card

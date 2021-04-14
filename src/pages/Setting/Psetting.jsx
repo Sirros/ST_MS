@@ -51,6 +51,7 @@ const PSetting = ({ dispatch, userInfo }) => {
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [fileName, setFileName] = useState('');
 
   const formRef = useRef();
   const inputRef = useRef();
@@ -165,6 +166,7 @@ const PSetting = ({ dispatch, userInfo }) => {
     if (info.file.status === 'done') {
       getBase64(info.file.originFileObj, (imageUrl) => {
         setImageUrl(imageUrl);
+        setFileName(info.file.name);
         setLoading(false);
       });
     }
@@ -180,6 +182,7 @@ const PSetting = ({ dispatch, userInfo }) => {
   const onFinish = (v) => {
     if (imageUrl) {
       v.imageUrl = imageUrl;
+      v.fileName = fileName;
     }
     console.log();
     if (Object.keys(getDifference(v, basicInfo)).length === 0) {
