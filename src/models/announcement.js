@@ -17,7 +17,6 @@ const AnnouncementModel = {
   },
   reducers: {
     savePostState(state, { payload }) {
-      console.log(payload);
       return {
         ...state,
         status: payload.status,

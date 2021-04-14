@@ -24,14 +24,12 @@ const Moment = ({ dispatch, fileTotal }) => {
   // const [targetFolder, setTargetFolder] = useState({});
 
   useEffect(() => {
-    console.log(123);
     dispatch({
       type: 'moment/getListData',
     });
   }, []);
 
   useEffect(() => {
-    console.log(fileTotal);
     const { list } = fileTotal;
     if (list && Object.keys(list).length) {
       setFileList(list.rows);
@@ -39,7 +37,6 @@ const Moment = ({ dispatch, fileTotal }) => {
   }, [fileTotal]);
 
   useEffect(() => {
-    console.log(createInfo);
     if (Object.keys(createInfo).length) {
       dispatch({
         type: 'moment/addFile',
@@ -61,7 +58,6 @@ const Moment = ({ dispatch, fileTotal }) => {
     multiple: true,
     // action: '/api/postPicture',
     onChange(info) {
-      console.log(info);
       const { status, name, uid } = info.file;
       if (status === 'done') {
         getBase64(info.file.originFileObj, (imageUrl) => {
@@ -174,8 +170,6 @@ const Moment = ({ dispatch, fileTotal }) => {
   // 当前选择
   function renderPictureWall() {
     const idx = fileList.findIndex((item) => item.title == selectFoldetItem);
-    console.log(fileList);
-    console.log(fileList[idx]);
     return (
       <>
         <Row gutter={10} type="flex">

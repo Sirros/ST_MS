@@ -50,7 +50,6 @@ const Welcome = ({ dispatch, team }) => {
       rules,
       logoUrl,
     } = team.mainInfo;
-    console.log(team);
 
     setTeamTitle(title);
     setTeamManagers(managers);

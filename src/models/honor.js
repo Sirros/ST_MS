@@ -9,7 +9,6 @@ const HonorModule = {
   effects: {
     *getList({ payload }, { put, call }) {
       const response = yield call(getHonorList);
-      console.log(response);
       yield put({
         type: 'saveList',
         payload: response,
@@ -24,7 +23,6 @@ const HonorModule = {
     },
     *createItem({ payload }, { put, call }) {
       const response = yield call(createHonorItem, payload);
-      console.log(response);
       yield put({
         type: 'saveNewList',
         payload: response,

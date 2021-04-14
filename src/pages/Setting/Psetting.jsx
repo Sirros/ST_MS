@@ -63,7 +63,6 @@ const PSetting = ({ dispatch, userInfo }) => {
   }, []);
 
   useEffect(() => {
-    console.log(userInfo);
     const {
       studentId,
       name,
@@ -184,7 +183,6 @@ const PSetting = ({ dispatch, userInfo }) => {
       v.imageUrl = imageUrl;
       v.fileName = fileName;
     }
-    console.log();
     if (Object.keys(getDifference(v, basicInfo)).length === 0) {
       message.info('数据无需更新');
     } else {
@@ -193,7 +191,6 @@ const PSetting = ({ dispatch, userInfo }) => {
         payload: v,
       });
     }
-    console.log(v);
   };
 
   const uploadButton = (

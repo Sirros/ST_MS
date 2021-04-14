@@ -23,7 +23,6 @@ const MomentModule = {
     },
     *uploadPicture({ payload }, { put, call }) {
       const response = yield call(postPicture, payload);
-      console.log(response);
       yield put({
         type: 'updateUpload',
         payload: response,
@@ -38,7 +37,6 @@ const MomentModule = {
       };
     },
     saveAddFile(state, { payload }) {
-      console.log(payload);
       state.addStatus = payload.status;
       return {
         ...state,

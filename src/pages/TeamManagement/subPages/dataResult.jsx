@@ -40,7 +40,6 @@ const sub_DataResult = ({ dispatch, postStatus }) => {
   }, []);
 
   useEffect(() => {
-    console.log(postStatus);
     if (postStatus.list && postStatus.list.length) {
       setOptionsList(postStatus.list);
     }

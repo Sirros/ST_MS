@@ -23,7 +23,6 @@ const Announcement = ({ postStatus, dispatch }) => {
   const { Option } = Select;
 
   useEffect(() => {
-    console.log(postStatus);
     if (Object.keys(postStatus).length > 0) {
       if (postStatus.status === 9000) {
         message.success('公告发布成功~😊');
@@ -34,10 +33,6 @@ const Announcement = ({ postStatus, dispatch }) => {
       setSpinningStatus(false);
     }
   }, [postStatus]);
-
-  const onValuesChange = (values) => {
-    console.log(values);
-  };
 
   const formItemLayout = {
     labelCol: {

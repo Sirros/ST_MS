@@ -58,7 +58,6 @@ const sub_Roster = ({ list, dispatch }) => {
   }, []);
 
   useEffect(() => {
-    console.log(list);
     const { members, retList, operaStatus } = list;
     setTableBasicData([...members]);
     if (retList.length > 0) {
@@ -124,7 +123,6 @@ const sub_Roster = ({ list, dispatch }) => {
         if (!Object.keys(getDifference(row, newData[index])).length) {
           message.info('数据没有修改');
         } else {
-          console.log(getDifference(row, newData[index]));
           // 这里发请求
           dispatch({
             type: 'subRoster/updateUser',
@@ -144,7 +142,6 @@ const sub_Roster = ({ list, dispatch }) => {
       }
       setEditingKey('');
     } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
       errInfo.errorFields.forEach((i) => {
         message.warn(`${i.errors}`);
       });
@@ -312,8 +309,6 @@ const sub_Roster = ({ list, dispatch }) => {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        console.log('OK');
-        console.log('删除队员', deleteId);
         dispatch({
           type: 'subRoster/deleteUser',
           payload: { uid: deleteId },
@@ -340,7 +335,6 @@ const sub_Roster = ({ list, dispatch }) => {
   const handleOk = () => {
     const newMemberInfo = formRef.current.getFieldsValue().player;
     newMemberInfo.key = newMemberInfo.studentId;
-    console.log(newMemberInfo);
     dispatch({
       type: 'subRoster/addMember',
       payload: newMemberInfo,
@@ -355,7 +349,6 @@ const sub_Roster = ({ list, dispatch }) => {
   };
 
   const handleCancel = () => {
-    console.log('Clicked cancel button');
     setVisible(false);
   };
 

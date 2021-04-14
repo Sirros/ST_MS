@@ -31,7 +31,6 @@ const TSetting = ({ dispatch, updateStatus }) => {
   }, []);
 
   useEffect(() => {
-    console.log(updateStatus);
     const { Info = {} } = updateStatus;
     const {
       departmentInfo = {},
@@ -138,7 +137,6 @@ const TSetting = ({ dispatch, updateStatus }) => {
         payload: v,
       });
     }
-    console.log(v);
   };
 
   const onClose = (e) => {

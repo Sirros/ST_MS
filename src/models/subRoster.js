@@ -78,7 +78,6 @@ const subRosterModel = {
       };
     },
     saveNewMember(state, { payload }) {
-      console.log(payload);
       return {
         ...state,
       };

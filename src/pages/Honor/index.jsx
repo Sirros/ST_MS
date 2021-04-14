@@ -50,7 +50,6 @@ const Honor = ({ dispatch, totalList }) => {
   }, []);
 
   useEffect(() => {
-    console.log(totalList);
     if (totalList.honorList) {
       const { honorList } = totalList;
       const { anta, freshman } = honorList;
@@ -79,7 +78,6 @@ const Honor = ({ dispatch, totalList }) => {
   const modalOk = () => {
     const formData = formRef.current.getFieldsValue();
     if (Object.keys(formData).length && Object.keys(formData).includes('newVal')) {
-      console.log('修改');
       if (formData.type === 'anta') {
         formData.type = '安踏杯';
       } else {
@@ -89,16 +87,13 @@ const Honor = ({ dispatch, totalList }) => {
         type: 'honor/updateItem',
         payload: formData,
       }); //修改请求
-      console.log(formData);
     } else {
-      console.log('新建');
       formData.dateTime = moment(formData.date).valueOf();
       if (formData.type === 'anta') {
         formData.type = '安踏杯';
       } else {
         formData.type = '新生杯';
       }
-      console.log(formData);
       dispatch({
         type: 'honor/createItem',
         payload: formData,

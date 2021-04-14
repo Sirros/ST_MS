@@ -22,7 +22,6 @@ export default {
     });
   },
   'POST /api/postPicture': (req, res) => {
-    console.log(res);
     res.send({
       status: 2002,
       text: '图片上传成功',
