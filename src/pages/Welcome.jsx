@@ -232,6 +232,6 @@ const Welcome = ({ dispatch, team }) => {
   );
 };
 
-export default connect(({ welcome, loading }) => ({
+export default connect(({ welcome }) => ({
   team: welcome,
 }))(Welcome);

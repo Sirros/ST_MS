@@ -35,14 +35,6 @@ export default [
                 path: '/',
                 redirect: '/home',
               },
-              // {
-              //   // 首页
-              //   path: '/welcome',
-              //   name: 'welcome',
-              //   icon: 'team',
-              //   authority: ALL_ALLOW,
-              //   component: './Welcome',
-              // },
               // 日程表
               {
                 path: '/schedule',
@@ -90,11 +82,6 @@ export default [
                 icon: 'edit',
                 authority: EXCEPT_BALLER,
                 routes: [
-                  // {
-                  //   path: '/teamManagement/sechdule',
-                  //   name: 'sechdule',
-                  //   component: './TeamManagement/subPages/sechdule',
-                  // },
                   {
                     path: '/teamManagement/roster',
                     name: 'roster',
@@ -105,12 +92,6 @@ export default [
                     name: 'dataResult',
                     component: './TeamManagement/subPages/dataResult',
                   },
-                  // {
-                  //   path: '/teamManagement/star',
-                  //   name: 'star',
-                  //   component: './TeamManagement/subPages/star',
-                  // },
-                  // { path: '/teamManagement/honor', name: 'honor', component: './TeamManagement/subPages/honor' },
                 ],
               },
               // 公告发布
