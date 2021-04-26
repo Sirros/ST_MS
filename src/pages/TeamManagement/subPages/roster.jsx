@@ -223,6 +223,12 @@ const sub_Roster = ({ list, dispatch }) => {
       sorter: (a, b) => a.weight - b.weight,
     },
     {
+      title: '出生日期',
+      dataIndex: 'birthday',
+      width: '120px',
+      editable: true,
+    },
+    {
       title: '地址',
       dataIndex: 'area',
       width: '140px',
@@ -384,6 +390,7 @@ const sub_Roster = ({ list, dispatch }) => {
             <ExcelColumn label="姓名" value="name" />
             <ExcelColumn label="年级" value="grade" />
             <ExcelColumn label="学号" value="studentId" />
+            <ExcelColumn label="出生日期" value="birthday" />
             <ExcelColumn label="司职" value="charge" />
             <ExcelColumn label="球衣码数" value="jersey_size" />
             <ExcelColumn label="身高" value="height" />
@@ -460,6 +467,17 @@ const sub_Roster = ({ list, dispatch }) => {
           <Input />
         </Form.Item>
         <Form.Item
+          name={['player', 'birthday']}
+          label="出生日期"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
           name={['player', 'attr']}
           label="属性"
           rules={[
@@ -513,17 +531,6 @@ const sub_Roster = ({ list, dispatch }) => {
           ]}
         >
           <Input placeholder="" />
-        </Form.Item>
-        <Form.Item
-          name={['player', 'jersey_size']}
-          label="球衣码数"
-          rules={[
-            {
-              required: false,
-            },
-          ]}
-        >
-          <Input placeholder="「s m l xl xxl xxxl xxxxl」" />
         </Form.Item>
         <Form.Item
           name={['player', 'height']}
