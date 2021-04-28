@@ -1,10 +1,11 @@
-import { updateUsernfo, getUserInfo } from '@/services/personalSetting';
+import { updateUsernfo, getUserInfo, changePassword } from '@/services/personalSetting';
 
 const PersonalSettingModule = {
   namespace: 'personalSetting',
   state: {
     user: {},
     result: -1,
+    changeState: -1,
   },
   effects: {
     *getUserInfo({ payload }, { put, call }) {
@@ -18,6 +19,14 @@ const PersonalSettingModule = {
       const response = yield call(updateUsernfo, payload);
       yield put({
         type: 'saveUpdateState',
+        payload: response,
+      });
+    },
+    *changePassword({ payload }, { put, call }) {
+      const response = yield call(changePassword, payload);
+      console.log(response);
+      yield put({
+        type: 'saveChangeState',
         payload: response,
       });
     },
@@ -35,6 +44,9 @@ const PersonalSettingModule = {
         ...state,
         result: payload.status,
       };
+    },
+    saveChangeState(state, { payload }) {
+      return { ...state, changeState: payload.status };
     },
   },
 };

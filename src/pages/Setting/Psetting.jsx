@@ -2,12 +2,23 @@ import React, { useState, useRef, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { TweenOneGroup } from 'rc-tween-one';
 import { LoadingOutlined, PlusOutlined, AntDesignOutlined } from '@ant-design/icons';
-import { Card, Form, Input, Button, Upload, message, Avatar, Row, Col, Divider, Tag } from 'antd';
+import {
+  Card,
+  Form,
+  Input,
+  Button,
+  Upload,
+  message,
+  Avatar,
+  Row,
+  Col,
+  Divider,
+  Tag,
+  Modal,
+} from 'antd';
 import { connect } from 'umi';
 import styles from './psettingStyle.less';
 import { getDifference } from '@/utils/utils.js';
-
-const { TextArea } = Input;
 
 // 表单布局
 const layout = {
@@ -44,7 +55,7 @@ function beforeUpload(file) {
   return isJpgOrPng && isLt2M;
 }
 
-const PSetting = ({ dispatch, userInfo }) => {
+const PSetting = ({ dispatch, userInfo, currentUser }) => {
   const [basicInfo, setBasicInfo] = useState({});
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState(['默认标签']);
@@ -53,8 +64,12 @@ const PSetting = ({ dispatch, userInfo }) => {
   const [imageUrl, setImageUrl] = useState('');
   const [fileName, setFileName] = useState('');
 
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [confirmLoading, setConfirmLoading] = React.useState(false);
+
   const formRef = useRef();
   const inputRef = useRef();
+  const modalFormRef = useRef();
 
   useEffect(() => {
     dispatch({
@@ -107,6 +122,16 @@ const PSetting = ({ dispatch, userInfo }) => {
       message.success('数据更新提交');
     }
   }, [userInfo.result]);
+
+  useEffect(() => {
+    if (userInfo.changeState && userInfo.changeState === 10000) {
+      setTimeout(() => {
+        message.success('修改密码成功😊');
+        setModalVisible(false);
+        setConfirmLoading(false);
+      }, 2000);
+    }
+  }, [userInfo.changeState]);
 
   useEffect(() => {
     if (inputRef.current && typeof inputRef.current.focus === 'function') {
@@ -199,7 +224,56 @@ const PSetting = ({ dispatch, userInfo }) => {
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
+
+  const changePsw = () => {
+    setModalVisible(true);
+  };
+
+  const handleOk = () => {
+    const formData = modalFormRef.current.getFieldsValue();
+    const { oldPsw, newPsw, repeatPsw } = formData;
+    if (oldPsw && newPsw && repeatPsw && newPsw === repeatPsw) {
+      setConfirmLoading(true);
+      dispatch({
+        type: 'personalSetting/changePassword',
+        payload: { ...formData, uid: basicInfo.studentId },
+      });
+    } else {
+      message.warning('两次密码输入不一致，请重试...');
+      setConfirmLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setModalVisible(false);
+  };
+
+  function renderModal() {
+    return (
+      <Modal
+        title="修改密码"
+        visible={modalVisible}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      >
+        <Form {...layout} ref={modalFormRef} name="resetPsw-form">
+          <Form.Item label="旧的密码" name="oldPsw">
+            <Input type="password" />
+          </Form.Item>
+          <Form.Item label="新的密码" name="newPsw">
+            <Input type="password" />
+          </Form.Item>
+          <Form.Item label="重复" name="repeatPsw">
+            <Input type="password" />
+          </Form.Item>
+        </Form>
+      </Modal>
+    );
+  }
+
   const tagChild = tags.map(forMap);
+
   return (
     <PageContainer>
       <Card>
@@ -381,10 +455,14 @@ const PSetting = ({ dispatch, userInfo }) => {
                 <Button htmlType="button" onClick={onReset}>
                   重置
                 </Button>
+                <Button type="dashed" onClick={changePsw} style={{ marginLeft: 10 }}>
+                  修改登陆密码
+                </Button>
               </Form.Item>
             </Form>
           </div>
         </div>
+        {renderModal()}
       </Card>
     </PageContainer>
   );

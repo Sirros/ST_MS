@@ -12,3 +12,10 @@ export async function updateUsernfo(params) {
     data: params,
   });
 }
+
+export async function changePassword(params) {
+  return request('/api/changePassword', {
+    method: 'POST',
+    data: params,
+  });
+}
