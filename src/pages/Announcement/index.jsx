@@ -71,6 +71,7 @@ const Announcement = ({ postStatus, dispatch }) => {
 
   // 提交
   const onFinish = (values) => {
+    console.log(values);
     setSpinningStatus(true);
     const { dateTime } = values;
     if (values.powerContent) {

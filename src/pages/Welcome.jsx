@@ -128,8 +128,8 @@ const Welcome = ({ dispatch, team }) => {
               </Card>
             </div>
             <div className={styles.secondRow}>
-              <Card hoverable={true} onClick={() => history.push('/schedule')}>
-                即将到来的比赛
+              <Card hoverable={true} onClick={() => history.push('/dataResult')}>
+                历史比赛
                 <br />#{teamComingMatch}
               </Card>
               <Card hoverable={true} onClick={() => history.push('/moment')}>
@@ -170,7 +170,7 @@ const Welcome = ({ dispatch, team }) => {
               slideShow.map((item, index) => {
                 return (
                   <div className={styles.carouselItem} key={index}>
-                    <img src={item.url} alt={index} />
+                    <img onClick={() => history.push('/moment')} src={item.url} alt={index} />
                   </div>
                 );
               })}

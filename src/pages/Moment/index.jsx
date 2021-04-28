@@ -235,7 +235,7 @@ const Moment = ({ dispatch, fileTotal }) => {
           >
             添加类型：
             <Radio.Group value={createType} onChange={handleCreateTypeChange}>
-              <Radio.Button value="file">文件</Radio.Button>
+              {level === 2 && <Radio.Button value="file">文件</Radio.Button>}
               {level < 2 && <Radio.Button value="folder">文件夹</Radio.Button>}
             </Radio.Group>
             {createType === 'file' && renderUploadFile()}
