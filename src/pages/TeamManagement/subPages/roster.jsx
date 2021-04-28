@@ -148,12 +148,13 @@ const sub_Roster = ({ list, dispatch }) => {
     }
   };
 
-  const isEditing = (record) => record.id === editingKey;
+  const isEditing = (record) => record.studentId === editingKey;
   const edit = (record) => {
+    console.log(record);
     form.setFieldsValue({
       ...record,
     });
-    setEditingKey(record.id);
+    setEditingKey(record.studentId);
   };
 
   const columns = [
