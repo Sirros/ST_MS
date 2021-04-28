@@ -1,12 +1,12 @@
 export default {
   'pages.layouts.userLayout.title': '欢迎使用 SportTMS 运动队管理系统',
   'pages.login.accountLogin.tab': '账户密码登录',
-  'pages.login.accountLogin.errorMessage': '错误的用户名和密码（root/123456)',
+  'pages.login.accountLogin.errorMessage': '错误的用户名或密码/角色选择错误',
   'pages.login.username.placeholder': '用户名: root',
   'pages.login.username.required': '用户名是必填项！',
   'pages.login.password.placeholder': '密码: 123456',
   'pages.login.password.required': '密码是必填项！',
-  
+
   'pages.login.forgotPassword': '忘记密码 ?',
   'pages.login.submit': '提交',
 
@@ -35,7 +35,7 @@ export default {
   'pages.searchTable.ruleName': '规则名称为必填项',
   'pages.searchTable.titleCallNo': '服务调用次数',
   'pages.searchTable.titleStatus': '状态',
-  
+
   'pages.searchTable.nameStatus.default': '关闭',
   'pages.searchTable.nameStatus.running': '运行中',
   'pages.searchTable.nameStatus.online': '已上线',

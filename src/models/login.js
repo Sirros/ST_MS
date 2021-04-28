@@ -1,6 +1,6 @@
 import { stringify } from 'querystring';
 import { history } from 'umi';
-import { fakeAccountLogin } from '@/services/login';
+import { fakeAccountLogin, sendCodeTo, reset } from '@/services/login';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { message } from 'antd';
@@ -18,6 +18,7 @@ const Model = {
   state: {
     status: undefined,
     selectedUser: 'baller',
+    resetStatus: -1,
   },
   effects: {
     *login({ payload }, { call, put }) {
@@ -73,6 +74,16 @@ const Model = {
         });
       }
     },
+    *sendCode({ payload }, { put, call }) {
+      yield call(sendCodeTo, payload);
+    },
+    *resetPsw({ payload }, { put, call }) {
+      const response = yield call(reset, payload);
+      yield put({
+        type: 'saveResetStatus',
+        payload: response,
+      });
+    },
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
@@ -81,6 +92,9 @@ const Model = {
     },
     changeSelectedUser(state, { payload }) {
       return { ...state, selectedUser: payload };
+    },
+    saveResetStatus(state, { payload }) {
+      return { ...state, resetStatus: payload.status };
     },
   },
 };
