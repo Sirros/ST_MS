@@ -7,6 +7,12 @@ yarn
 ## 项目启动
 
 ```bash
+yarn start:no-mock
+```
+
+## 项目启动(mock 模式下)
+
+```bash
 yarn start
 ```
 
