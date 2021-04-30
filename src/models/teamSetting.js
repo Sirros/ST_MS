@@ -1,9 +1,10 @@
-import { updateTeamInfo, getTeamInfo } from '@/services/teamSetting';
+import { updateTeamInfo, getTeamInfo, changeMoney } from '@/services/teamSetting';
 
 const TeamSettingModule = {
   namespace: 'teamSetting',
   state: {
     Info: {},
+    changeMoneyStatus: -1,
   },
   effects: {
     *getTeamInfo({ payload }, { put, call }) {
@@ -17,6 +18,14 @@ const TeamSettingModule = {
       const response = yield call(updateTeamInfo, payload);
       yield put({
         type: 'saveUpdateState',
+        payload: response,
+      });
+    },
+    *changeMoney({ payload }, { put, call }) {
+      const response = yield call(changeMoney, payload);
+      console.log(response);
+      yield put({
+        type: 'saveChangeState',
         payload: response,
       });
     },
@@ -34,6 +43,9 @@ const TeamSettingModule = {
         ...state,
         // result: { ...payload },
       };
+    },
+    saveChangeState(state, { payload }) {
+      return { ...state, changeMoneyStatus: payload.status };
     },
   },
 };

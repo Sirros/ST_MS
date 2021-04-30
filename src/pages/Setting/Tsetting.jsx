@@ -2,7 +2,20 @@ import React, { useState, useRef, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { connect } from 'umi';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { Card, Form, Input, Button, Upload, message, Select, Tag, Alert } from 'antd';
+import {
+  Card,
+  Form,
+  Input,
+  Button,
+  Upload,
+  message,
+  Select,
+  Tag,
+  Alert,
+  Modal,
+  Row,
+  Col,
+} from 'antd';
 
 const { TextArea } = Input;
 const color = ['gold', 'lime', 'green', 'cyan', 'sandybrown'];
@@ -22,6 +35,10 @@ const TSetting = ({ dispatch, updateStatus }) => {
   const [playerOptions, setPlayerOptions] = useState([]);
   const [headofDepOptions, setHeadofDepOptions] = useState([]);
 
+  const [visible, setVisible] = useState(false);
+  const modalFormRef = useRef();
+  const [confirmLoading, setConfirmLoading] = React.useState(false);
+
   const formRef = useRef();
 
   useEffect(() => {
@@ -31,7 +48,7 @@ const TSetting = ({ dispatch, updateStatus }) => {
   }, []);
 
   useEffect(() => {
-    const { Info = {} } = updateStatus;
+    const { Info = {}, changeMoneyStatus } = updateStatus;
     const {
       departmentInfo = {},
       groupChat,
@@ -46,6 +63,12 @@ const TSetting = ({ dispatch, updateStatus }) => {
       message.success('更新成功！');
     } else if (Info.status === 9001) {
       message.warn('更新失败，请重试...');
+    }
+
+    if (changeMoneyStatus === 9000) {
+      message.success('修改成功！');
+    } else {
+      message.warn('修改失败，请重试...');
     }
 
     setPlayerOptions(teamMembers);
@@ -150,6 +173,64 @@ const TSetting = ({ dispatch, updateStatus }) => {
     </div>
   );
 
+  const modalVisible = () => {
+    setVisible(true);
+  };
+
+  const modalOk = () => {
+    const formData = modalFormRef.current.getFieldsValue();
+    dispatch({
+      type: 'teamSetting/changeMoney',
+      payload: formData,
+    });
+    setConfirmLoading(true);
+    setTimeout(() => {
+      setConfirmLoading(false);
+      setVisible(false);
+    }, 2000);
+  };
+
+  const modalClose = () => {
+    setVisible(false);
+  };
+
+  function renderModal() {
+    return (
+      <Modal
+        title="添加消费记录"
+        visible={visible}
+        onOk={modalOk}
+        confirmLoading={confirmLoading}
+        onCancel={modalClose}
+      >
+        <Form layout="vertical" ref={modalFormRef} hideRequiredMark>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                name="money"
+                label="消费金额"
+                rules={[{ required: true, message: '请输入消费金额' }]}
+              >
+                <Input placeholder="请输入消费金额" />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                name="log"
+                label="消费日志"
+                rules={[{ required: true, message: '请输入消费日志' }]}
+              >
+                <Input placeholder="请输入消费日志" />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </Modal>
+    );
+  }
+
   return (
     <PageContainer>
       <Card>
@@ -233,6 +314,9 @@ const TSetting = ({ dispatch, updateStatus }) => {
                   </Upload>
                 </>
               </Form.Item>
+              <Form.Item label="队伍经费修改" name="consume" rules={[{ required: false }]}>
+                <Button onClick={modalVisible}>添加消费日志</Button>
+              </Form.Item>
               <Form.Item {...tailLayout}>
                 <Button type="primary" htmlType="submit" style={{ marginRight: 10 }}>
                   更新队伍信息
@@ -251,6 +335,7 @@ const TSetting = ({ dispatch, updateStatus }) => {
             </Form>
           </div>
         </div>
+        {renderModal()}
       </Card>
     </PageContainer>
   );

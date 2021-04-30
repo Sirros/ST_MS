@@ -13,7 +13,7 @@ const Moment = ({ dispatch, fileTotal }) => {
   const [selectFoldetItem, setSelectFoldetItem] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
-  const [createType, setCreateType] = useState('file'); // 创建类型
+  const [createType, setCreateType] = useState('folder'); // 创建类型
   const [createFolderTitle, setCreateFolderTitle] = useState(''); // 新文件夹名称
   const [createFolderCreator, setCreateFolderCreator] = useState(''); // 新文件夹创建人
 
@@ -84,12 +84,15 @@ const Moment = ({ dispatch, fileTotal }) => {
   // 文件夹点击
   const handleFolderItemClick = (e) => {
     setLevel(level + 1);
+    setCreateType('file');
     setSelectFoldetItem(e.currentTarget.id);
     setToggleDetail(true);
   };
 
   // 返回
   const handleGoBack = () => {
+    setLevel(level - 1);
+    setCreateType('folder');
     setToggleDetail(false);
   };
 
@@ -235,11 +238,11 @@ const Moment = ({ dispatch, fileTotal }) => {
           >
             添加类型：
             <Radio.Group value={createType} onChange={handleCreateTypeChange}>
-              {level === 2 && <Radio.Button value="file">文件</Radio.Button>}
+              {level !== 1 && <Radio.Button value="file">文件</Radio.Button>}
               {level < 2 && <Radio.Button value="folder">文件夹</Radio.Button>}
             </Radio.Group>
-            {createType === 'file' && renderUploadFile()}
-            {createType === 'folder' && (
+            {level !== 1 && createType === 'file' && renderUploadFile()}
+            {level === 1 && createType === 'folder' && (
               <>
                 <Input
                   style={{ marginTop: 15 }}
